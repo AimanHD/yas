@@ -17,565 +17,475 @@
       background:#04030f;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      text-rendering:optimizeLegibility
     }
 
-    /* ── CANVASES ── */
-    #star-canvas  { position:fixed; inset:0; z-index:0;  display:block }
-    #magic-canvas { position:fixed; inset:0; z-index:20; pointer-events:none; display:block }
-    #petal-canvas { position:fixed; inset:0; z-index:11; cursor:pointer }
+    #star-canvas  { position:fixed; inset:0; z-index:0; display:block }
+    #magic-canvas { position:fixed; inset:0; z-index:1; pointer-events:none; display:block }
 
-    /* ════════════════════════
-       GAME SCREEN
-    ════════════════════════ */
-    #game-screen {
-      position:fixed; inset:0; z-index:12;
+    /* ─── BOOK WRAP ─── */
+    #book-wrap {
+      position:fixed; inset:0; z-index:10;
+      display:flex; align-items:center; justify-content:center;
+      padding:clamp(.6rem,1.8vh,1.5rem) clamp(.6rem,2vw,1.2rem);
+    }
+
+    /* ─── BOOK CARD ─── */
+    #book-card {
+      position:relative;
+      width: min(500px, 95vw);
+      height: min(710px, 88vh);
+      background: rgba(11, 4, 22, 0.91);
+      border:1px solid rgba(195,135,215,.2);
+      border-radius:24px;
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:
+        0 0 80px rgba(150,70,210,.14),
+        0 28px 90px rgba(0,0,0,.62),
+        inset 0 1px 0 rgba(255,255,255,.05);
+      overflow:hidden;
+    }
+
+    /* ─── CORNER FLOWERS ─── */
+    .corner {
+      position:absolute;
+      width:clamp(80px,21vw,118px);
       pointer-events:none;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:flex-start;
-      padding-top: max(5vh, 36px);
-      transition: opacity 1.2s, transform 1.2s
+      z-index:5;
+      opacity:.88;
     }
+    .corner.tl { top:0; left:0; }
+    .corner.tr { top:0; right:0; transform:scaleX(-1); }
+    .corner.bl { bottom:0; left:0; transform:scaleY(-1); }
+    .corner.br { bottom:0; right:0; transform:scale(-1,-1); }
 
-    .game-title {
+    /* ─── PAGES ─── */
+    .page {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:clamp(1.8rem,4vw,2.8rem) clamp(1.6rem,5vw,3rem) 5rem;
+      opacity:0;
+      transform:translateY(18px);
+      transition:opacity .68s ease, transform .68s ease;
+      pointer-events:none;
+      z-index:2;
+      text-align:center;
+    }
+    .page.active  { opacity:1; transform:translateY(0); pointer-events:auto }
+    .page.leaving { opacity:0; transform:translateY(-10px); transition:opacity .42s ease, transform .42s ease }
+
+    /* ══ COVER ══ */
+    .cover-label {
       font-family:'Cormorant Garamond', serif;
       font-style:italic;
-      font-size:clamp(2rem, 5vw, 3rem);
-      letter-spacing:.04em;
-      color:#ede0ff;
-      text-shadow:0 0 28px rgba(200,130,255,.7), 0 0 60px rgba(160,100,255,.35), 0 2px 8px rgba(0,0,0,.6);
-      margin-bottom:.45rem;
-      animation:titlePulse 4s ease-in-out infinite;
+      font-size:clamp(1rem,2.8vw,1.3rem);
+      color:rgba(210,175,240,.62);
+      letter-spacing:.14em;
+      margin-bottom:.5rem;
     }
-    @keyframes titlePulse {
-      0%,100%{ text-shadow:0 0 28px rgba(200,130,255,.65), 0 0 55px rgba(160,100,255,.3) }
-      50%    { text-shadow:0 0 40px rgba(220,150,255,.9),  0 0 80px rgba(200,130,255,.4) }
+    .cover-name {
+      font-family:'Dancing Script', cursive;
+      font-weight:700;
+      font-size:clamp(3.8rem,14vw,5.8rem);
+      color:#f3e6ff;
+      text-shadow:0 0 35px rgba(200,130,255,.55), 0 0 80px rgba(160,80,220,.22), 0 3px 14px rgba(0,0,0,.85);
+      line-height:1.05;
+      margin-bottom:1.5rem;
     }
-
-    .game-sub {
-      font-size:.82rem; letter-spacing:.18em;
-      text-transform:uppercase; color:#c0aee8; opacity:.9;
-      font-weight:400;
-      text-shadow:0 1px 6px rgba(0,0,0,.5);
+    .cover-rule {
+      display:flex; align-items:center; gap:.75rem;
+      margin-bottom:1.4rem; width:min(250px,72%);
     }
-
-    /* Progress petals */
-    #progress-bar {
-      display:flex; gap:12px; margin-top:1.4rem;
-    }
-    .prog-petal {
-      width:14px; height:18px;
-      opacity:.28;
-      filter:drop-shadow(0 0 0px transparent);
-      transition:all .5s;
-      background:radial-gradient(ellipse at 50% 30%, #e8c0ff 0%, #b080e0 60%, rgba(140,60,200,0) 100%);
-      clip-path:polygon(50% 0%, 85% 25%, 100% 60%, 85% 90%, 50% 100%, 15% 90%, 0% 60%, 15% 25%);
-      border-radius:40% 40% 50% 50%;
-    }
-    .prog-petal.lit {
-      opacity:1;
-      filter:drop-shadow(0 0 8px rgba(210,150,255,.9)) drop-shadow(0 0 18px rgba(180,100,255,.5));
+    .cover-rule span { flex:1; height:1px; background:rgba(200,150,230,.22) }
+    .cover-rule em { font-style:normal; font-size:.88rem; color:rgba(200,150,230,.42); letter-spacing:.28em }
+    .cover-sub {
+      font-family:'Cormorant Garamond', serif;
+      font-style:italic;
+      font-size:clamp(.9rem,2.5vw,1.1rem);
+      color:rgba(218,196,248,.55);
+      line-height:2;
     }
 
-    #hint {
-      position:fixed; bottom:max(2rem, env(safe-area-inset-bottom, 2rem));
-      left:50%; transform:translateX(-50%);
-      z-index:12; pointer-events:none;
-      font-size:.8rem; letter-spacing:.14em;
-      text-transform:uppercase; color:rgba(210,190,245,.8);
-      font-weight:400;
-      text-shadow:0 1px 8px rgba(0,0,0,.6);
-      white-space:nowrap;
-      animation:blink 2.8s ease-in-out infinite;
-      transition:opacity .6s
+    /* ══ LIST PAGES ══ */
+    .list-wrap { width:100%; text-align:left; }
+    .list-tag {
+      display:flex; align-items:center; gap:.55rem;
+      font-size:.62rem; letter-spacing:.28em;
+      text-transform:uppercase; color:rgba(180,128,220,.38);
+      margin-bottom:clamp(.9rem,2.5vh,1.4rem);
     }
-    @keyframes blink { 0%,100%{opacity:.7} 50%{opacity:.2} }
-
-    /* ════════════════════════
-       FLASH
-    ════════════════════════ */
-    #bloom {
-      position:fixed; inset:0; z-index:50;
-      background:radial-gradient(ellipse at center, #fff8ff 0%, #e8d0ff 40%, #fff 100%);
-      opacity:0; pointer-events:none;
-      transition:opacity .6s
+    .list-tag::before, .list-tag::after {
+      content:''; flex:1; height:1px; background:rgba(180,128,220,.16);
+    }
+    .list-item {
+      display:flex; align-items:baseline; gap:.75rem;
+      padding:clamp(.38rem,1.2vh,.58rem) 0;
+      border-bottom:1px solid rgba(185,135,225,.07);
+    }
+    .list-item:last-child { border-bottom:none }
+    .n {
+      font-family:'Cormorant Garamond', serif;
+      font-size:.7rem; color:rgba(195,150,242,.52);
+      min-width:1.5rem; text-align:right;
+      flex-shrink:0; letter-spacing:.04em;
+    }
+    .t {
+      font-family:'Cormorant Garamond', serif;
+      font-style:italic;
+      font-size:clamp(.97rem,3.3vw,1.26rem);
+      color:rgba(240,224,255,.9);
+      line-height:1.38;
     }
 
-    /* ════════════════════════
-       REVEAL SCREEN
-    ════════════════════════ */
-    #reveal {
-      position:fixed; inset:0; z-index:30;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:flex-end;
-      padding:2rem;
-      padding-bottom: max(3rem, env(safe-area-inset-bottom, 3rem));
-      text-align:center;
-      opacity:0; pointer-events:none;
-      transition:opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    /* ══ FINAL PAGE ══ */
+    .page-final {
       background:
         linear-gradient(to bottom,
-          rgba(4,2,15,.95) 0%,
-          rgba(4,2,15,.5)  14%,
-          rgba(6,4,16,.22) 30%,
-          rgba(6,4,16,.22) 60%,
-          rgba(4,2,15,.75) 100%
+          rgba(6,2,16,.92) 0%,
+          rgba(6,2,16,.48) 18%,
+          rgba(6,2,16,.4)  62%,
+          rgba(6,2,16,.94) 100%
         ),
         url("ChatGPT Image 28 jun 2026, 21_19_50.png") center/cover no-repeat;
     }
-    #reveal.on { opacity:1 }
-
-    .r-phrase {
+    .final-box {
       font-family:'Cormorant Garamond', serif;
       font-style:italic;
-      font-size:clamp(1.05rem, 2.6vw, 1.45rem);
-      color:#f2eaff;
-      line-height:1.9;
-      background:rgba(4, 2, 18, 0.68);
-      border:1px solid rgba(190,140,255,.22);
-      border-radius:16px;
-      padding:1.4rem 2rem;
-      max-width:min(88vw, 520px);
+      font-size:clamp(.88rem,2.6vw,1.18rem);
+      color:#f0eaff;
+      line-height:1.92;
+      background:rgba(5,2,18,.72);
+      border:1px solid rgba(190,140,255,.17);
+      border-radius:14px;
+      padding:clamp(.9rem,2.8vw,1.35rem) clamp(1rem,3.5vw,1.8rem);
+      max-width:min(88vw,400px);
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
-      opacity:0;
-      margin-bottom:1.6rem;
-      transition:opacity 1.4s ease .5s;
+      margin-bottom:1rem;
     }
-    #reveal.on .r-phrase { opacity:1 }
-
-    .r-divider {
-      display:block;
-      font-size:clamp(.85rem, 2vw, 1rem);
-      letter-spacing:.5em;
-      color:rgba(220,195,255,.9);
-      opacity:0;
-      text-shadow:0 0 14px rgba(180,130,255,.6), 0 1px 8px rgba(0,0,0,.6);
-      transition:opacity 1s ease .3s;
-      margin-bottom:.1rem;
-    }
-    #reveal.on .r-divider { opacity:1 }
-
-    .r-name {
-      display:block;
-      margin-top:.7rem;
+    .final-love {
       font-family:'Dancing Script', cursive;
-      font-size:clamp(2.8rem, 9vw, 5.5rem);
       font-weight:700;
-      color:rgba(250,235,255,1);
-      opacity:0;
-      text-shadow:0 2px 20px rgba(0,0,0,.9), 0 0 36px rgba(210,140,255,.7), 0 0 70px rgba(190,110,255,.3);
-      transition:opacity 1.4s ease .6s;
+      font-size:clamp(2rem,7vw,3rem);
+      color:rgba(252,210,240,1);
+      text-shadow:0 0 30px rgba(220,120,180,.65), 0 2px 14px rgba(0,0,0,.88);
+      margin-bottom:.6rem;
     }
-    #reveal.on .r-name { opacity:1 }
-
-    /* ── MOBILE ── */
-    @media(max-width:768px){
-      #game-screen {
-        padding-top: max(3vh, 20px);
-        background: linear-gradient(to bottom, rgba(4,2,15,.72) 0%, rgba(4,2,15,.0) 100%);
-        padding-bottom: 0;
-        height: auto;
-        bottom: auto;
-      }
-      .game-title   { font-size:clamp(1.5rem, 5.5vw, 2rem); letter-spacing:.02em; margin-bottom:.3rem }
-      .game-sub     { font-size:.68rem; letter-spacing:.12em }
-      #progress-bar { margin-top:.75rem; gap:10px }
-      .prog-petal   { width:16px; height:20px }
-      #hint         { font-size:.68rem; letter-spacing:.1em; bottom:max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) }
-
-      .r-phrase   { font-size:clamp(.95rem, 3.8vw, 1.15rem); padding:1rem 1.3rem; margin-bottom:1rem; line-height:1.8 }
-      .r-divider  { font-size:.8rem; letter-spacing:.38em }
-      .r-name     { font-size:clamp(2.2rem, 10vw, 3.2rem); margin-top:.5rem }
-      #reveal     {
-        padding:1.2rem;
-        padding-bottom:max(2.2rem, env(safe-area-inset-bottom, 2.2rem));
-        background:
-          linear-gradient(to bottom,
-            rgba(4,2,15,.97) 0%,
-            rgba(4,2,15,.55) 15%,
-            rgba(6,4,16,.18) 32%,
-            rgba(6,4,16,.18) 62%,
-            rgba(4,2,15,.82) 100%
-          ),
-          url("ChatGPT Image 28 jun 2026, 21_19_50.png") center top/cover no-repeat;
-      }
+    .final-div {
+      font-size:.82rem; letter-spacing:.48em;
+      color:rgba(218,192,255,.8);
+      text-shadow:0 0 12px rgba(180,130,255,.42);
+      margin-bottom:.25rem;
     }
-    @media(max-width:420px){
-      .game-title { font-size:clamp(1.25rem, 6.5vw, 1.6rem) }
-      .game-sub   { font-size:.62rem; letter-spacing:.08em }
-      .r-phrase   { font-size:.9rem; padding:.85rem 1.1rem }
-      .r-name     { font-size:2.2rem }
-      .prog-petal { width:14px; height:17px }
+    .final-name {
+      font-family:'Dancing Script', cursive;
+      font-weight:700;
+      font-size:clamp(2.5rem,10vw,4.6rem);
+      color:rgba(252,238,255,1);
+      text-shadow:0 2px 22px rgba(0,0,0,.92), 0 0 40px rgba(210,140,255,.58), 0 0 80px rgba(185,110,255,.2);
+      margin-top:.2rem;
+    }
+
+    /* ─── NAVIGATION ─── */
+    #book-nav {
+      position:absolute; bottom:0; left:0; right:0;
+      z-index:8;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.8rem clamp(1rem,4vw,1.6rem) clamp(.85rem,2.5vw,1.1rem);
+      background:linear-gradient(to top, rgba(6,2,18,.78) 0%, transparent 100%);
+    }
+    #dots { display:flex; gap:6px; align-items:center; flex-wrap:wrap; max-width:55% }
+    .dot {
+      width:6px; height:6px; border-radius:50%;
+      background:rgba(175,125,218,.24);
+      border:1px solid rgba(175,125,218,.36);
+      transition:all .38s; cursor:pointer; flex-shrink:0;
+    }
+    .dot.on {
+      background:rgba(212,160,244,.92);
+      border-color:rgba(228,192,255,.9);
+      box-shadow:0 0 8px rgba(200,140,255,.68);
+      transform:scale(1.3);
+    }
+    .nav-btn {
+      display:flex; align-items:center; gap:.4rem;
+      font-family:'Jost', sans-serif;
+      font-size:.72rem; font-weight:500;
+      letter-spacing:.13em; text-transform:uppercase;
+      border-radius:50px; cursor:pointer;
+      transition:all .26s; white-space:nowrap;
+    }
+    #btn-prev {
+      background:transparent;
+      border:1px solid rgba(175,125,215,.2);
+      color:rgba(200,160,240,.52);
+      padding:.48rem 1.05rem;
+    }
+    #btn-prev:hover { border-color:rgba(200,158,250,.38); color:rgba(220,185,255,.82) }
+    #btn-next {
+      background:linear-gradient(135deg,rgba(155,55,128,.88),rgba(105,45,178,.88));
+      border:1px solid rgba(210,148,232,.26);
+      color:#f0deff;
+      padding:.54rem 1.35rem;
+      box-shadow:0 4px 18px rgba(135,55,200,.3);
+    }
+    #btn-next:hover {
+      background:linear-gradient(135deg,rgba(175,75,148,.92),rgba(125,65,198,.92));
+      box-shadow:0 6px 26px rgba(160,75,225,.44);
+      transform:translateY(-1px);
+    }
+    #btn-next:active { transform:translateY(0) }
+    .nav-btn.hidden { opacity:0; pointer-events:none }
+
+    /* ─── MOBILE ─── */
+    @media(max-width:480px){
+      .corner   { width:clamp(72px,22vw,98px) }
+      .page     { padding:1.6rem 1.45rem 4.6rem }
+      .cover-name { font-size:clamp(3.4rem,16vw,4.8rem) }
+      .t        { font-size:clamp(.92rem,4vw,1.12rem) }
+      .final-box{ font-size:clamp(.82rem,3.4vw,.96rem); padding:.82rem 1rem }
+      .final-name{ font-size:clamp(2.2rem,12vw,3rem) }
+      .final-love{ font-size:clamp(1.75rem,8vw,2.4rem) }
+      #book-nav { padding:.68rem .95rem .82rem }
+      .nav-btn  { font-size:.66rem; padding:.44rem .92rem }
+    }
+    @media(max-width:360px){
+      .corner { width:68px }
+      .page   { padding:1.4rem 1.2rem 4.4rem }
+      .t      { font-size:.88rem }
     }
   </style>
 </head>
 <body>
 
-  <audio id="bg-music" loop>
-    <source src="audio/cancion.mp3" type="audio/mpeg">
-    <source src="audio/cancion.wav" type="audio/wav">
-  </audio>
+<audio id="bg-music" loop>
+  <source src="audio/cancion.mp3" type="audio/mpeg">
+  <source src="audio/cancion.wav" type="audio/wav">
+</audio>
 
-  <canvas id="star-canvas"></canvas>
-  <canvas id="magic-canvas"></canvas>
-  <canvas id="petal-canvas"></canvas>
+<canvas id="star-canvas"></canvas>
+<canvas id="magic-canvas"></canvas>
 
-  <div id="bloom"></div>
+<div id="book-wrap">
+  <div id="book-card">
 
-  <div id="game-screen">
-    <div class="game-title">Recoge los pétalos</div>
-    <div class="game-sub">un secreto te aguarda</div>
-    <div id="progress-bar"></div>
+    <!-- Corner flowers (CSS mirrors for TR/BL/BR) -->
+    <svg class="corner tl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
+      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
+      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
+      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
+      <g transform="translate(35,80)">
+        <ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/>
+        <ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/>
+        <ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/>
+        <ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/>
+        <ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/>
+        <circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/>
+      </g>
+      <g transform="translate(52,63) rotate(-28)">
+        <ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/>
+        <path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/>
+      </g>
+      <g transform="translate(75,44)">
+        <ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/>
+        <ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/>
+        <ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/>
+        <ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/>
+        <ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/>
+        <circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/>
+      </g>
+      <g transform="translate(108,13)">
+        <ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/>
+        <ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/>
+        <ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/>
+        <ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/>
+        <ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/>
+        <circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/>
+      </g>
+      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/>
+      <circle cx="90" cy="29"  r="1.4" fill="#C090E0" opacity=".4"/>
+    </svg>
+    <svg class="corner tr" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
+      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
+      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
+      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
+      <g transform="translate(35,80)"><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/><circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/></g>
+      <g transform="translate(52,63) rotate(-28)"><ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/><path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/></g>
+      <g transform="translate(75,44)"><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/><circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/></g>
+      <g transform="translate(108,13)"><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/><circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/></g>
+      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/><circle cx="90" cy="29" r="1.4" fill="#C090E0" opacity=".4"/>
+    </svg>
+    <svg class="corner bl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
+      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
+      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
+      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
+      <g transform="translate(35,80)"><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/><circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/></g>
+      <g transform="translate(52,63) rotate(-28)"><ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/><path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/></g>
+      <g transform="translate(75,44)"><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/><circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/></g>
+      <g transform="translate(108,13)"><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/><circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/></g>
+      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/><circle cx="90" cy="29" r="1.4" fill="#C090E0" opacity=".4"/>
+    </svg>
+    <svg class="corner br" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
+      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
+      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
+      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
+      <g transform="translate(35,80)"><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/><circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/></g>
+      <g transform="translate(52,63) rotate(-28)"><ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/><path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/></g>
+      <g transform="translate(75,44)"><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/><circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/></g>
+      <g transform="translate(108,13)"><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/><circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/></g>
+      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/><circle cx="90" cy="29" r="1.4" fill="#C090E0" opacity=".4"/>
+    </svg>
+
+    <!-- ══════ PÁGINA 0 — PORTADA ══════ -->
+    <div class="page active" id="p0">
+      <div class="cover-label">Para ti,</div>
+      <div class="cover-name">Yasmin</div>
+      <div class="cover-rule"><span></span><em>✦</em><span></span></div>
+      <div class="cover-sub">
+        Todo lo que me encantas,<br>
+        en orden, sin olvidar nada.
+      </div>
+    </div>
+
+    <!-- ══════ PÁGINA 1 — 1 a 5 ══════ -->
+    <div class="page" id="p1">
+      <div class="list-wrap">
+        <div class="list-tag">Lo que me encanta de ti</div>
+        <div class="list-item"><span class="n">01</span><span class="t">Tus ojos</span></div>
+        <div class="list-item"><span class="n">02</span><span class="t">Tu nombre</span></div>
+        <div class="list-item"><span class="n">03</span><span class="t">Tú siendo graciosa</span></div>
+        <div class="list-item"><span class="n">04</span><span class="t">Tu mirada</span></div>
+        <div class="list-item"><span class="n">05</span><span class="t">Tu voz</span></div>
+      </div>
+    </div>
+
+    <!-- ══════ PÁGINA 2 — 6 a 10 ══════ -->
+    <div class="page" id="p2">
+      <div class="list-wrap">
+        <div class="list-tag">continúa&hellip;</div>
+        <div class="list-item"><span class="n">06</span><span class="t">Tu cariño</span></div>
+        <div class="list-item"><span class="n">07</span><span class="t">Tu atención</span></div>
+        <div class="list-item"><span class="n">08</span><span class="t">Tus manos encajadas con las mías</span></div>
+        <div class="list-item"><span class="n">09</span><span class="t">Tú cuando te emocionas</span></div>
+        <div class="list-item"><span class="n">10</span><span class="t">Tú con tus galletitas</span></div>
+      </div>
+    </div>
+
+    <!-- ══════ PÁGINA 3 — 11 a 15 ══════ -->
+    <div class="page" id="p3">
+      <div class="list-wrap">
+        <div class="list-tag">continúa&hellip;</div>
+        <div class="list-item"><span class="n">11</span><span class="t">Tú con aguita</span></div>
+        <div class="list-item"><span class="n">12</span><span class="t">Tú con hamburguesita</span></div>
+        <div class="list-item"><span class="n">13</span><span class="t">Tu culo</span></div>
+        <div class="list-item"><span class="n">14</span><span class="t">Tus labios</span></div>
+        <div class="list-item"><span class="n">15</span><span class="t">Tú conduciendo</span></div>
+      </div>
+    </div>
+
+    <!-- ══════ PÁGINA 4 — 16 a 19 ══════ -->
+    <div class="page" id="p4">
+      <div class="list-wrap">
+        <div class="list-tag">continúa&hellip;</div>
+        <div class="list-item"><span class="n">16</span><span class="t">Tú cuando me miras</span></div>
+        <div class="list-item"><span class="n">17</span><span class="t">Tú cuando me acaricias</span></div>
+        <div class="list-item"><span class="n">18</span><span class="t">Tú diciéndome que te gustó</span></div>
+        <div class="list-item"><span class="n">19</span><span class="t">Tú nadando</span></div>
+      </div>
+    </div>
+
+    <!-- ══════ PÁGINA 5 — 20 a 22 ══════ -->
+    <div class="page" id="p5">
+      <div class="list-wrap">
+        <div class="list-tag">y para terminar&hellip;</div>
+        <div class="list-item"><span class="n">20</span><span class="t">Tú contenta</span></div>
+        <div class="list-item"><span class="n">21</span><span class="t">Tú despeinada</span></div>
+        <div class="list-item"><span class="n">22</span><span class="t">Tú arreglada</span></div>
+      </div>
+    </div>
+
+    <!-- ══════ PÁGINA 6 — FINAL ══════ -->
+    <div class="page page-final" id="p6">
+      <div class="final-box">
+        Simplemente <em>tú</em> me encantas,<br>
+        de todas y cada una de las formas<br>
+        en las que existas o estés existiendo.<br>
+        Ante mis ojos, siempre serás la mejor.
+      </div>
+      <div class="final-love">te quiero</div>
+      <div class="final-div">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <div class="final-name">Yasmin</div>
+    </div>
+
+    <!-- ══ NAV ══ -->
+    <div id="book-nav">
+      <button class="nav-btn hidden" id="btn-prev">← Volver</button>
+      <div id="dots"></div>
+      <button class="nav-btn" id="btn-next">Siguiente →</button>
+    </div>
+
   </div>
+</div>
 
-  <div id="hint">✦ Toca cada pétalo ✦</div>
+<script>
+// ════════════ STARFIELD ════════════
+const sc=document.getElementById('star-canvas'),sct=sc.getContext('2d');
+let W,H;
+const STARS=(()=>{let s=42;const r=()=>{s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/0xffffffff};return Array.from({length:200},()=>({px:r(),py:r(),r:r()*1.3+0.3,a:r()*0.5+0.3,ts:r()*0.011+0.004,to:r()*Math.PI*2,col:r()>.85?'#d0c0ff':(r()>.7?'#ffe8f0':'#ffffff')}))})();
+const shooters=[];
+function spawnShooter(){if(Math.random()>.007)return;const a=Math.PI/6+Math.random()*Math.PI/6;shooters.push({x:Math.random()*W,y:Math.random()*H*.3,len:80+Math.random()*110,speed:8+Math.random()*9,vx:Math.cos(a),vy:Math.sin(a),life:1,decay:.018+Math.random()*.012})}
+function drawSky(now){const bg=sct.createRadialGradient(W*.35,H*.25,0,W*.5,H*.5,Math.max(W,H)*.85);bg.addColorStop(0,'#0e0828');bg.addColorStop(.5,'#06041a');bg.addColorStop(1,'#04030f');sct.fillStyle=bg;sct.fillRect(0,0,W,H);[{x:.22,y:.28,rx:.55,ry:.32,c:'rgba(90,50,180,.13)'},{x:.72,y:.68,rx:.48,ry:.35,c:'rgba(160,50,110,.1)'},{x:.5,y:.1,rx:.4,ry:.28,c:'rgba(50,70,200,.08)'}].forEach(n=>{const g=sct.createRadialGradient(n.x*W,n.y*H,0,n.x*W,n.y*H,Math.max(W,H)*Math.max(n.rx,n.ry));g.addColorStop(0,n.c);g.addColorStop(1,'rgba(0,0,0,0)');sct.fillStyle=g;sct.beginPath();sct.ellipse(n.x*W,n.y*H,n.rx*W,n.ry*H,0,0,Math.PI*2);sct.fill()});STARS.forEach(s=>{const alpha=s.a*(.65+.35*Math.sin(now*s.ts*60+s.to));sct.globalAlpha=Math.max(0,alpha);sct.shadowBlur=s.r>1.2?7:0;sct.shadowColor=s.col;sct.fillStyle=s.col;sct.beginPath();sct.arc(s.px*W,s.py*H,s.r,0,Math.PI*2);sct.fill();sct.globalAlpha=1;sct.shadowBlur=0});spawnShooter();for(let i=shooters.length-1;i>=0;i--){const sh=shooters[i];const tail=sct.createLinearGradient(sh.x,sh.y,sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);tail.addColorStop(0,`rgba(220,210,255,${sh.life*.8})`);tail.addColorStop(.4,`rgba(180,160,255,${sh.life*.28})`);tail.addColorStop(1,'rgba(0,0,0,0)');sct.beginPath();sct.moveTo(sh.x,sh.y);sct.lineTo(sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);sct.strokeStyle=tail;sct.lineWidth=1.5;sct.stroke();sh.x+=sh.vx*sh.speed;sh.y+=sh.vy*sh.speed;sh.life-=sh.decay;if(sh.life<=0||sh.x>W+50||sh.y>H+50)shooters.splice(i,1)}}
 
-  <!-- ── REVEAL ── -->
-  <div id="reveal">
-    <p class="r-phrase">
-      &ldquo;Como el jazmín, no necesitas<br>
-      llamar la atención.<br>
-      Tu presencia lo hace sola.&rdquo;
-    </p>
-    <span class="r-divider">✦ &nbsp; ✦ &nbsp; ✦</span>
-    <span class="r-name">Yasmin</span>
-  </div>
+// ════════════ PARTICLES ════════════
+const mc=document.getElementById('magic-canvas'),mcx=mc.getContext('2d');
+const pCl=['#c090ff','#e0c0ff','#fff','#f0c0e8','#d0a0ff'];
+let pts=[];
+function hx(h){const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:[255,255,255]}
+class Pt{constructor(x,y){this.x=x;this.y=y;this.r=Math.random()*1.8+.4;this.c=pCl[Math.floor(Math.random()*pCl.length)];const a=Math.random()*Math.PI*2,sp=Math.random()*.5+.1;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.life=1;this.decay=Math.random()*.003+.0015}update(){this.x+=this.vx;this.y+=this.vy;this.vx+=(Math.random()-.5)*.06;this.life-=this.decay}draw(){mcx.beginPath();mcx.arc(this.x,this.y,this.r,0,Math.PI*2);const[r,g,b]=hx(this.c);mcx.fillStyle=`rgba(${r},${g},${b},${Math.max(0,this.life)})`;mcx.fill()}}
+function amb(){if(pts.length<50&&Math.random()>.75)pts.push(new Pt(Math.random()*mc.width,mc.height+5))}
 
-  <script>
-  // ════════════════════════════════════════
-  //  UTILS
-  // ════════════════════════════════════════
-  const isMobile = window.matchMedia('(max-width:768px)').matches;
-  let W, H;
+// ════════════ NAVIGATION ════════════
+const PAGES=document.querySelectorAll('.page');
+const TOTAL=PAGES.length;
+const btnNext=document.getElementById('btn-next');
+const btnPrev=document.getElementById('btn-prev');
+const dotsEl=document.getElementById('dots');
+const bgMusic=document.getElementById('bg-music');
+let cur=0,musicPlayed=false;
 
-  // ════════════════════════════════════════
-  //  STARFIELD
-  // ════════════════════════════════════════
-  const sc  = document.getElementById('star-canvas');
-  const sct = sc.getContext('2d');
+for(let i=0;i<TOTAL;i++){const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.addEventListener('click',()=>goTo(i));dotsEl.appendChild(d)}
 
-  const STARS = (() => {
-    let s = 42;
-    const rnd = () => { s = (s*1664525+1013904223)&0xffffffff; return (s>>>0)/0xffffffff; };
-    return Array.from({length:220}, () => ({
-      px:rnd(), py:rnd(),
-      r: rnd()*1.4+0.3,
-      a: rnd()*0.55+0.3,
-      ts:rnd()*0.012+0.004,
-      to:rnd()*Math.PI*2,
-      col:rnd()>.85?'#d0c0ff':(rnd()>.7?'#ffe8f0':'#ffffff')
-    }));
-  })();
+function updateUI(){document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));btnPrev.classList.toggle('hidden',cur===0);btnNext.classList.toggle('hidden',cur===TOTAL-1)}
 
-  const shooters = [];
-  function spawnShooter() {
-    if (Math.random() > 0.007) return;
-    const angle = Math.PI/6 + Math.random()*Math.PI/6;
-    shooters.push({
-      x:Math.random()*W, y:Math.random()*H*.35,
-      len:80+Math.random()*120, speed:8+Math.random()*10,
-      vx:Math.cos(angle), vy:Math.sin(angle),
-      life:1, decay:.018+Math.random()*.012
-    });
-  }
+function goTo(n){
+  if(n===cur||n<0||n>=TOTAL)return;
+  if(!musicPlayed){bgMusic.play().catch(()=>{});musicPlayed=true}
+  PAGES[cur].classList.remove('active');
+  PAGES[cur].classList.add('leaving');
+  const prev=cur;cur=n;
+  setTimeout(()=>PAGES[prev].classList.remove('leaving'),480);
+  setTimeout(()=>{PAGES[cur].classList.add('active');updateUI()},55);
+}
 
-  function drawSky(now) {
-    const bg = sct.createRadialGradient(W*.35, H*.25, 0, W*.5, H*.5, Math.max(W,H)*.85);
-    bg.addColorStop(0,   '#0e0828');
-    bg.addColorStop(0.5, '#06041a');
-    bg.addColorStop(1,   '#04030f');
-    sct.fillStyle = bg;
-    sct.fillRect(0,0,W,H);
+btnNext.addEventListener('click',()=>goTo(cur+1));
+btnPrev.addEventListener('click',()=>goTo(cur-1));
 
-    [{x:.22,y:.28,rx:.55,ry:.32,c:'rgba(90,50,180,.15)'},
-     {x:.72,y:.68,rx:.48,ry:.35,c:'rgba(160,50,110,.12)'},
-     {x:.50,y:.12,rx:.4, ry:.28,c:'rgba(50,70,200,.10)'}
-    ].forEach(n=>{
-      const g = sct.createRadialGradient(n.x*W,n.y*H,0,n.x*W,n.y*H,Math.max(W,H)*Math.max(n.rx,n.ry));
-      g.addColorStop(0, n.c); g.addColorStop(1,'rgba(0,0,0,0)');
-      sct.fillStyle=g;
-      sct.beginPath(); sct.ellipse(n.x*W,n.y*H,n.rx*W,n.ry*H,0,0,Math.PI*2); sct.fill();
-    });
+// Swipe
+let tx=0,ty=0;
+const card=document.getElementById('book-card');
+card.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+card.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>42){dx<0?goTo(cur+1):goTo(cur-1)}},{passive:true});
 
-    STARS.forEach(s=>{
-      const alpha = s.a*(.65+.35*Math.sin(now*s.ts*60+s.to));
-      sct.globalAlpha = Math.max(0,alpha);
-      sct.shadowBlur  = s.r>1.2?8:0;
-      sct.shadowColor = s.col;
-      sct.fillStyle   = s.col;
-      sct.beginPath(); sct.arc(s.px*W,s.py*H,s.r,0,Math.PI*2); sct.fill();
-      sct.globalAlpha = 1; sct.shadowBlur = 0;
-    });
-
-    spawnShooter();
-    for (let i=shooters.length-1; i>=0; i--) {
-      const sh = shooters[i];
-      const tail = sct.createLinearGradient(sh.x,sh.y,sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);
-      tail.addColorStop(0, `rgba(220,210,255,${sh.life*.85})`);
-      tail.addColorStop(.4,`rgba(180,160,255,${sh.life*.35})`);
-      tail.addColorStop(1, 'rgba(0,0,0,0)');
-      sct.beginPath(); sct.moveTo(sh.x,sh.y);
-      sct.lineTo(sh.x-sh.vx*sh.len, sh.y-sh.vy*sh.len);
-      sct.strokeStyle=tail; sct.lineWidth=1.5; sct.stroke();
-      sh.x+=sh.vx*sh.speed; sh.y+=sh.vy*sh.speed; sh.life-=sh.decay;
-      if(sh.life<=0||sh.x>W+50||sh.y>H+50) shooters.splice(i,1);
-    }
-  }
-
-  // ════════════════════════════════════════
-  //  PARTICLES
-  // ════════════════════════════════════════
-  const mc  = document.getElementById('magic-canvas');
-  const mcx = mc.getContext('2d');
-  const pCl = ['#c090ff','#e0c0ff','#ffffff','#f0c0e8','#f8d0ff','#d0a0ff'];
-  let pts = [];
-
-  function hx(h){
-    const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
-    return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:[255,255,255];
-  }
-
-  class Pt {
-    constructor(x,y,big){
-      this.x=x; this.y=y;
-      this.r=big?Math.random()*5+2:Math.random()*2+.5;
-      this.c=pCl[Math.floor(Math.random()*pCl.length)];
-      const a=Math.random()*Math.PI*2, sp=big?Math.random()*14+4:Math.random()*.6+.1;
-      this.vx=Math.cos(a)*sp; this.vy=Math.sin(a)*sp-(big?2:0);
-      this.life=1; this.decay=big?Math.random()*.012+.005:Math.random()*.004+.002;
-      this.g=big?.07:0;
-    }
-    update(){
-      this.x+=this.vx; this.y+=this.vy; this.vy+=this.g;
-      if(!this.g){ this.vx+=(Math.random()-.5)*.08 }else{ this.vx*=.98; this.vy*=.98 }
-      this.life-=this.decay;
-    }
-    draw(){
-      mcx.beginPath(); mcx.arc(this.x,this.y,this.r,0,Math.PI*2);
-      mcx.shadowBlur=9; mcx.shadowColor=this.c;
-      const[r,g,b]=hx(this.c);
-      mcx.fillStyle=`rgba(${r},${g},${b},${Math.max(0,this.life)})`;
-      mcx.fill(); mcx.shadowBlur=0;
-    }
-  }
-  function burst(x,y){ for(let i=0;i<28;i++) pts.push(new Pt(x,y,false)) }
-  function bigBoom(x,y){ for(let i=0;i<380;i++) pts.push(new Pt(x,y,true)) }
-  function amb(){ if(pts.length<60&&Math.random()>.72) pts.push(new Pt(Math.random()*mc.width,mc.height+5)) }
-
-  // ════════════════════════════════════════
-  //  PETAL GAME
-  // ════════════════════════════════════════
-  const cv  = document.getElementById('petal-canvas');
-  const ctx = cv.getContext('2d');
-
-  // Posiciones desktop (pantalla ancha)
-  const PETAL_DEFS_DESK = [
-    {px:.18, py:.22},
-    {px:.54, py:.16},
-    {px:.82, py:.27},
-    {px:.30, py:.48},
-    {px:.68, py:.44},
-    {px:.15, py:.67},
-    {px:.58, py:.68},
-  ];
-  // Posiciones móvil: evitar la cabecera (top 28%) y la pista (bottom 12%)
-  const PETAL_DEFS_MOB = [
-    {px:.20, py:.33},
-    {px:.72, py:.30},
-    {px:.48, py:.44},
-    {px:.14, py:.57},
-    {px:.82, py:.54},
-    {px:.34, py:.71},
-    {px:.66, py:.73},
-  ];
-  const PETAL_DEFS  = isMobile ? PETAL_DEFS_MOB : PETAL_DEFS_DESK;
-  const PETAL_COUNT = PETAL_DEFS.length;
-
-  // Petal hues (pink-purple range)
-  const HUES = [310, 290, 325, 305, 315, 295, 320];
-
-  let petals = [];
-  let collected = 0;
-  let gameWon = false;
-  let t = 0;
-
-  class Petal {
-    constructor(def, hue, idx) {
-      this.baseX  = def.px * W + (Math.random()-.5)*W*.06;
-      this.baseY  = def.py * H + (Math.random()-.5)*H*.04;
-      this.x      = this.baseX;
-      this.y      = this.baseY;
-      this.hue    = hue;
-      this.idx    = idx;
-      this.size   = (isMobile ? 34 : 20) + Math.random()*10;
-      this.rot    = Math.random()*Math.PI*2;
-      this.rotSpd = (Math.random()-.5)*.008;
-      this.phase  = Math.random()*Math.PI*2;
-      this.alpha  = 0;
-      this.done   = false;
-    }
-
-    update(t) {
-      if(this.done) return;
-      if(this.alpha < 1) this.alpha = Math.min(1, this.alpha + .025);
-      this.x = this.baseX + Math.sin(t*.6 + this.phase)*12;
-      this.y = this.baseY + Math.sin(t*.4 + this.phase*1.4)*7;
-      this.rot += this.rotSpd;
-    }
-
-    draw() {
-      if(this.done || this.alpha <= 0) return;
-      const s = this.size;
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rot);
-
-      // Outer glow
-      ctx.shadowBlur  = 22;
-      ctx.shadowColor = `hsla(${this.hue}, 80%, 80%, .7)`;
-
-      // Petal body — teardrop bezier
-      const grad = ctx.createRadialGradient(0, -s*.25, s*.05, 0, 0, s);
-      grad.addColorStop(0,   `hsla(${this.hue+18}, 85%, 96%, 1)`);
-      grad.addColorStop(.45, `hsla(${this.hue},    78%, 82%, .95)`);
-      grad.addColorStop(1,   `hsla(${this.hue-12}, 65%, 66%, .15)`);
-
-      ctx.beginPath();
-      ctx.moveTo(0, -s);
-      ctx.bezierCurveTo( s*.58, -s*.65,  s*.58,  s*.28, 0,  s*.48);
-      ctx.bezierCurveTo(-s*.58,  s*.28, -s*.58, -s*.65, 0, -s);
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // Center shimmer line
-      ctx.beginPath();
-      ctx.moveTo(0, -s*.75);
-      ctx.lineTo(0,  s*.3);
-      ctx.strokeStyle = `hsla(${this.hue+30}, 90%, 97%, .35)`;
-      ctx.lineWidth   = .8;
-      ctx.setLineDash([]);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    isHit(px, py) {
-      return !this.done && Math.hypot(px - this.x, py - this.y) < this.size * (isMobile ? 1.9 : 1.5);
-    }
-  }
-
-  function buildPetals() {
-    petals = [];
-    collected = 0;
-    PETAL_DEFS.forEach((def, i) => petals.push(new Petal(def, HUES[i], i)));
-  }
-
-  // Progress bar
-  const pb = document.getElementById('progress-bar');
-  PETAL_DEFS.forEach((_,i)=>{
-    const d = document.createElement('div');
-    d.className='prog-petal'; d.id='pp-'+i; pb.appendChild(d);
-  });
-
-  function drawPetals() {
-    if(gameWon) return;
-    t += .025;
-    ctx.clearRect(0,0,W,H);
-    petals.forEach(p => { p.update(t); p.draw(); });
-    requestAnimationFrame(drawPetals);
-  }
-
-  // Touch / click
-  function handleTap(ex, ey) {
-    if(gameWon) return;
-    for(let i=0; i<petals.length; i++) {
-      const p = petals[i];
-      if(p.isHit(ex, ey)) {
-        p.done = true;
-        burst(p.x, p.y);
-        collected++;
-        const dot = document.getElementById('pp-'+i);
-        if(dot) dot.classList.add('lit');
-        if(collected >= PETAL_COUNT) setTimeout(win, 400);
-        return;
-      }
-    }
-  }
-
-  cv.addEventListener('mousedown', e => handleTap(e.clientX, e.clientY));
-  cv.addEventListener('touchstart', e => {
-    e.preventDefault();
-    handleTap(e.touches[0].clientX, e.touches[0].clientY);
-  }, {passive:false});
-
-  // Resize
-  function resize() {
-    W = sc.width = cv.width = mc.width = innerWidth;
-    H = sc.height = cv.height = mc.height = innerHeight;
-    if(!gameWon) buildPetals();
-  }
-  window.addEventListener('resize', resize);
-
-  // ════════════════════════════════════════
-  //  WIN
-  // ════════════════════════════════════════
-  const bgMusic  = document.getElementById('bg-music');
-  const gameScr  = document.getElementById('game-screen');
-  const hintEl   = document.getElementById('hint');
-  const bloomEl  = document.getElementById('bloom');
-  const revealEl = document.getElementById('reveal');
-
-  function win() {
-    gameWon = true;
-    bigBoom(W/2, H/2);
-    bgMusic.play().catch(()=>{});
-
-    gameScr.style.opacity = '0';
-    gameScr.style.transform = 'scale(.93)';
-    gameScr.style.pointerEvents = 'none';
-    hintEl.style.opacity = '0';
-
-    bloomEl.style.opacity = '1';
-    setTimeout(()=>{
-      bloomEl.style.opacity = '0';
-      revealEl.classList.add('on');
-      revealEl.style.pointerEvents = 'all';
-    }, 650);
-
-    setTimeout(()=>{
-      gameScr.style.display = 'none';
-      hintEl.style.display  = 'none';
-      cv.style.display      = 'none';
-      ctx.clearRect(0,0,W,H);
-    }, 1600);
-  }
-
-  // ════════════════════════════════════════
-  //  MAIN LOOP
-  // ════════════════════════════════════════
-  function mainLoop() {
-    const now = Date.now()*.001;
-    sct.clearRect(0,0,W,H);
-    drawSky(now);
-
-    mcx.clearRect(0,0,mc.width,mc.height);
-    amb();
-    for(let i=pts.length-1; i>=0; i--) {
-      pts[i].update();
-      if(pts[i].life<=0) pts.splice(i,1);
-      else pts[i].draw();
-    }
-    requestAnimationFrame(mainLoop);
-  }
-
-  // ════════════════════════════════════════
-  //  INIT
-  // ════════════════════════════════════════
-  resize();
-  mainLoop();
-  drawPetals();
-  </script>
+// ════════════ RESIZE + LOOP ════════════
+function resize(){W=sc.width=mc.width=innerWidth;H=sc.height=mc.height=innerHeight}
+window.addEventListener('resize',resize);
+function loop(){const now=Date.now()*.001;sct.clearRect(0,0,W,H);drawSky(now);mcx.clearRect(0,0,mc.width,mc.height);amb();for(let i=pts.length-1;i>=0;i--){pts[i].update();if(pts[i].life<=0)pts.splice(i,1);else pts[i].draw()}requestAnimationFrame(loop)}
+resize();updateUI();loop();
+</script>
 </body>
 </html>
