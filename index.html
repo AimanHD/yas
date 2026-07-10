@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Para ti, Yasmin ✨</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Dancing+Script:wght@600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Las mil maneras en que me amas ✦</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Dancing+Script:wght@600;700&family=Jost:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box }
 
@@ -13,253 +13,252 @@
       overflow:hidden;
       user-select:none;
       touch-action:manipulation;
-      font-family:'Jost', sans-serif;
-      background:#04030f;
+      font-family:'Cormorant Garamond', serif;
+      background:#080402;
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
 
     #star-canvas  { position:fixed; inset:0; z-index:0; display:block }
     #magic-canvas { position:fixed; inset:0; z-index:1; pointer-events:none; display:block }
 
-    /* ─── BOOK WRAP ─── */
+    /* ── BOOK WRAP ── */
     #book-wrap {
       position:fixed; inset:0; z-index:10;
       display:flex; align-items:center; justify-content:center;
-      padding:clamp(.6rem,1.8vh,1.5rem) clamp(.6rem,2vw,1.2rem);
+      padding:clamp(.5rem,1.5vh,1.4rem) clamp(.5rem,2vw,1.1rem);
     }
 
-    /* ─── BOOK CARD ─── */
+    /* ── BOOK CARD (parchment) ── */
     #book-card {
       position:relative;
-      width: min(500px, 95vw);
-      height: min(710px, 88vh);
-      background: rgba(11, 4, 22, 0.91);
-      border:1px solid rgba(195,135,215,.2);
-      border-radius:24px;
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
+      width:  min(490px, 95vw);
+      height: min(720px, 89vh);
+      background:
+        radial-gradient(ellipse at 18% 22%, rgba(180,130,60,.1)  0%, transparent 48%),
+        radial-gradient(ellipse at 82% 78%, rgba(150,100,40,.09) 0%, transparent 48%),
+        radial-gradient(ellipse at 50% 50%, rgba(200,160,90,.06) 0%, transparent 70%),
+        linear-gradient(158deg, #f7edda 0%, #eee0c4 38%, #f2e6cf 62%, #e9dabb 100%);
+      border:1px solid rgba(130,80,30,.35);
+      border-radius:6px;
       box-shadow:
-        0 0 80px rgba(150,70,210,.14),
-        0 28px 90px rgba(0,0,0,.62),
-        inset 0 1px 0 rgba(255,255,255,.05);
+        0 0 0 4px rgba(200,155,80,.12),
+        0 0 0 5px rgba(130,80,30,.18),
+        inset 0 0 60px rgba(120,70,20,.07),
+        0 28px 90px rgba(0,0,0,.68),
+        0 6px 20px rgba(0,0,0,.4);
       overflow:hidden;
     }
 
-    /* ─── CORNER FLOWERS ─── */
+    /* inner margin line (book frame) */
+    #book-card::before {
+      content:'';
+      position:absolute;
+      inset:10px;
+      border:1px solid rgba(130,80,30,.18);
+      border-radius:3px;
+      pointer-events:none;
+      z-index:6;
+    }
+
+    /* ── CORNER DECORATIONS ── */
     .corner {
       position:absolute;
-      width:clamp(80px,21vw,118px);
+      width:clamp(75px,19vw,108px);
       pointer-events:none;
-      z-index:5;
-      opacity:.88;
+      z-index:7;
+      opacity:.82;
     }
-    .corner.tl { top:0; left:0; }
-    .corner.tr { top:0; right:0; transform:scaleX(-1); }
-    .corner.bl { bottom:0; left:0; transform:scaleY(-1); }
-    .corner.br { bottom:0; right:0; transform:scale(-1,-1); }
+    .corner.tl { top:0;    left:0; }
+    .corner.tr { top:0;    right:0;  transform:scaleX(-1); }
+    .corner.bl { bottom:0; left:0;   transform:scaleY(-1); }
+    .corner.br { bottom:0; right:0;  transform:scale(-1,-1); }
 
-    /* ─── PAGES ─── */
+    /* ── PAGES ── */
     .page {
       position:absolute; inset:0;
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;
-      padding:clamp(1.8rem,4vw,2.8rem) clamp(1.6rem,5vw,3rem) 5rem;
+      padding:clamp(1.8rem,4vh,2.8rem) clamp(1.6rem,5vw,3rem) 5rem;
       opacity:0;
-      transform:translateY(18px);
-      transition:opacity .68s ease, transform .68s ease;
+      transform:translateY(14px);
+      transition:opacity .7s ease, transform .7s ease;
       pointer-events:none;
       z-index:2;
       text-align:center;
     }
     .page.active  { opacity:1; transform:translateY(0); pointer-events:auto }
-    .page.leaving { opacity:0; transform:translateY(-10px); transition:opacity .42s ease, transform .42s ease }
+    .page.leaving { opacity:0; transform:translateY(-10px); transition:opacity .4s ease, transform .4s ease }
 
     /* ══ COVER ══ */
-    .cover-label {
-      font-family:'Cormorant Garamond', serif;
-      font-style:italic;
-      font-size:clamp(1rem,2.8vw,1.3rem);
-      color:rgba(210,175,240,.62);
-      letter-spacing:.14em;
-      margin-bottom:.5rem;
+    .cover-pre {
+      font-style:italic; font-weight:300;
+      font-size:clamp(.88rem,2.5vw,1.05rem);
+      color:#7a4828; letter-spacing:.18em;
+      margin-bottom:.4rem;
     }
-    .cover-name {
+    .cover-orn {
+      display:flex; align-items:center; gap:.6rem;
+      margin:.7rem 0; width:min(240px,70%);
+    }
+    .cover-orn span { flex:1; height:1px; background:rgba(140,80,30,.3) }
+    .cover-orn em { font-style:normal; color:#a03048; font-size:.95rem }
+    .cover-title {
       font-family:'Dancing Script', cursive;
       font-weight:700;
-      font-size:clamp(3.8rem,14vw,5.8rem);
-      color:#f3e6ff;
-      text-shadow:0 0 35px rgba(200,130,255,.55), 0 0 80px rgba(160,80,220,.22), 0 3px 14px rgba(0,0,0,.85);
-      line-height:1.05;
-      margin-bottom:1.5rem;
+      font-size:clamp(2.4rem,10vw,3.8rem);
+      color:#3a1a10;
+      text-shadow:0 1px 3px rgba(80,30,10,.2);
+      line-height:1.15;
+      margin-bottom:.2rem;
     }
-    .cover-rule {
-      display:flex; align-items:center; gap:.75rem;
-      margin-bottom:1.4rem; width:min(250px,72%);
-    }
-    .cover-rule span { flex:1; height:1px; background:rgba(200,150,230,.22) }
-    .cover-rule em { font-style:normal; font-size:.88rem; color:rgba(200,150,230,.42); letter-spacing:.28em }
     .cover-sub {
-      font-family:'Cormorant Garamond', serif;
-      font-style:italic;
-      font-size:clamp(.9rem,2.5vw,1.1rem);
-      color:rgba(218,196,248,.55);
-      line-height:2;
+      font-style:italic; font-weight:300;
+      font-size:clamp(.85rem,2.4vw,1rem);
+      color:#7a4828; letter-spacing:.06em;
+      line-height:1.9; margin-top:1rem;
     }
+    .heart-deco { color:#b03050; font-size:1.1rem; letter-spacing:.35em; margin:.5rem 0 }
 
     /* ══ LIST PAGES ══ */
     .list-wrap { width:100%; text-align:left; }
-    .list-tag {
+    .list-hdr {
       display:flex; align-items:center; gap:.55rem;
-      font-size:.62rem; letter-spacing:.28em;
-      text-transform:uppercase; color:rgba(180,128,220,.38);
-      margin-bottom:clamp(.9rem,2.5vh,1.4rem);
+      font-size:.6rem; letter-spacing:.3em;
+      text-transform:uppercase; color:rgba(130,70,30,.55);
+      margin-bottom:clamp(.85rem,2.2vh,1.3rem);
     }
-    .list-tag::before, .list-tag::after {
-      content:''; flex:1; height:1px; background:rgba(180,128,220,.16);
+    .list-hdr::before, .list-hdr::after {
+      content:''; flex:1; height:1px; background:rgba(140,80,30,.22);
     }
     .list-item {
-      display:flex; align-items:baseline; gap:.75rem;
-      padding:clamp(.38rem,1.2vh,.58rem) 0;
-      border-bottom:1px solid rgba(185,135,225,.07);
+      display:flex; align-items:baseline; gap:.7rem;
+      padding:clamp(.35rem,1.1vh,.55rem) 0;
+      border-bottom:1px solid rgba(140,80,30,.1);
     }
     .list-item:last-child { border-bottom:none }
     .n {
-      font-family:'Cormorant Garamond', serif;
-      font-size:.7rem; color:rgba(195,150,242,.52);
-      min-width:1.5rem; text-align:right;
+      font-style:italic; font-weight:300;
+      font-size:.68rem; color:rgba(150,80,40,.6);
+      min-width:1.4rem; text-align:right;
       flex-shrink:0; letter-spacing:.04em;
     }
     .t {
-      font-family:'Cormorant Garamond', serif;
-      font-style:italic;
-      font-size:clamp(.97rem,3.3vw,1.26rem);
-      color:rgba(240,224,255,.9);
-      line-height:1.38;
+      font-style:italic; font-weight:400;
+      font-size:clamp(.95rem,3.2vw,1.22rem);
+      color:#2c1408; line-height:1.42;
     }
 
     /* ══ FINAL PAGE ══ */
     .page-final {
       background:
         linear-gradient(to bottom,
-          rgba(6,2,16,.92) 0%,
-          rgba(6,2,16,.48) 18%,
-          rgba(6,2,16,.4)  62%,
-          rgba(6,2,16,.94) 100%
+          rgba(4,2,10,.9) 0%, rgba(4,2,10,.45) 16%,
+          rgba(4,2,10,.38) 60%, rgba(4,2,10,.94) 100%
         ),
         url("ChatGPT Image 28 jun 2026, 21_19_50.png") center/cover no-repeat;
+      border-radius:4px;
     }
-    .final-box {
-      font-family:'Cormorant Garamond', serif;
-      font-style:italic;
-      font-size:clamp(.88rem,2.6vw,1.18rem);
-      color:#f0eaff;
-      line-height:1.92;
-      background:rgba(5,2,18,.72);
-      border:1px solid rgba(190,140,255,.17);
-      border-radius:14px;
-      padding:clamp(.9rem,2.8vw,1.35rem) clamp(1rem,3.5vw,1.8rem);
+    .final-scroll {
+      font-style:italic; font-weight:400;
+      font-size:clamp(.85rem,2.5vw,1.1rem);
+      color:#f0e8d8;
+      line-height:1.95;
+      background:rgba(8,4,2,.72);
+      border:1px solid rgba(200,160,100,.2);
+      border-radius:4px;
+      padding:clamp(.9rem,2.8vw,1.35rem) clamp(1rem,3.5vw,1.75rem);
       max-width:min(88vw,400px);
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
       margin-bottom:1rem;
+      text-align:center;
     }
     .final-love {
       font-family:'Dancing Script', cursive;
       font-weight:700;
-      font-size:clamp(2rem,7vw,3rem);
-      color:rgba(252,210,240,1);
-      text-shadow:0 0 30px rgba(220,120,180,.65), 0 2px 14px rgba(0,0,0,.88);
-      margin-bottom:.6rem;
+      font-size:clamp(2rem,8vw,3.2rem);
+      color:rgba(255,210,210,1);
+      text-shadow:0 0 28px rgba(220,80,100,.7), 0 2px 14px rgba(0,0,0,.88);
+      margin-bottom:.5rem;
     }
-    .final-div {
-      font-size:.82rem; letter-spacing:.48em;
-      color:rgba(218,192,255,.8);
-      text-shadow:0 0 12px rgba(180,130,255,.42);
-      margin-bottom:.25rem;
-    }
+    .final-hearts { color:rgba(220,130,140,.7); font-size:.9rem; letter-spacing:.45em; margin-bottom:.2rem }
     .final-name {
       font-family:'Dancing Script', cursive;
       font-weight:700;
-      font-size:clamp(2.5rem,10vw,4.6rem);
-      color:rgba(252,238,255,1);
-      text-shadow:0 2px 22px rgba(0,0,0,.92), 0 0 40px rgba(210,140,255,.58), 0 0 80px rgba(185,110,255,.2);
-      margin-top:.2rem;
+      font-size:clamp(2.3rem,9vw,4.2rem);
+      color:rgba(255,240,230,1);
+      text-shadow:0 2px 22px rgba(0,0,0,.92), 0 0 40px rgba(240,160,120,.45);
+      margin-top:.15rem;
     }
 
-    /* ─── NAVIGATION ─── */
+    /* ── NAV ── */
     #book-nav {
-      position:absolute; bottom:0; left:0; right:0;
-      z-index:8;
+      position:absolute; bottom:0; left:0; right:0; z-index:8;
       display:flex; align-items:center; justify-content:space-between;
-      padding:.8rem clamp(1rem,4vw,1.6rem) clamp(.85rem,2.5vw,1.1rem);
-      background:linear-gradient(to top, rgba(6,2,18,.78) 0%, transparent 100%);
+      padding:.78rem clamp(1rem,4vw,1.55rem) clamp(.82rem,2.5vw,1.05rem);
+      background:linear-gradient(to top, rgba(235,220,195,.92) 0%, rgba(235,220,195,0) 100%);
     }
-    #dots { display:flex; gap:6px; align-items:center; flex-wrap:wrap; max-width:55% }
+    #dots { display:flex; gap:6px; align-items:center; flex-wrap:wrap; max-width:52% }
     .dot {
       width:6px; height:6px; border-radius:50%;
-      background:rgba(175,125,218,.24);
-      border:1px solid rgba(175,125,218,.36);
+      background:rgba(140,70,30,.22);
+      border:1px solid rgba(140,70,30,.35);
       transition:all .38s; cursor:pointer; flex-shrink:0;
     }
     .dot.on {
-      background:rgba(212,160,244,.92);
-      border-color:rgba(228,192,255,.9);
-      box-shadow:0 0 8px rgba(200,140,255,.68);
-      transform:scale(1.3);
+      background:rgba(160,40,60,.8);
+      border-color:rgba(180,60,80,.9);
+      box-shadow:0 0 7px rgba(180,50,70,.55);
+      transform:scale(1.32);
     }
     .nav-btn {
-      display:flex; align-items:center; gap:.4rem;
-      font-family:'Jost', sans-serif;
-      font-size:.72rem; font-weight:500;
-      letter-spacing:.13em; text-transform:uppercase;
-      border-radius:50px; cursor:pointer;
-      transition:all .26s; white-space:nowrap;
+      font-family:'Cormorant Garamond', serif;
+      font-style:italic;
+      font-size:clamp(.82rem,2.5vw,.96rem);
+      letter-spacing:.1em;
+      border-radius:3px; cursor:pointer;
+      transition:all .25s; white-space:nowrap;
     }
     #btn-prev {
       background:transparent;
-      border:1px solid rgba(175,125,215,.2);
-      color:rgba(200,160,240,.52);
-      padding:.48rem 1.05rem;
+      border:1px solid rgba(140,70,30,.28);
+      color:rgba(120,60,20,.6);
+      padding:.46rem 1rem;
     }
-    #btn-prev:hover { border-color:rgba(200,158,250,.38); color:rgba(220,185,255,.82) }
+    #btn-prev:hover { border-color:rgba(150,80,30,.45); color:rgba(130,60,20,.85) }
     #btn-next {
-      background:linear-gradient(135deg,rgba(155,55,128,.88),rgba(105,45,178,.88));
-      border:1px solid rgba(210,148,232,.26);
-      color:#f0deff;
-      padding:.54rem 1.35rem;
-      box-shadow:0 4px 18px rgba(135,55,200,.3);
+      background:linear-gradient(135deg,rgba(160,40,55,.9),rgba(120,30,40,.9));
+      border:1px solid rgba(200,100,100,.25);
+      color:#fae8e8;
+      padding:.5rem 1.3rem;
+      box-shadow:0 3px 14px rgba(140,30,40,.3);
     }
-    #btn-next:hover {
-      background:linear-gradient(135deg,rgba(175,75,148,.92),rgba(125,65,198,.92));
-      box-shadow:0 6px 26px rgba(160,75,225,.44);
-      transform:translateY(-1px);
-    }
+    #btn-next:hover { background:linear-gradient(135deg,rgba(180,55,70,.92),rgba(140,40,55,.92)); box-shadow:0 5px 20px rgba(160,40,55,.42); transform:translateY(-1px) }
     #btn-next:active { transform:translateY(0) }
     .nav-btn.hidden { opacity:0; pointer-events:none }
 
-    /* ─── MOBILE ─── */
+    /* ── MOBILE ── */
     @media(max-width:480px){
-      .corner   { width:clamp(72px,22vw,98px) }
-      .page     { padding:1.6rem 1.45rem 4.6rem }
-      .cover-name { font-size:clamp(3.4rem,16vw,4.8rem) }
-      .t        { font-size:clamp(.92rem,4vw,1.12rem) }
-      .final-box{ font-size:clamp(.82rem,3.4vw,.96rem); padding:.82rem 1rem }
-      .final-name{ font-size:clamp(2.2rem,12vw,3rem) }
-      .final-love{ font-size:clamp(1.75rem,8vw,2.4rem) }
-      #book-nav { padding:.68rem .95rem .82rem }
-      .nav-btn  { font-size:.66rem; padding:.44rem .92rem }
+      .corner { width:clamp(65px,21vw,90px) }
+      .page   { padding:1.6rem 1.4rem 4.5rem }
+      .cover-title { font-size:clamp(2.1rem,12vw,3rem) }
+      .t      { font-size:clamp(.88rem,4vw,1.08rem) }
+      .final-scroll { font-size:clamp(.8rem,3.3vw,.92rem); padding:.8rem .95rem }
+      .final-love  { font-size:clamp(1.7rem,9vw,2.4rem) }
+      .final-name  { font-size:clamp(2rem,11vw,2.8rem) }
+      #book-nav    { padding:.65rem .9rem .78rem }
+      .nav-btn     { font-size:.78rem; padding:.42rem .88rem }
     }
     @media(max-width:360px){
-      .corner { width:68px }
-      .page   { padding:1.4rem 1.2rem 4.4rem }
-      .t      { font-size:.88rem }
+      .corner { width:60px }
+      .page   { padding:1.4rem 1.15rem 4.3rem }
+      .t      { font-size:.84rem }
     }
   </style>
 </head>
 <body>
 
-<audio id="bg-music" loop>
+<audio id="bg-music" loop preload="auto">
   <source src="audio/cancion.mp3" type="audio/mpeg">
   <source src="audio/cancion.wav" type="audio/wav">
 </audio>
@@ -270,159 +269,143 @@
 <div id="book-wrap">
   <div id="book-card">
 
-    <!-- Corner flowers (CSS mirrors for TR/BL/BR) -->
-    <svg class="corner tl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
-      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
-      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
-      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
-      <g transform="translate(35,80)">
-        <ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/>
-        <ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/>
-        <ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/>
-        <ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/>
-        <ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/>
-        <circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/>
+    <!-- Corner heart ornaments (CSS mirrors TR/BL/BR) -->
+    <svg class="corner tl" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 107 Q18 84 38 66 Q60 46 80 28 Q96 13 107 3" stroke="#8B5030" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".5"/>
+      <path d="M28 84 Q15 73 26 67 Q37 61 37 74 Q33 83 28 84Z" fill="#6B7A3A" opacity=".6"/>
+      <path d="M60 52 Q48 41 58 35 Q68 29 68 42 Q64 52 60 52Z" fill="#6B7A3A" opacity=".58"/>
+      <path d="M88 25 Q78 15 86 9 Q96 3 96 15 Q92 25 88 25Z" fill="#6B7A3A" opacity=".56"/>
+      <!-- Heart at tip -->
+      <g transform="translate(100,8) scale(1.1)">
+        <path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C03050" opacity=".88"/>
       </g>
-      <g transform="translate(52,63) rotate(-28)">
-        <ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/>
-        <path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/>
+      <!-- Small heart mid -->
+      <g transform="translate(68,42) scale(.9)">
+        <path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#B84060" opacity=".78"/>
       </g>
-      <g transform="translate(75,44)">
-        <ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/>
-        <ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/>
-        <ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/>
-        <ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/>
-        <ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/>
-        <circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/>
+      <!-- Tiny heart low -->
+      <g transform="translate(38,72) scale(.75)">
+        <path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C85068" opacity=".7"/>
       </g>
-      <g transform="translate(108,13)">
-        <ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/>
-        <ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/>
-        <ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/>
-        <ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/>
-        <ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/>
-        <circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/>
-      </g>
-      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/>
-      <circle cx="90" cy="29"  r="1.4" fill="#C090E0" opacity=".4"/>
+      <circle cx="12" cy="100" r="1.6" fill="#C06080" opacity=".4"/>
+      <circle cx="52" cy="62"  r="1.2" fill="#A05040" opacity=".38"/>
     </svg>
-    <svg class="corner tr" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
-      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
-      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
-      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
-      <g transform="translate(35,80)"><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/><circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/></g>
-      <g transform="translate(52,63) rotate(-28)"><ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/><path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/></g>
-      <g transform="translate(75,44)"><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/><circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/></g>
-      <g transform="translate(108,13)"><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/><circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/></g>
-      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/><circle cx="90" cy="29" r="1.4" fill="#C090E0" opacity=".4"/>
+    <svg class="corner tr" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 107 Q18 84 38 66 Q60 46 80 28 Q96 13 107 3" stroke="#8B5030" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".5"/>
+      <path d="M28 84 Q15 73 26 67 Q37 61 37 74 Q33 83 28 84Z" fill="#6B7A3A" opacity=".6"/>
+      <path d="M60 52 Q48 41 58 35 Q68 29 68 42 Q64 52 60 52Z" fill="#6B7A3A" opacity=".58"/>
+      <path d="M88 25 Q78 15 86 9 Q96 3 96 15 Q92 25 88 25Z" fill="#6B7A3A" opacity=".56"/>
+      <g transform="translate(100,8) scale(1.1)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C03050" opacity=".88"/></g>
+      <g transform="translate(68,42) scale(.9)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#B84060" opacity=".78"/></g>
+      <g transform="translate(38,72) scale(.75)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C85068" opacity=".7"/></g>
+      <circle cx="12" cy="100" r="1.6" fill="#C06080" opacity=".4"/><circle cx="52" cy="62" r="1.2" fill="#A05040" opacity=".38"/>
     </svg>
-    <svg class="corner bl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
-      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
-      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
-      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
-      <g transform="translate(35,80)"><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/><circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/></g>
-      <g transform="translate(52,63) rotate(-28)"><ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/><path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/></g>
-      <g transform="translate(75,44)"><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/><circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/></g>
-      <g transform="translate(108,13)"><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/><circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/></g>
-      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/><circle cx="90" cy="29" r="1.4" fill="#C090E0" opacity=".4"/>
+    <svg class="corner bl" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 107 Q18 84 38 66 Q60 46 80 28 Q96 13 107 3" stroke="#8B5030" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".5"/>
+      <path d="M28 84 Q15 73 26 67 Q37 61 37 74 Q33 83 28 84Z" fill="#6B7A3A" opacity=".6"/>
+      <path d="M60 52 Q48 41 58 35 Q68 29 68 42 Q64 52 60 52Z" fill="#6B7A3A" opacity=".58"/>
+      <path d="M88 25 Q78 15 86 9 Q96 3 96 15 Q92 25 88 25Z" fill="#6B7A3A" opacity=".56"/>
+      <g transform="translate(100,8) scale(1.1)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C03050" opacity=".88"/></g>
+      <g transform="translate(68,42) scale(.9)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#B84060" opacity=".78"/></g>
+      <g transform="translate(38,72) scale(.75)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C85068" opacity=".7"/></g>
+      <circle cx="12" cy="100" r="1.6" fill="#C06080" opacity=".4"/><circle cx="52" cy="62" r="1.2" fill="#A05040" opacity=".38"/>
     </svg>
-    <svg class="corner br" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 116 Q22 92 42 72 Q64 50 84 30 Q104 12 116 4" stroke="#7A4868" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".56"/>
-      <path d="M32 87 Q19 76 29 70 Q40 64 40 77 Q36 86 32 87Z" fill="#5E3856" opacity=".68"/>
-      <path d="M65 54 Q52 43 62 37 Q73 31 73 44 Q69 54 65 54Z" fill="#5E3856" opacity=".66"/>
-      <path d="M98 22 Q87 11 96 6 Q107 1 107 13 Q103 22 98 22Z" fill="#5E3856" opacity=".64"/>
-      <g transform="translate(35,80)"><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(0)   translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(72)  translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(144) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#DC72A0" opacity=".87" transform="rotate(216) translate(0,-7)"/><ellipse rx="5" ry="8.5" fill="#C45880" opacity=".87" transform="rotate(288) translate(0,-7)"/><circle r="4.5" fill="#C87818"/><circle r="2.5" fill="#EAA030"/></g>
-      <g transform="translate(52,63) rotate(-28)"><ellipse rx="3.5" ry="5.8" fill="#AE4272" opacity=".78"/><path d="M-2.5,-3.5 Q0,-8 2.5,-3.5" fill="#CE6898" opacity=".78"/></g>
-      <g transform="translate(75,44)"><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(12)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(84)  translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(156) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#C260A8" opacity=".87" transform="rotate(228) translate(0,-8)"/><ellipse rx="6" ry="9.5" fill="#A03878" opacity=".87" transform="rotate(300) translate(0,-8)"/><circle r="4.8" fill="#C87818"/><circle r="2.7" fill="#EAA030"/></g>
-      <g transform="translate(108,13)"><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(0)   translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(72)  translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(144) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#AA62D0" opacity=".85" transform="rotate(216) translate(0,-6)"/><ellipse rx="4.5" ry="7.5" fill="#8840B0" opacity=".85" transform="rotate(288) translate(0,-6)"/><circle r="4" fill="#C87818"/><circle r="2.2" fill="#EAA030"/></g>
-      <circle cx="14" cy="110" r="1.8" fill="#D890C0" opacity=".46"/><circle cx="90" cy="29" r="1.4" fill="#C090E0" opacity=".4"/>
+    <svg class="corner br" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 107 Q18 84 38 66 Q60 46 80 28 Q96 13 107 3" stroke="#8B5030" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".5"/>
+      <path d="M28 84 Q15 73 26 67 Q37 61 37 74 Q33 83 28 84Z" fill="#6B7A3A" opacity=".6"/>
+      <path d="M60 52 Q48 41 58 35 Q68 29 68 42 Q64 52 60 52Z" fill="#6B7A3A" opacity=".58"/>
+      <path d="M88 25 Q78 15 86 9 Q96 3 96 15 Q92 25 88 25Z" fill="#6B7A3A" opacity=".56"/>
+      <g transform="translate(100,8) scale(1.1)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C03050" opacity=".88"/></g>
+      <g transform="translate(68,42) scale(.9)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#B84060" opacity=".78"/></g>
+      <g transform="translate(38,72) scale(.75)"><path d="M0,0 C-1,-3 -6,-2.5 -6,1 C-6,4.5 0,8 0,8 C0,8 6,4.5 6,1 C6,-2.5 1,-3 0,0Z" fill="#C85068" opacity=".7"/></g>
+      <circle cx="12" cy="100" r="1.6" fill="#C06080" opacity=".4"/><circle cx="52" cy="62" r="1.2" fill="#A05040" opacity=".38"/>
     </svg>
 
-    <!-- ══════ PÁGINA 0 — PORTADA ══════ -->
+    <!-- ══ PORTADA ══ -->
     <div class="page active" id="p0">
-      <div class="cover-label">Para ti,</div>
-      <div class="cover-name">Yasmin</div>
-      <div class="cover-rule"><span></span><em>✦</em><span></span></div>
-      <div class="cover-sub">
-        Todo lo que me encantas,<br>
-        en orden, sin olvidar nada.
+      <div class="cover-pre">un libro de amor para</div>
+      <div class="cover-title">Yasmin</div>
+      <div class="cover-orn"><span></span><em>♥</em><span></span></div>
+      <div class="cover-pre" style="font-size:clamp(1rem,2.8vw,1.2rem); color:#3a1a10; letter-spacing:.06em; line-height:1.6">
+        <em>Las mil maneras<br>en que me amas</em>
       </div>
+      <div class="cover-orn" style="margin-top:.9rem"><span></span><em>♥</em><span></span></div>
+      <div class="cover-sub">y todo lo que aprecio de ellas</div>
     </div>
 
-    <!-- ══════ PÁGINA 1 — 1 a 5 ══════ -->
+    <!-- ══ PÁGINA 1 — 1 a 5 ══ -->
     <div class="page" id="p1">
       <div class="list-wrap">
-        <div class="list-tag">Lo que me encanta de ti</div>
-        <div class="list-item"><span class="n">01</span><span class="t">Tus ojos</span></div>
-        <div class="list-item"><span class="n">02</span><span class="t">Tu nombre</span></div>
-        <div class="list-item"><span class="n">03</span><span class="t">Tú siendo graciosa</span></div>
-        <div class="list-item"><span class="n">04</span><span class="t">Tu mirada</span></div>
-        <div class="list-item"><span class="n">05</span><span class="t">Tu voz</span></div>
+        <div class="list-hdr">aprecio tu amor por&hellip;</div>
+        <div class="list-item"><span class="n">01</span><span class="t">Tu atención</span></div>
+        <div class="list-item"><span class="n">02</span><span class="t">El interés que pones al escucharme</span></div>
+        <div class="list-item"><span class="n">03</span><span class="t">Al mirarme desinteresadamente, solo por la manera en que te trato</span></div>
+        <div class="list-item"><span class="n">04</span><span class="t">Por darme el placer de mantener contacto físico contigo</span></div>
+        <div class="list-item"><span class="n">05</span><span class="t">Ver que puedes dormir profundamente conmigo</span></div>
       </div>
     </div>
 
-    <!-- ══════ PÁGINA 2 — 6 a 10 ══════ -->
+    <!-- ══ PÁGINA 2 — 6 a 10 ══ -->
     <div class="page" id="p2">
       <div class="list-wrap">
-        <div class="list-tag">continúa&hellip;</div>
-        <div class="list-item"><span class="n">06</span><span class="t">Tu cariño</span></div>
-        <div class="list-item"><span class="n">07</span><span class="t">Tu atención</span></div>
-        <div class="list-item"><span class="n">08</span><span class="t">Tus manos encajadas con las mías</span></div>
-        <div class="list-item"><span class="n">09</span><span class="t">Tú cuando te emocionas</span></div>
-        <div class="list-item"><span class="n">10</span><span class="t">Tú con tus galletitas</span></div>
+        <div class="list-hdr">continúa&hellip;</div>
+        <div class="list-item"><span class="n">06</span><span class="t">Verte tararear y contenta conmigo</span></div>
+        <div class="list-item"><span class="n">07</span><span class="t">Escuchar tu vocecita linda sin que te enteres que estás entonando más fino</span></div>
+        <div class="list-item"><span class="n">08</span><span class="t">Tus mensajitos</span></div>
+        <div class="list-item"><span class="n">09</span><span class="t">Por preocuparte por mí</span></div>
+        <div class="list-item"><span class="n">10</span><span class="t">Por saber cómo me encuentro</span></div>
       </div>
     </div>
 
-    <!-- ══════ PÁGINA 3 — 11 a 15 ══════ -->
+    <!-- ══ PÁGINA 3 — 11 a 15 ══ -->
     <div class="page" id="p3">
       <div class="list-wrap">
-        <div class="list-tag">continúa&hellip;</div>
-        <div class="list-item"><span class="n">11</span><span class="t">Tú con aguita</span></div>
-        <div class="list-item"><span class="n">12</span><span class="t">Tú con hamburguesita</span></div>
-        <div class="list-item"><span class="n">13</span><span class="t">Tu culo</span></div>
-        <div class="list-item"><span class="n">14</span><span class="t">Tus labios</span></div>
-        <div class="list-item"><span class="n">15</span><span class="t">Tú conduciendo</span></div>
+        <div class="list-hdr">continúa&hellip;</div>
+        <div class="list-item"><span class="n">11</span><span class="t">Por invitarme junto a ti a Alicante</span></div>
+        <div class="list-item"><span class="n">12</span><span class="t">Por confiar en mí dejándome conducir por ti</span></div>
+        <div class="list-item"><span class="n">13</span><span class="t">Llevarte de la manita</span></div>
+        <div class="list-item"><span class="n">14</span><span class="t">Que me recibas en tu casa</span></div>
+        <div class="list-item"><span class="n">15</span><span class="t">Que casualmente te lleve al restaurante que tú deseabas</span></div>
       </div>
     </div>
 
-    <!-- ══════ PÁGINA 4 — 16 a 19 ══════ -->
+    <!-- ══ PÁGINA 4 — 16 a 19 ══ -->
     <div class="page" id="p4">
       <div class="list-wrap">
-        <div class="list-tag">continúa&hellip;</div>
-        <div class="list-item"><span class="n">16</span><span class="t">Tú cuando me miras</span></div>
-        <div class="list-item"><span class="n">17</span><span class="t">Tú cuando me acaricias</span></div>
-        <div class="list-item"><span class="n">18</span><span class="t">Tú diciéndome que te gustó</span></div>
-        <div class="list-item"><span class="n">19</span><span class="t">Tú nadando</span></div>
+        <div class="list-hdr">continúa&hellip;</div>
+        <div class="list-item"><span class="n">16</span><span class="t">Que me agradezcas todos y cada uno de mis detalles</span></div>
+        <div class="list-item"><span class="n">17</span><span class="t">Que seas feliz de tenerme</span></div>
+        <div class="list-item"><span class="n">18</span><span class="t">Que me digas que quieres ser mi mujer</span></div>
+        <div class="list-item"><span class="n">19</span><span class="t">Que quieras tener una familia y una casa conmigo</span></div>
       </div>
     </div>
 
-    <!-- ══════ PÁGINA 5 — 20 a 22 ══════ -->
+    <!-- ══ PÁGINA 5 — 20 a 22 ══ -->
     <div class="page" id="p5">
       <div class="list-wrap">
-        <div class="list-tag">y para terminar&hellip;</div>
-        <div class="list-item"><span class="n">20</span><span class="t">Tú contenta</span></div>
-        <div class="list-item"><span class="n">21</span><span class="t">Tú despeinada</span></div>
-        <div class="list-item"><span class="n">22</span><span class="t">Tú arreglada</span></div>
+        <div class="list-hdr">y para terminar&hellip;</div>
+        <div class="list-item"><span class="n">20</span><span class="t">Que estés feliz leyendo y escuchando mis cartas y escritos</span></div>
+        <div class="list-item"><span class="n">21</span><span class="t">Que te alegres cada mañana con mis mensajes</span></div>
+        <div class="list-item"><span class="n">22</span><span class="t">Que me ames a tu manera, pero lo haces</span></div>
       </div>
     </div>
 
-    <!-- ══════ PÁGINA 6 — FINAL ══════ -->
+    <!-- ══ PÁGINA FINAL ══ -->
     <div class="page page-final" id="p6">
-      <div class="final-box">
-        Simplemente <em>tú</em> me encantas,<br>
-        de todas y cada una de las formas<br>
-        en las que existas o estés existiendo.<br>
-        Ante mis ojos, siempre serás la mejor.
+      <div class="final-scroll">
+        Simplemente, <em>gracias.</em><br><br>
+        Que sepas que no eres la mejor,
+        porque decirte que eres la mejor
+        quiere decir que hay comparación contigo,
+        y no hay ninguna que te llegue a competir.<br><br>
+        <strong>Eres única.</strong>
       </div>
-      <div class="final-love">te quiero</div>
-      <div class="final-div">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <div class="final-love">te amo</div>
+      <div class="final-hearts">♥ &nbsp; ♥ &nbsp; ♥</div>
       <div class="final-name">Yasmin</div>
     </div>
 
-    <!-- ══ NAV ══ -->
+    <!-- NAV -->
     <div id="book-nav">
       <button class="nav-btn hidden" id="btn-prev">← Volver</button>
       <div id="dots"></div>
@@ -433,30 +416,37 @@
 </div>
 
 <script>
-// ════════════ STARFIELD ════════════
+// ════════ STARFIELD (tonos cálidos) ════════
 const sc=document.getElementById('star-canvas'),sct=sc.getContext('2d');
 let W,H;
-const STARS=(()=>{let s=42;const r=()=>{s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/0xffffffff};return Array.from({length:200},()=>({px:r(),py:r(),r:r()*1.3+0.3,a:r()*0.5+0.3,ts:r()*0.011+0.004,to:r()*Math.PI*2,col:r()>.85?'#d0c0ff':(r()>.7?'#ffe8f0':'#ffffff')}))})();
+const STARS=(()=>{let s=77;const r=()=>{s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/0xffffffff};return Array.from({length:180},()=>({px:r(),py:r(),r:r()*1.2+0.25,a:r()*0.45+0.28,ts:r()*0.01+0.003,to:r()*Math.PI*2,col:r()>.8?'#ffd8a0':(r()>.6?'#ffe0d0':'#fff8f0')}))})();
 const shooters=[];
-function spawnShooter(){if(Math.random()>.007)return;const a=Math.PI/6+Math.random()*Math.PI/6;shooters.push({x:Math.random()*W,y:Math.random()*H*.3,len:80+Math.random()*110,speed:8+Math.random()*9,vx:Math.cos(a),vy:Math.sin(a),life:1,decay:.018+Math.random()*.012})}
-function drawSky(now){const bg=sct.createRadialGradient(W*.35,H*.25,0,W*.5,H*.5,Math.max(W,H)*.85);bg.addColorStop(0,'#0e0828');bg.addColorStop(.5,'#06041a');bg.addColorStop(1,'#04030f');sct.fillStyle=bg;sct.fillRect(0,0,W,H);[{x:.22,y:.28,rx:.55,ry:.32,c:'rgba(90,50,180,.13)'},{x:.72,y:.68,rx:.48,ry:.35,c:'rgba(160,50,110,.1)'},{x:.5,y:.1,rx:.4,ry:.28,c:'rgba(50,70,200,.08)'}].forEach(n=>{const g=sct.createRadialGradient(n.x*W,n.y*H,0,n.x*W,n.y*H,Math.max(W,H)*Math.max(n.rx,n.ry));g.addColorStop(0,n.c);g.addColorStop(1,'rgba(0,0,0,0)');sct.fillStyle=g;sct.beginPath();sct.ellipse(n.x*W,n.y*H,n.rx*W,n.ry*H,0,0,Math.PI*2);sct.fill()});STARS.forEach(s=>{const alpha=s.a*(.65+.35*Math.sin(now*s.ts*60+s.to));sct.globalAlpha=Math.max(0,alpha);sct.shadowBlur=s.r>1.2?7:0;sct.shadowColor=s.col;sct.fillStyle=s.col;sct.beginPath();sct.arc(s.px*W,s.py*H,s.r,0,Math.PI*2);sct.fill();sct.globalAlpha=1;sct.shadowBlur=0});spawnShooter();for(let i=shooters.length-1;i>=0;i--){const sh=shooters[i];const tail=sct.createLinearGradient(sh.x,sh.y,sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);tail.addColorStop(0,`rgba(220,210,255,${sh.life*.8})`);tail.addColorStop(.4,`rgba(180,160,255,${sh.life*.28})`);tail.addColorStop(1,'rgba(0,0,0,0)');sct.beginPath();sct.moveTo(sh.x,sh.y);sct.lineTo(sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);sct.strokeStyle=tail;sct.lineWidth=1.5;sct.stroke();sh.x+=sh.vx*sh.speed;sh.y+=sh.vy*sh.speed;sh.life-=sh.decay;if(sh.life<=0||sh.x>W+50||sh.y>H+50)shooters.splice(i,1)}}
+function spawnShooter(){if(Math.random()>.006)return;const a=Math.PI/6+Math.random()*Math.PI/5;shooters.push({x:Math.random()*W,y:Math.random()*H*.3,len:70+Math.random()*100,speed:7+Math.random()*8,vx:Math.cos(a),vy:Math.sin(a),life:1,decay:.02+Math.random()*.012})}
+function drawSky(now){
+  const bg=sct.createRadialGradient(W*.4,H*.3,0,W*.5,H*.5,Math.max(W,H)*.85);
+  bg.addColorStop(0,'#1a0c06');bg.addColorStop(.5,'#0d0604');bg.addColorStop(1,'#080402');
+  sct.fillStyle=bg;sct.fillRect(0,0,W,H);
+  [{x:.25,y:.3,rx:.5,ry:.3,c:'rgba(120,55,20,.16)'},{x:.7,y:.65,rx:.45,ry:.32,c:'rgba(100,35,30,.13)'},{x:.5,y:.1,rx:.38,ry:.25,c:'rgba(80,50,15,.1)'}].forEach(n=>{const g=sct.createRadialGradient(n.x*W,n.y*H,0,n.x*W,n.y*H,Math.max(W,H)*Math.max(n.rx,n.ry));g.addColorStop(0,n.c);g.addColorStop(1,'rgba(0,0,0,0)');sct.fillStyle=g;sct.beginPath();sct.ellipse(n.x*W,n.y*H,n.rx*W,n.ry*H,0,0,Math.PI*2);sct.fill()});
+  STARS.forEach(s=>{const alpha=s.a*(.65+.35*Math.sin(now*s.ts*60+s.to));sct.globalAlpha=Math.max(0,alpha);sct.shadowBlur=s.r>1?6:0;sct.shadowColor=s.col;sct.fillStyle=s.col;sct.beginPath();sct.arc(s.px*W,s.py*H,s.r,0,Math.PI*2);sct.fill();sct.globalAlpha=1;sct.shadowBlur=0});
+  spawnShooter();
+  for(let i=shooters.length-1;i>=0;i--){const sh=shooters[i];const tail=sct.createLinearGradient(sh.x,sh.y,sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);tail.addColorStop(0,`rgba(255,220,180,${sh.life*.75})`);tail.addColorStop(.4,`rgba(220,170,130,${sh.life*.25})`);tail.addColorStop(1,'rgba(0,0,0,0)');sct.beginPath();sct.moveTo(sh.x,sh.y);sct.lineTo(sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);sct.strokeStyle=tail;sct.lineWidth=1.4;sct.stroke();sh.x+=sh.vx*sh.speed;sh.y+=sh.vy*sh.speed;sh.life-=sh.decay;if(sh.life<=0||sh.x>W+50||sh.y>H+50)shooters.splice(i,1)}
+}
 
-// ════════════ PARTICLES ════════════
+// ════════ PARTICLES ════════
 const mc=document.getElementById('magic-canvas'),mcx=mc.getContext('2d');
-const pCl=['#c090ff','#e0c0ff','#fff','#f0c0e8','#d0a0ff'];
+const pCl=['#ffd8a0','#ffe0c0','#fff8f0','#ffc0a8'];
 let pts=[];
 function hx(h){const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:[255,255,255]}
-class Pt{constructor(x,y){this.x=x;this.y=y;this.r=Math.random()*1.8+.4;this.c=pCl[Math.floor(Math.random()*pCl.length)];const a=Math.random()*Math.PI*2,sp=Math.random()*.5+.1;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.life=1;this.decay=Math.random()*.003+.0015}update(){this.x+=this.vx;this.y+=this.vy;this.vx+=(Math.random()-.5)*.06;this.life-=this.decay}draw(){mcx.beginPath();mcx.arc(this.x,this.y,this.r,0,Math.PI*2);const[r,g,b]=hx(this.c);mcx.fillStyle=`rgba(${r},${g},${b},${Math.max(0,this.life)})`;mcx.fill()}}
-function amb(){if(pts.length<50&&Math.random()>.75)pts.push(new Pt(Math.random()*mc.width,mc.height+5))}
+class Pt{constructor(x,y){this.x=x;this.y=y;this.r=Math.random()*1.5+.3;this.c=pCl[Math.floor(Math.random()*pCl.length)];const a=Math.random()*Math.PI*2;this.vx=Math.cos(a)*.4;this.vy=Math.sin(a)*.4;this.life=1;this.decay=Math.random()*.003+.0012}update(){this.x+=this.vx;this.y+=this.vy;this.vx+=(Math.random()-.5)*.05;this.life-=this.decay}draw(){mcx.beginPath();mcx.arc(this.x,this.y,this.r,0,Math.PI*2);const[r,g,b]=hx(this.c);mcx.fillStyle=`rgba(${r},${g},${b},${Math.max(0,this.life)})`;mcx.fill()}}
+function amb(){if(pts.length<40&&Math.random()>.78)pts.push(new Pt(Math.random()*mc.width,mc.height+5))}
 
-// ════════════ NAVIGATION ════════════
+// ════════ NAVEGACIÓN ════════
 const PAGES=document.querySelectorAll('.page');
 const TOTAL=PAGES.length;
 const btnNext=document.getElementById('btn-next');
 const btnPrev=document.getElementById('btn-prev');
 const dotsEl=document.getElementById('dots');
-const bgMusic=document.getElementById('bg-music');
-let cur=0,musicPlayed=false;
+let cur=0;
 
 for(let i=0;i<TOTAL;i++){const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.addEventListener('click',()=>goTo(i));dotsEl.appendChild(d)}
 
@@ -464,11 +454,10 @@ function updateUI(){document.querySelectorAll('.dot').forEach((d,i)=>d.classList
 
 function goTo(n){
   if(n===cur||n<0||n>=TOTAL)return;
-  if(!musicPlayed){bgMusic.play().catch(()=>{});musicPlayed=true}
   PAGES[cur].classList.remove('active');
   PAGES[cur].classList.add('leaving');
   const prev=cur;cur=n;
-  setTimeout(()=>PAGES[prev].classList.remove('leaving'),480);
+  setTimeout(()=>PAGES[prev].classList.remove('leaving'),460);
   setTimeout(()=>{PAGES[cur].classList.add('active');updateUI()},55);
 }
 
@@ -479,9 +468,16 @@ btnPrev.addEventListener('click',()=>goTo(cur-1));
 let tx=0,ty=0;
 const card=document.getElementById('book-card');
 card.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
-card.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>42){dx<0?goTo(cur+1):goTo(cur-1)}},{passive:true});
+card.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){dx<0?goTo(cur+1):goTo(cur-1)}},{passive:true});
 
-// ════════════ RESIZE + LOOP ════════════
+// ════════ MÚSICA (autoplay + fallback) ════════
+const bgMusic=document.getElementById('bg-music');
+bgMusic.volume=0.75;
+function tryPlay(){bgMusic.play().catch(()=>{})}
+tryPlay();
+['click','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,tryPlay,{once:true}));
+
+// ════════ RESIZE + LOOP ════════
 function resize(){W=sc.width=mc.width=innerWidth;H=sc.height=mc.height=innerHeight}
 window.addEventListener('resize',resize);
 function loop(){const now=Date.now()*.001;sct.clearRect(0,0,W,H);drawSky(now);mcx.clearRect(0,0,mc.width,mc.height);amb();for(let i=pts.length-1;i>=0;i--){pts[i].update();if(pts[i].life<=0)pts.splice(i,1);else pts[i].draw()}requestAnimationFrame(loop)}
