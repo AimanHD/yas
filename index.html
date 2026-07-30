@@ -32,6 +32,7 @@
       cursor:pointer; z-index:10;
       display:flex; align-items:center; justify-content:center;
       pointer-events:none;
+      touch-action:manipulation;
       filter:drop-shadow(0 0 7px rgba(255,210,100,.95)) drop-shadow(0 0 22px rgba(255,185,60,.6));
       transition:filter 1.4s;
     }
@@ -270,9 +271,9 @@ setTimeout(()=>{
   setTimeout(()=>{ intro.style.display='none' }, 1700);
 }, 3000);
 
-// Star click
+// Star interaction (click for desktop, touchend for mobile)
 document.querySelectorAll('.tstar').forEach(star=>{
-  star.addEventListener('click', e=>{
+  const activate = e => {
     e.stopPropagation();
     if(open || star.classList.contains('found')) return;
     const idx=parseInt(star.dataset.i);
@@ -283,18 +284,21 @@ document.querySelectorAll('.tstar').forEach(star=>{
     found++;
     ctr.textContent=`✦ ${found} de 8 pensamientos encontrados`;
     ctr.classList.add('on');
-  });
-  star.addEventListener('touchstart', e=>e.preventDefault(), {passive:false});
+  };
+  star.addEventListener('click', activate);
+  star.addEventListener('touchend', e=>{ e.preventDefault(); activate(e) }, {passive:false});
 });
 
 // Close card
-mcard.addEventListener('click', e=>{
+const closeCard = e => {
   e.stopPropagation();
   if(!open) return;
   mcard.classList.remove('show');
   open=false;
   if(found===8) setTimeout(showFinale, 750);
-});
+};
+mcard.addEventListener('click', closeCard);
+mcard.addEventListener('touchend', e=>{ e.preventDefault(); closeCard(e) }, {passive:false});
 
 function showFinale(){
   ctr.style.opacity='0';
