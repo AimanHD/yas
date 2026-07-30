@@ -31,22 +31,22 @@
       transform:translate(-50%,-50%);
       cursor:pointer; z-index:10;
       display:flex; align-items:center; justify-content:center;
-      opacity:0; transition:opacity 1.4s;
+      pointer-events:none;
+      filter:drop-shadow(0 0 7px rgba(255,210,100,.95)) drop-shadow(0 0 22px rgba(255,185,60,.6));
+      transition:filter 1.4s;
     }
-    .tstar.active { opacity:1 }
-    .tstar.found  { cursor:default }
+    .tstar.active { pointer-events:auto }
+    .tstar.found  { cursor:default; filter:drop-shadow(0 0 3px rgba(255,210,100,.18)) }
 
     .sshape {
-      width:13px; height:13px;
+      width:16px; height:16px;
       background:#ffd888;
       clip-path:polygon(50% 0%,61% 35%,98% 38%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 38%,39% 35%);
-      filter:drop-shadow(0 0 5px rgba(255,210,100,.95)) drop-shadow(0 0 14px rgba(255,185,60,.6));
       animation:sbeat var(--d,2.8s) ease-in-out infinite;
-      transition:filter 1.2s, background 1.2s;
+      transition:background 1.2s;
     }
     .tstar.found .sshape {
-      background:rgba(255,210,100,.18);
-      filter:drop-shadow(0 0 2px rgba(255,210,100,.2));
+      background:rgba(255,210,100,.12);
       animation:none;
     }
     @keyframes sbeat {
@@ -235,8 +235,8 @@ function sky(now){
 }
 function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
 window.addEventListener('resize',resize);
-(function loop(){ctx.clearRect(0,0,W,H);sky(Date.now()*.001);requestAnimationFrame(loop)})();
 resize();
+(function loop(){ctx.clearRect(0,0,W,H);sky(Date.now()*.001);requestAnimationFrame(loop)})();
 
 // ══ THOUGHTS ══
 const THOUGHTS=[
@@ -263,14 +263,12 @@ const ctr=document.getElementById('ctr');
 const finale=document.getElementById('finale');
 let found=0, open=false;
 
-// Reveal stars after intro
+// Fade intro then enable clicking
 setTimeout(()=>{
   intro.classList.add('gone');
-  setTimeout(()=>{
-    intro.style.display='none';
-    document.querySelectorAll('.tstar').forEach(s=>s.classList.add('active'));
-  }, 1700);
-}, 5200);
+  document.querySelectorAll('.tstar').forEach(s=>s.classList.add('active'));
+  setTimeout(()=>{ intro.style.display='none' }, 1700);
+}, 3000);
 
 // Star click
 document.querySelectorAll('.tstar').forEach(star=>{
