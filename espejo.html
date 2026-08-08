@@ -144,9 +144,11 @@ const WORDS=[
 
 function drawScene(){
   const u=Math.min(W,H);
+  // Warm dark background
   const bg=scC.createRadialGradient(W*.5,H*.44,0,W*.5,H*.5,Math.max(W,H)*.78);
   bg.addColorStop(0,'#301506'); bg.addColorStop(.4,'#1c0a04'); bg.addColorStop(1,'#0c0503');
   scC.fillStyle=bg; scC.fillRect(0,0,W,H);
+  // Soft warm glow center
   const cg=scC.createRadialGradient(W*.5,H*.46,0,W*.5,H*.46,Math.min(W,H)*.35);
   cg.addColorStop(0,'rgba(60,25,5,.45)'); cg.addColorStop(1,'rgba(0,0,0,0)');
   scC.fillStyle=cg; scC.fillRect(0,0,W,H);
@@ -170,8 +172,10 @@ function drawScene(){
 function initFog(){
   fgC.clearRect(0,0,W,H);
   fgC.globalCompositeOperation='source-over';
+  // Base fog — dark blue-gray (cold mirror)
   fgC.fillStyle='rgba(50,44,66,1)';
   fgC.fillRect(0,0,W,H);
+  // Texture: random light patches
   for(let i=0;i<14;i++){
     const gx=Math.random()*W, gy=Math.random()*H;
     const gr=fgC.createRadialGradient(gx,gy,0,gx,gy,55+Math.random()*110);
@@ -179,6 +183,7 @@ function initFog(){
     gr.addColorStop(1,'rgba(0,0,0,0)');
     fgC.fillStyle=gr; fgC.fillRect(0,0,W,H);
   }
+  // Subtle drip streaks
   for(let i=0;i<22;i++){
     const sx=Math.random()*W, sy=Math.random()*H*.55;
     const sh=20+Math.random()*75;
