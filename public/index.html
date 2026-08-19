@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Para Yasmin ♥</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♥</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,300;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- App Shell -->
+<div id="app">
+
+  <!-- Top header -->
+  <header id="top-bar">
+    <div class="top-inner">
+      <span class="top-title">Para Yasmin <span class="hrt">♥</span></span>
+      <button class="icon-btn" onclick="App.openSettings()" title="Configuración">⚙️</button>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main id="content"></main>
+
+  <!-- Bottom nav -->
+  <nav id="bottom-nav">
+    <button class="nav-item active" data-section="home">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Inicio</span>
+    </button>
+    <button class="nav-item" data-section="letters">
+      <span class="nav-icon">💌</span>
+      <span class="nav-label">Cartas</span>
+    </button>
+    <button class="nav-item" data-section="notes">
+      <span class="nav-icon">📝</span>
+      <span class="nav-label">Notas</span>
+    </button>
+    <button class="nav-item" data-section="poems">
+      <span class="nav-icon">🌸</span>
+      <span class="nav-label">Poemas</span>
+    </button>
+    <button class="nav-item" data-section="gallery">
+      <span class="nav-icon">📷</span>
+      <span class="nav-label">Galería</span>
+    </button>
+    <button class="nav-item" data-section="details">
+      <span class="nav-icon">✨</span>
+      <span class="nav-label">Detalles</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- Modal overlay -->
+<div id="modal-overlay" onclick="App.closeModal()"></div>
+<div id="modal">
+  <div id="modal-inner"></div>
+</div>
+
+<!-- Book overlay -->
+<div id="book-overlay">
+  <button class="book-close" onclick="App.closeBook()">✕</button>
+  <div id="book-container"></div>
+</div>
+
+<!-- Experience overlay -->
+<div id="exp-overlay">
+  <button class="exp-close" onclick="App.closeExp()">✕ cerrar</button>
+  <iframe id="exp-frame" src=""></iframe>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

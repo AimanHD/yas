@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Para ti, Yasmin ♥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box }
+    html, body {
+      width:100%; height:100%; overflow:hidden;
+      background:#07041a; font-family:'Cormorant Garamond', serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    #bg { position:fixed; inset:0; z-index:0; display:block }
+
+    /* ── INTRO ── */
+    #intro {
+      position:fixed; inset:0; z-index:50;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:2rem;
+      pointer-events:none;
+      transition:opacity 1.4s;
+    }
+    #intro.gone { opacity:0 }
+    .il {
+      opacity:0; animation:iup .8s ease forwards;
+      font-style:italic; line-height:2.2;
+    }
+    .il:nth-child(1){ font-size:clamp(.85rem,2.8vw,1.05rem); color:rgba(200,180,155,.6); animation-delay:.5s }
+    .il:nth-child(2){ font-family:'Dancing Script',cursive; font-weight:700; font-size:clamp(1.8rem,7vw,3rem); color:rgba(255,220,160,.92); animation-delay:1.5s; text-shadow:0 0 30px rgba(255,200,100,.28) }
+    .il:nth-child(3){ font-size:clamp(.8rem,2.5vw,.95rem); color:rgba(200,175,145,.5); letter-spacing:.15em; animation-delay:2.6s }
+    @keyframes iup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── BALLOONS ── */
+    .bwrap {
+      position:fixed;
+      left:var(--cx); top:var(--cy);
+      transform:translate(-50%,-50%);
+      z-index:5; pointer-events:none;
+      animation:bob var(--dur,3.5s) ease-in-out infinite var(--d,0s);
+    }
+    @keyframes bob {
+      0%,100% { transform:translate(-50%,-50%) rotate(calc(var(--tilt,-3)*1deg)) }
+      50%      { transform:translate(-50%,calc(-50% - 14px)) rotate(calc(var(--tilt,-3)*-1deg)) }
+    }
+    .bln {
+      width:clamp(60px,17vw,78px);
+      height:clamp(76px,21vw,97px);
+      background:var(--col);
+      border-radius:50%;
+      position:relative;
+      pointer-events:auto;
+      cursor:pointer;
+      touch-action:manipulation;
+      box-shadow:
+        inset -9px -11px 0 rgba(0,0,0,.14),
+        inset 7px 6px 0 rgba(255,255,255,.22);
+      display:flex; align-items:center; justify-content:center;
+      transition:transform .12s;
+    }
+    .bln:active { transform:scale(.9) }
+    /* shine */
+    .bln::before {
+      content:''; position:absolute;
+      top:clamp(11px,3vw,15px); left:clamp(10px,3vw,14px);
+      width:clamp(12px,3.5vw,16px); height:clamp(16px,5vw,22px);
+      background:rgba(255,255,255,.30); border-radius:50%;
+      transform:rotate(-35deg); pointer-events:none;
+    }
+    /* knot triangle */
+    .bln::after {
+      content:''; position:absolute;
+      bottom:clamp(-10px,-2.8vw,-8px); left:50%;
+      transform:translateX(-50%);
+      width:0; height:0;
+      border-left:clamp(5px,1.6vw,7px) solid transparent;
+      border-right:clamp(5px,1.6vw,7px) solid transparent;
+      border-top:clamp(8px,2.3vw,11px) solid var(--col);
+      pointer-events:none;
+    }
+    .bword {
+      font-style:italic;
+      font-size:clamp(10px,2.9vw,13px);
+      color:rgba(255,255,255,.93);
+      text-shadow:0 1px 4px rgba(0,0,0,.5);
+      letter-spacing:.02em; text-align:center;
+      padding:0 7px; line-height:1.25;
+      pointer-events:none;
+    }
+    .bstring {
+      width:1px;
+      height:clamp(68px,18vw,92px);
+      background:linear-gradient(to bottom, rgba(210,188,158,.52), rgba(210,188,158,.15));
+      margin:0 auto; pointer-events:none;
+    }
+    /* Pop */
+    .bwrap.popped { animation:none!important }
+    .bwrap.popped .bln { animation:bpop .32s ease-out forwards; pointer-events:none }
+    .bwrap.popped .bstring { opacity:0 }
+    @keyframes bpop {
+      0%  { transform:scale(1); opacity:1 }
+      55% { transform:scale(1.5); opacity:.4 }
+      100%{ transform:scale(0); opacity:0 }
+    }
+
+    /* ── PARTICLES ── */
+    .ptcl {
+      position:fixed; width:7px; height:7px;
+      border-radius:50%; pointer-events:none; z-index:20;
+      animation:pflyt .68s ease-out forwards;
+      transform:translate(-50%,-50%);
+    }
+    @keyframes pflyt {
+      0%  { transform:translate(-50%,-50%) scale(1.2); opacity:1 }
+      100%{ transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity:0 }
+    }
+
+    /* ── FLASH WORD ── */
+    #flash {
+      position:fixed; top:50%; left:50%;
+      transform:translate(-50%,-50%) scale(.85);
+      z-index:30;
+      background:rgba(4,2,16,.97);
+      border:1px solid rgba(255,210,150,.16);
+      border-radius:14px;
+      padding:clamp(1.2rem,4vw,1.8rem) clamp(2rem,6vw,3rem);
+      text-align:center;
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      box-shadow:0 22px 65px rgba(0,0,0,.72);
+      opacity:0; pointer-events:none;
+      transition:opacity .38s, transform .38s;
+    }
+    #flash.show { opacity:1; transform:translate(-50%,-50%) scale(1) }
+    .fhsm { font-size:.85rem; color:rgba(220,85,105,.6); margin-bottom:.35rem; display:block }
+    #fword {
+      font-style:italic; display:block;
+      font-size:clamp(1.7rem,7vw,2.8rem);
+      color:rgba(255,220,165,.93);
+    }
+
+    /* ── COUNTER ── */
+    #ctr {
+      position:fixed; bottom:clamp(1.2rem,3.5vh,2rem); left:50%;
+      transform:translateX(-50%); z-index:10;
+      font-style:italic; font-size:clamp(.74rem,2.2vw,.88rem);
+      color:rgba(200,170,130,.32); letter-spacing:.22em;
+      opacity:0; transition:opacity .55s; white-space:nowrap;
+    }
+    #ctr.on { opacity:1 }
+
+    /* ── FINALE ── */
+    #finale {
+      position:fixed; inset:0; z-index:40;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:2.5rem;
+      opacity:0; pointer-events:none;
+      transition:opacity 2.4s;
+    }
+    #finale.show { opacity:1 }
+    .fheart {
+      font-size:clamp(2.8rem,12vw,5.5rem);
+      color:rgba(220,70,100,.9);
+      filter:drop-shadow(0 0 26px rgba(220,55,90,.6));
+      animation:hbeat 1.9s ease-in-out infinite;
+      display:block; margin-bottom:.8rem;
+    }
+    @keyframes hbeat {
+      0%,100%{transform:scale(1)} 15%{transform:scale(1.22)}
+      30%{transform:scale(1)} 50%{transform:scale(1.1)}
+    }
+    .ftitle {
+      font-family:'Dancing Script',cursive; font-weight:700;
+      font-size:clamp(3rem,13vw,6rem);
+      color:rgba(255,222,120,.96);
+      text-shadow:0 0 60px rgba(255,200,80,.5), 0 0 120px rgba(255,170,50,.18);
+      line-height:1.15; margin-bottom:.8rem;
+    }
+    .fsub {
+      font-style:italic; font-weight:300;
+      font-size:clamp(.95rem,3.2vw,1.3rem);
+      color:rgba(225,195,155,.72); line-height:2.1;
+    }
+    .fsub em { font-style:italic; color:rgba(255,225,168,.88) }
+
+    @media(max-width:380px){
+      .ftitle { font-size:clamp(2.3rem,14vw,3.8rem) }
+      .fsub   { font-size:clamp(.88rem,4vw,1.1rem) }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<audio id="bgm" loop></audio>
+
+<!-- Intro -->
+<div id="intro">
+  <div class="il">esta noche te he preparado algo</div>
+  <div class="il">revienta los globos</div>
+  <div class="il">toca cada uno ✦</div>
+</div>
+
+<!-- 9 Balloons — spread across screen -->
+<div class="bwrap" style="--cx:12%;--cy:28%;--col:#e88898;--d:.00s;--dur:3.8s;--tilt:-3" data-word="hermosa"    data-col="#e88898"><div class="bln"><span class="bword">hermosa</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:39%;--cy:18%;--col:#f0a862;--d:.38s;--dur:3.3s;--tilt:4"  data-word="única"      data-col="#f0a862"><div class="bln"><span class="bword">única</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:66%;--cy:24%;--col:#c8a0d8;--d:.72s;--dur:4.1s;--tilt:-2" data-word="especial"  data-col="#c8a0d8"><div class="bln"><span class="bword">especial</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:88%;--cy:36%;--col:#88b8d8;--d:.18s;--dur:3.6s;--tilt:5"  data-word="mi favorita" data-col="#88b8d8"><div class="bln"><span class="bword">mi favorita</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:23%;--cy:50%;--col:#d8a8c8;--d:.55s;--dur:3.9s;--tilt:-4" data-word="te quiero" data-col="#d8a8c8"><div class="bln"><span class="bword">te quiero</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:50%;--cy:44%;--col:#e8c052;--d:.88s;--dur:3.4s;--tilt:3"  data-word="me alegras" data-col="#e8c052"><div class="bln"><span class="bword">me alegras</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:76%;--cy:54%;--col:#88c8a2;--d:.28s;--dur:4.0s;--tilt:-5" data-word="gracias"   data-col="#88c8a2"><div class="bln"><span class="bword">gracias</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:16%;--cy:66%;--col:#e87858;--d:.62s;--dur:3.7s;--tilt:4"  data-word="eres mía"  data-col="#e87858"><div class="bln"><span class="bword">eres mía</span></div><div class="bstring"></div></div>
+<div class="bwrap" style="--cx:60%;--cy:67%;--col:#e888a8;--d:.95s;--dur:3.5s;--tilt:-3" data-word="te amo"    data-col="#e888a8"><div class="bln"><span class="bword">te amo</span></div><div class="bstring"></div></div>
+
+<!-- Flash -->
+<div id="flash"><span class="fhsm">♥</span><span id="fword"></span></div>
+
+<!-- Counter -->
+<div id="ctr">✦ 0 de 9 ✦</div>
+
+<!-- Finale -->
+<div id="finale">
+  <span class="fheart">♥</span>
+  <div class="ftitle">Yasmin</div>
+  <div class="fsub">
+    podría llenarte el cielo<br>
+    de globos cada día<br>
+    y aún así no bastarían.<br>
+    <em>Te amo.</em>
+  </div>
+</div>
+
+<script>
+// ── STARFIELD ──
+const cv=document.getElementById('bg'), cx=cv.getContext('2d');
+let W,H;
+const ST=(()=>{ let s=42; const r=()=>{s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/0xffffffff}; return Array.from({length:190},()=>({px:r(),py:r(),ra:r()*1.1+.18,al:r()*.42+.2,ts:r()*.007+.002,to:r()*Math.PI*2,c:r()>.78?'#ffd8b0':r()>.55?'#e8d8ff':'#f0f0ff'})) })();
+const SH=[];
+function spwn(){ if(Math.random()>.007)return; const a=Math.PI/6+Math.random()*Math.PI/5; SH.push({x:Math.random()*W,y:Math.random()*H*.25,len:50+Math.random()*80,sp:5+Math.random()*7,vx:Math.cos(a),vy:Math.sin(a),life:1,dc:.025+Math.random()*.012}) }
+function drawBg(now){
+  const g=cx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#06041a');g.addColorStop(.5,'#090520');g.addColorStop(1,'#110618');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const hg=cx.createRadialGradient(W*.5,H,0,W*.5,H,H*.65);
+  hg.addColorStop(0,'rgba(70,18,38,.22)');hg.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=hg;cx.fillRect(0,0,W,H);
+  ST.forEach(s=>{const a=s.al*(.6+.4*Math.sin(now*s.ts*60+s.to));cx.globalAlpha=Math.max(0,a);cx.shadowBlur=s.ra>.7?4:0;cx.shadowColor=s.c;cx.fillStyle=s.c;cx.beginPath();cx.arc(s.px*W,s.py*H,s.ra,0,Math.PI*2);cx.fill();cx.globalAlpha=1;cx.shadowBlur=0});
+  spwn();
+  for(let i=SH.length-1;i>=0;i--){const sh=SH[i];const t=cx.createLinearGradient(sh.x,sh.y,sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);t.addColorStop(0,`rgba(220,200,255,${sh.life*.58})`);t.addColorStop(1,'rgba(0,0,0,0)');cx.beginPath();cx.moveTo(sh.x,sh.y);cx.lineTo(sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);cx.strokeStyle=t;cx.lineWidth=1.1;cx.stroke();sh.x+=sh.vx*sh.sp;sh.y+=sh.vy*sh.sp;sh.life-=sh.dc;if(sh.life<=0||sh.x>W+50||sh.y>H+50)SH.splice(i,1)}
+}
+function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight }
+window.addEventListener('resize',resize); resize();
+(function loop(){ cx.clearRect(0,0,W,H); drawBg(Date.now()*.001); requestAnimationFrame(loop) })();
+
+// ── INTRO ──
+const intro=document.getElementById('intro');
+setTimeout(()=>{ intro.classList.add('gone'); setTimeout(()=>intro.style.display='none',1500) }, 4800);
+
+// ── POP SOUND (Web Audio API) ──
+let aCtx=null;
+function playPop(){
+  try{
+    if(!aCtx) aCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=aCtx.createOscillator(),g=aCtx.createGain();
+    o.connect(g);g.connect(aCtx.destination);
+    o.frequency.setValueAtTime(650,aCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(35,aCtx.currentTime+.13);
+    g.gain.setValueAtTime(.42,aCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,aCtx.currentTime+.15);
+    o.start(aCtx.currentTime);o.stop(aCtx.currentTime+.15);
+  }catch(e){}
+}
+
+// ── PARTICLES ──
+function burst(x,y,col){
+  for(let i=0;i<16;i++){
+    const ang=(i/16)*Math.PI*2, dist=38+Math.random()*58;
+    const p=document.createElement('div');
+    p.className='ptcl';
+    p.style.cssText=`left:${x}px;top:${y}px;background:${col};--tx:${Math.cos(ang)*dist}px;--ty:${Math.sin(ang)*dist}px;animation-delay:${Math.random()*.04}s`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),730);
+  }
+}
+
+// ── BALLOON LOGIC ──
+const flash=document.getElementById('flash'), fword=document.getElementById('fword');
+const ctr=document.getElementById('ctr'), finale=document.getElementById('finale');
+let popped=0, flashT=null;
+
+function showFlash(w){
+  fword.textContent=w; flash.classList.add('show');
+  if(flashT)clearTimeout(flashT);
+  flashT=setTimeout(()=>flash.classList.remove('show'),1350);
+}
+function updateCtr(){ ctr.textContent=`✦ ${popped} de 9 ✦`; ctr.classList.add('on') }
+
+document.querySelectorAll('.bwrap').forEach(wrap=>{
+  wrap.querySelector('.bln').addEventListener('click',()=>{
+    if(wrap.classList.contains('popped'))return;
+    wrap.classList.add('popped');
+    const r=wrap.querySelector('.bln').getBoundingClientRect();
+    burst(r.left+r.width*.5, r.top+r.height*.42, wrap.dataset.col);
+    playPop();
+    showFlash(wrap.dataset.word);
+    popped++; updateCtr();
+    setTimeout(()=>{ wrap.style.visibility='hidden'; if(popped===9)setTimeout(()=>finale.classList.add('show'),950) },360);
+  });
+});
+
+// ── MUSIC ──
+const bgm=document.getElementById('bgm');
+bgm.src='[TubePull] Amr_Diab_-_Al_Leila_عمرو_دياب_-_الليلة.m4a';
+bgm.volume=.72;
+function tryPlay(){ bgm.play().catch(()=>{}) }
+tryPlay();
+['click','touchstart'].forEach(ev=>document.addEventListener(ev,tryPlay,{once:true}));
+</script>
+</body>
+</html>
