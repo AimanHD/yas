@@ -70,6 +70,19 @@ const EXP_ICONS = {
   book:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
 };
 
+const SOBRE_100 = `Cien días.
+
+Cien mañanas en las que desperté pensando en ti. Cien noches en las que me dormí con tu nombre en la cabeza. Cien veces que elegí quererte, y cien veces que lo habría vuelto a elegir.
+
+Hay personas que pasan por tu vida como el viento: rápido, sin dejar rastro. Y luego estás tú. Tú te quedaste. Y eso, Yasmin, no tiene precio.
+
+Cuando escribí este sobre no sabía qué decirte que no te hubiera dicho ya. Pero lo entendí: no hace falta decirte nada nuevo. Solo hace falta que sepas que aquí sigo. Que aquí estaré.
+
+Gracias por los cien días. Por cada uno.
+
+Para siempre tuyo,
+Aiman`;
+
 const ROULETTE_PLANS = [
   'Una cena romántica en casa con velas',
   'Maratón de películas abrazados',
@@ -305,6 +318,9 @@ async function renderHome() {
     <div class="frase-text">${fraseDelDia()}</div>
   `;
   c.appendChild(fc);
+
+  // ── SOBRE DE LOS 100 DÍAS ──
+  renderEnvelopeCard(c);
 
   // ── ACCESOS RÁPIDOS ──
   const qg = el('div', 'quick-grid anim anim-d2');
@@ -854,6 +870,64 @@ async function renderDetails() {
   c.appendChild(rl);
 }
 
+// ── SOBRE DE LOS 100 DÍAS ──
+function renderEnvelopeCard(c) {
+  const start    = new Date(S.settings.start_date);
+  const day100   = new Date(start.getTime() + 100 * 86400000);
+  const daysLeft = Math.ceil((day100 - Date.now()) / 86400000);
+  const isOpen   = daysLeft <= 0;
+
+  const card = el('div', `envelope-card anim anim-d1${isOpen ? ' envelope-open' : ''}`);
+  const dateStr = day100.toLocaleDateString('es-ES', { day:'numeric', month:'long' });
+
+  card.innerHTML = `
+    <div class="envelope-icon">${ICONS.letters}</div>
+    <div class="envelope-body">
+      <div class="envelope-title">El sobre de los 100 días</div>
+      <div class="envelope-sub">${isOpen
+        ? 'Ha llegado el momento. Ábrelo.'
+        : `Se abre el <strong>${dateStr}</strong> · Faltan <strong>${daysLeft}</strong> días`}
+      </div>
+    </div>
+    <span class="envelope-badge ${isOpen ? 'badge-open' : 'badge-locked'}">${isOpen ? 'Abierto' : 'Cerrado'}</span>
+  `;
+
+  if (isOpen) {
+    card.onclick = () => App.openModal(`
+      <div style="text-align:center;margin-bottom:1.2rem">
+        <div style="font-size:1.5rem;margin-bottom:.5rem">${ICONS.letters.replace('viewBox','style="width:36px;height:36px;stroke:var(--rose)" viewBox')}</div>
+        <h3 style="font-family:var(--font-title);font-size:1.6rem;color:var(--rose);font-style:italic">100 días</h3>
+      </div>
+      <div style="font-family:var(--font-body);font-size:1.05rem;line-height:2;color:var(--text);white-space:pre-wrap;font-style:italic">${SOBRE_100}</div>
+    `, '');
+  }
+  c.appendChild(card);
+}
+
+// ── LLUVIA DE CORAZONES (easter egg) ──
+function triggerHeartRain() {
+  const container = document.createElement('div');
+  container.className = 'heart-rain';
+  document.body.appendChild(container);
+  const shapes = ['♥','♥','♡','❤'];
+  const colors = ['#C2185B','#E91E8C','#F06292','#880E4F','#F48FB1'];
+  for (let i = 0; i < 24; i++) {
+    setTimeout(() => {
+      const h = document.createElement('span');
+      h.className = 'falling-heart';
+      h.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      h.style.left = (Math.random() * 96) + 'vw';
+      h.style.color = colors[Math.floor(Math.random() * colors.length)];
+      h.style.fontSize = (0.9 + Math.random() * 1.4) + 'rem';
+      h.style.animationDuration = (1.8 + Math.random() * 2.2) + 's';
+      h.style.animationDelay = '0s';
+      container.appendChild(h);
+      h.addEventListener('animationend', () => h.remove());
+    }, i * 70);
+  }
+  setTimeout(() => container.remove(), 6000);
+}
+
 // ── HELPERS ──
 function sectionTitle(eyebrow, title, desc) {
   const w = el('div', 'sec-title-wrap anim');
@@ -887,6 +961,18 @@ async function init() {
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.onclick = () => { App.navigate(btn.dataset.section); App.closeMenu(); };
   });
+
+  // Easter egg: triple-tap en el logo → lluvia de corazones
+  let _logoTaps = 0, _logoTimer;
+  const logoEl = document.querySelector('.logo');
+  if (logoEl) {
+    logoEl.addEventListener('click', () => {
+      _logoTaps++;
+      clearTimeout(_logoTimer);
+      _logoTimer = setTimeout(() => { _logoTaps = 0; }, 550);
+      if (_logoTaps >= 3) { _logoTaps = 0; triggerHeartRain(); }
+    });
+  }
 
   await App.navigate('home');
 }

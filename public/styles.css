@@ -857,6 +857,55 @@ img { max-width:100%; display:block }
   .quick-grid { grid-template-columns:repeat(4,1fr) }
 }
 
+/* ── SOBRE DE LOS 100 DÍAS ── */
+.envelope-card {
+  background:linear-gradient(135deg, #fff8fc 0%, var(--blush) 100%);
+  border:1.5px solid rgba(194,24,91,.2); border-radius:var(--radius);
+  padding:1.1rem 1.2rem; display:flex; gap:1rem; align-items:center;
+  box-shadow:var(--card-shadow); cursor:default; transition:all .28s;
+  margin-bottom:1rem;
+}
+.envelope-card.envelope-open {
+  cursor:pointer; border-color:var(--rose);
+  background:linear-gradient(135deg, #fff0f5 0%, #ffd6e8 100%);
+}
+.envelope-card.envelope-open:hover { box-shadow:var(--card-shadow-h); transform:translateY(-2px) }
+.envelope-icon {
+  width:44px; height:44px; flex-shrink:0; border-radius:50%;
+  background:var(--rose); display:flex; align-items:center; justify-content:center;
+}
+.envelope-icon svg { stroke:#fff; width:20px; height:20px }
+.envelope-body { flex:1; min-width:0 }
+.envelope-title {
+  font-family:var(--font-title); font-size:1rem; color:var(--text);
+  font-weight:600; margin-bottom:.2rem;
+}
+.envelope-sub {
+  font-family:var(--font-body); font-style:italic; font-size:.88rem;
+  color:var(--text-muted); line-height:1.45;
+}
+.envelope-badge {
+  flex-shrink:0; font-size:.6rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; padding:.22rem .65rem; border-radius:60px;
+}
+.badge-locked { background:var(--blush); color:var(--rose) }
+.badge-open   { background:var(--rose); color:#fff; animation:shimmer 2.2s ease-in-out infinite }
+
+/* ── HEART RAIN ── */
+.heart-rain {
+  position:fixed; inset:0; pointer-events:none;
+  z-index:9999; overflow:hidden;
+}
+.falling-heart {
+  position:absolute; top:-40px; user-select:none;
+  animation:fallHeart ease-in forwards;
+}
+@keyframes fallHeart {
+  0%   { transform:translateY(0) rotate(-8deg) scale(1); opacity:.95 }
+  80%  { opacity:.8 }
+  100% { transform:translateY(110vh) rotate(12deg) scale(.8); opacity:0 }
+}
+
 /* ══════════════════════════════════════
    ANIMACIONES
 ══════════════════════════════════════ */
