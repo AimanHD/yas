@@ -101,14 +101,16 @@ const S = {
 };
 
 // ── API ──
+const BACKEND = location.hostname === 'localhost' ? '' : 'https://yas-1.onrender.com';
+
 async function api(method, path, body) {
   const opts = { method, headers: { 'Content-Type': 'application/json' } };
   if (body) opts.body = JSON.stringify(body);
-  const r = await fetch('/api' + path, opts);
+  const r = await fetch(BACKEND + '/api' + path, opts);
   return r.json();
 }
 async function apiUpload(path, formData) {
-  const r = await fetch('/api' + path, { method: 'POST', body: formData });
+  const r = await fetch(BACKEND + '/api' + path, { method: 'POST', body: formData });
   return r.json();
 }
 
@@ -134,7 +136,8 @@ function typeLabel(type) {
   return { poem:'Poema', song:'Canción', story:'Historia', letter:'Carta' }[type] || type;
 }
 function imgSrc(item) {
-  return item.src || '/uploads/' + encodeURIComponent(item.filename || '');
+  if (item.src) return BACKEND + item.src;
+  return BACKEND + '/uploads/' + encodeURIComponent(item.filename || '');
 }
 function driveEmbedUrl(url) {
   // Archivo individual: /file/d/ID  →  preview
@@ -188,7 +191,7 @@ const App = window.App = {
     $('book-overlay').classList.add('open');
   },
   closeBook()  { $('book-overlay').classList.remove('open') },
-  openExp(url) { $('exp-frame').src = url; $('exp-overlay').classList.add('open') },
+  openExp(url) { $('exp-frame').src = url.startsWith('http') ? url : BACKEND + url; $('exp-overlay').classList.add('open') },
   closeExp()   { $('exp-frame').src = ''; $('exp-overlay').classList.remove('open') },
   async openSettings() {
     const s = S.settings;
@@ -410,7 +413,7 @@ function renderBook() {
           <div class="pdf-icon">${ICONS.pdf}</div>
           <h3>${letter.title}</h3>
           ${letter.subtitle ? `<p>${letter.subtitle}</p>` : ''}
-          <a href="/love/${encodeURIComponent(letter.filename)}" target="_blank">Abrir carta</a>
+          <a href="${BACKEND}/love/${encodeURIComponent(letter.filename)}" target="_blank">Abrir carta</a>
         </div>
       </div>
     `;
