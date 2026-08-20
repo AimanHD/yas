@@ -1,9 +1,9 @@
 {
   "outputDirectory": "public",
   "rewrites": [
-    { "source": "/api/:path*",        "destination": "https://yas-1ttv.onrender.com/api/:path*" },
-    { "source": "/love/:path*",       "destination": "https://yas-1ttv.onrender.com/love/:path*" },
-    { "source": "/uploads/:path*",    "destination": "https://yas-1ttv.onrender.com/uploads/:path*" },
-    { "source": "/experience/:path*", "destination": "https://yas-1ttv.onrender.com/experience/:path*" }
+    { "source": "/api/:path*",        "destination": "https://yas-1.onrender.com/api/:path*" },
+    { "source": "/love/:path*",       "destination": "https://yas-1.onrender.com/love/:path*" },
+    { "source": "/uploads/:path*",    "destination": "https://yas-1.onrender.com/uploads/:path*" },
+    { "source": "/experience/:path*", "destination": "https://yas-1.onrender.com/experience/:path*" }
   ]
 }
