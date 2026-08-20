@@ -89,9 +89,11 @@ const ROULETTE_PLANS = [
 ];
 
 // ── STATE ──
+let _counterTimer = null;
+
 const S = {
   section: 'home',
-  settings: { start_date: '2026-07-01', her_name: 'Yasmin', your_name: 'Aiman' },
+  settings: { start_date: '2026-06-30', her_name: 'Yasmin', your_name: 'Aiman' },
   letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [], movies: [],
   poemFilter: 'all',
   bookLetter: null,
@@ -128,6 +130,16 @@ function fmtDate(d) {
 function daysTogether() {
   const diff = Math.floor((Date.now() - new Date(S.settings.start_date)) / 86400000);
   return Math.max(0, diff);
+}
+function timeTogether() {
+  const ms = Date.now() - new Date(S.settings.start_date).getTime();
+  if (ms < 0) return { days:0, hours:0, mins:0, secs:0 };
+  return {
+    days:  Math.floor(ms / 86400000),
+    hours: Math.floor((ms % 86400000) / 3600000),
+    mins:  Math.floor((ms % 3600000) / 60000),
+    secs:  Math.floor((ms % 60000) / 1000),
+  };
 }
 function fraseDelDia() {
   return FRASES[Math.floor(Date.now() / 86400000) % FRASES.length];
@@ -191,6 +203,11 @@ const App = window.App = {
     $('book-overlay').classList.add('open');
   },
   closeBook()  { $('book-overlay').classList.remove('open') },
+  toggleMenu() {
+    const m = $('mobile-menu');
+    m.classList.toggle('open');
+  },
+  closeMenu()  { $('mobile-menu').classList.remove('open') },
   openExp(url) { $('exp-frame').src = url.startsWith('http') ? url : BACKEND + url; $('exp-overlay').classList.add('open') },
   closeExp()   { $('exp-frame').src = ''; $('exp-overlay').classList.remove('open') },
   async openSettings() {
@@ -224,14 +241,20 @@ const App = window.App = {
 
 // ── RENDER DISPATCHER ──
 async function render() {
+  if (_counterTimer) { clearInterval(_counterTimer); _counterTimer = null; }
   const c = $('content');
-  c.innerHTML = '<div class="loading">cargando…</div>';
+  c.classList.add('fade-out');
+  await new Promise(r => setTimeout(r, 140));
+  c.innerHTML = '';
   const fns = { home:renderHome, letters:renderLetters, notes:renderNotes, poems:renderPoems, gallery:renderGallery, barbie:renderBarbie, details:renderDetails };
   await (fns[S.section] || renderHome)();
+  requestAnimationFrame(() => c.classList.remove('fade-out'));
 }
 
 // ── HOME ──
 async function renderHome() {
+  if (_counterTimer) { clearInterval(_counterTimer); _counterTimer = null; }
+
   const [notes, poems, letters] = await Promise.all([
     api('GET', '/notes'), api('GET', '/poems'), api('GET', '/letters'),
   ]);
@@ -240,30 +263,53 @@ async function renderHome() {
   const c = $('content');
   c.innerHTML = '';
 
-  // Hero
-  const hero = el('div', 'home-hero');
+  // ── HERO CON CONTADOR EN VIVO ──
+  const hero = el('div', 'home-hero anim');
   hero.innerHTML = `
-    <div class="hero-days">${daysTogether()}</div>
-    <div class="hero-label">días juntos con ${S.settings.her_name}</div>
-    <div class="hero-date">${new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+    <div class="hero-petals" aria-hidden="true">
+      ${Array.from({length:12},(_,i)=>`<span class="petal petal-${i+1}"></span>`).join('')}
+    </div>
+    <div class="hero-eyebrow">desde el 30 de junio contigo</div>
+    <div class="hero-counter">
+      <div class="hero-unit"><div class="hero-num" id="h-days">0</div><div class="hero-unit-label">días</div></div>
+      <div class="hero-sep">·</div>
+      <div class="hero-unit"><div class="hero-num" id="h-hours">00</div><div class="hero-unit-label">horas</div></div>
+      <div class="hero-sep">·</div>
+      <div class="hero-unit"><div class="hero-num" id="h-mins">00</div><div class="hero-unit-label">min</div></div>
+      <div class="hero-sep">·</div>
+      <div class="hero-unit"><div class="hero-num" id="h-secs">00</div><div class="hero-unit-label">seg</div></div>
+    </div>
+    <div class="hero-tagline">juntos, ${S.settings.her_name}</div>
+    <div class="hero-date-line">${new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
   `;
   c.appendChild(hero);
 
-  // Frase del día
-  const fc = el('div', 'frase-card');
+  function tick() {
+    const t = timeTogether();
+    const de=$('h-days'),he=$('h-hours'),me=$('h-mins'),se=$('h-secs');
+    if(de) de.textContent=t.days;
+    if(he) he.textContent=String(t.hours).padStart(2,'0');
+    if(me) me.textContent=String(t.mins).padStart(2,'0');
+    if(se) se.textContent=String(t.secs).padStart(2,'0');
+  }
+  tick();
+  _counterTimer = setInterval(tick, 1000);
+
+  // ── FRASE DEL DÍA ──
+  const fc = el('div', 'frase-card anim anim-d1');
   fc.innerHTML = `
     <div class="frase-label">Frase del día</div>
     <div class="frase-text">${fraseDelDia()}</div>
   `;
   c.appendChild(fc);
 
-  // Quick access
-  const qg = el('div', 'quick-grid');
+  // ── ACCESOS RÁPIDOS ──
+  const qg = el('div', 'quick-grid anim anim-d2');
   [
-    { icon:ICONS.letters, label:'Cartas',    count:`${letters.length} cartas`,  section:'letters' },
-    { icon:ICONS.notes,   label:'Notas',     count:`${notes.length} notas`,     section:'notes'   },
-    { icon:ICONS.poems,   label:'Poemas',    count:`${poems.length} escritos`,  section:'poems'   },
-    { icon:ICONS.details, label:'Detalles',  count:'Sorpresas',                 section:'details' },
+    { icon:ICONS.letters, label:'Cartas',   count:`${letters.length} cartas`, section:'letters' },
+    { icon:ICONS.notes,   label:'Notas',    count:`${notes.length} notas`,    section:'notes'   },
+    { icon:ICONS.poems,   label:'Poemas',   count:`${poems.length} escritos`, section:'poems'   },
+    { icon:ICONS.details, label:'Detalles', count:'Sorpresas',                section:'details' },
   ].forEach(q => {
     const qc = el('div', 'quick-card');
     qc.innerHTML = `<div class="qc-icon">${q.icon}</div><div class="qc-label">${q.label}</div><div class="qc-count">${q.count}</div>`;
@@ -272,13 +318,9 @@ async function renderHome() {
   });
   c.appendChild(qg);
 
-  // Last note preview
+  // ── ÚLTIMA NOTA ──
   if (notes[0]) {
-    const h = el('h3', '');
-    h.style.cssText = 'font-family:var(--font-title);color:var(--rose);margin:.9rem 0 .7rem;font-size:1.15rem;font-style:italic';
-    h.textContent = 'Última nota';
-    c.appendChild(h);
-    const nc = el('div', 'note-card');
+    const nc = el('div', 'note-card anim anim-d3');
     nc.innerHTML = `
       <div class="note-top">
         <div><div class="note-date">${fmtDate(notes[0].date)}</div>${notes[0].title?`<div class="note-title">${notes[0].title}</div>`:''}</div>
@@ -290,20 +332,16 @@ async function renderHome() {
     c.appendChild(nc);
   }
 
-  // Last poem preview
+  // ── ÚLTIMO ESCRITO ──
   if (poems[0]) {
-    const h2 = el('h3', '');
-    h2.style.cssText = 'font-family:var(--font-title);color:var(--rose);margin:.9rem 0 .7rem;font-size:1.15rem;font-style:italic';
-    h2.textContent = 'Último escrito';
-    c.appendChild(h2);
-    const pc = el('div', 'poem-card');
+    const pc = el('div', 'poem-card anim anim-d4');
     pc.innerHTML = `<div class="poem-type-tag">${typeLabel(poems[0].type)}</div><div class="poem-title">${poems[0].title}</div><div class="poem-preview">${poems[0].content}</div>`;
     pc.onclick = () => App.navigate('poems');
     c.appendChild(pc);
   }
 
-  // Roulette
-  const rl = el('div', 'roulette-card');
+  // ── RULETA ──
+  const rl = el('div', 'roulette-card anim anim-d5');
   rl.innerHTML = `
     <div class="roulette-icon">${ICONS.wheel}</div>
     <div><div class="card-title" style="margin:0">Ruleta romántica</div><div class="card-sub">Gira para elegir el plan de esta noche</div></div>
@@ -328,56 +366,16 @@ function openRoulette() {
 
 // ── LETTERS ──
 async function renderLetters() {
-  [S.letters, S.gallery] = await Promise.all([api('GET', '/letters'), api('GET', '/gallery')]);
+  S.letters = await api('GET', '/letters');
   const c = $('content');
   c.innerHTML = '';
 
-  const head = el('div', 'section-head');
-  head.innerHTML = `<h2>Cartas & Escritos</h2><button class="btn btn-ghost" onclick="openAddLetter()">${ICONS.plus} Añadir</button>`;
-  c.appendChild(head);
+  c.appendChild(backBtn());
+  c.appendChild(sectionTitle('Correspondencia', 'Cartas', 'Las que necesitan página entera. Ábrelas cuando tengas tiempo de quedarte un rato.'));
 
-  const desc = el('p', 'section-desc');
-  desc.textContent = 'Cada carta es un pedazo de corazón puesto en palabras.';
-  c.appendChild(desc);
-
-  // ── FOTOS & PALABRAS (flip cards) ──
-  const fotos = S.gallery.filter(g => g.seeded);
-  if (fotos.length) {
-    const ft = el('p', 'flip-section-title', 'Fotos & Palabras');
-    c.appendChild(ft);
-
-    const grid = el('div', 'flip-grid');
-    fotos.forEach(img => {
-      const card = el('div', 'flip-card');
-      const inner = el('div', 'flip-card-inner');
-
-      const front = el('div', 'flip-front');
-      front.innerHTML = `
-        <img src="${imgSrc(img)}" alt="${img.title}" loading="lazy">
-        <div class="flip-front-overlay">
-          <div class="flip-front-title">${img.title}</div>
-          <div class="flip-front-hint">toca para leer</div>
-        </div>
-      `;
-
-      const back = el('div', 'flip-back');
-      back.innerHTML = `
-        <div class="flip-back-title">${img.title}</div>
-        <div class="flip-back-text">${img.description || ''}</div>
-      `;
-
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
-
-      card.onclick = () => card.classList.toggle('flipped');
-      grid.appendChild(card);
-    });
-    c.appendChild(grid);
-
-    const div = el('hr', 'divider');
-    c.appendChild(div);
-  }
+  const actionRow = el('div', 'sec-action-row');
+  actionRow.innerHTML = `<button class="btn btn-ghost" onclick="openAddLetter()">${ICONS.plus} Añadir carta</button>`;
+  c.appendChild(actionRow);
 
   if (!S.letters.length) { c.appendChild(emptyState('Aún no hay cartas')); return; }
 
@@ -459,38 +457,72 @@ window.saveLetter = async () => {
 
 // ── NOTES ──
 async function renderNotes() {
-  S.notes = await api('GET', '/notes');
+  [S.notes, S.gallery] = await Promise.all([api('GET', '/notes'), api('GET', '/gallery')]);
   const c = $('content');
   c.innerHTML = '';
 
-  const head = el('div', 'section-head');
-  head.innerHTML = `<h2>Notas diarias</h2>`;
-  c.appendChild(head);
+  c.appendChild(backBtn());
+  c.appendChild(sectionTitle('Día a día', 'Notas', 'Los pequeños momentos que merecen ser recordados, escritos con cuidado.'));
 
-  const desc = el('p', 'section-desc');
-  desc.textContent = 'Los pequeños momentos del día a día que merecen ser recordados.';
-  c.appendChild(desc);
+  // ── FOTOS & PALABRAS (flip cards) ──
+  const fotos = (S.gallery || []).filter(g => g.seeded || g.seeded === 1);
+  if (fotos.length) {
+    const ft = el('p', 'flip-section-title');
+    ft.textContent = 'Fotos & Palabras';
+    c.appendChild(ft);
+
+    const grid = el('div', 'flip-grid');
+    fotos.forEach(img => {
+      const card = el('div', 'flip-card');
+      const inner = el('div', 'flip-card-inner');
+      const front = el('div', 'flip-front');
+      front.innerHTML = `
+        <img src="${imgSrc(img)}" alt="${img.title}" loading="lazy">
+        <div class="flip-front-overlay">
+          <div class="flip-front-title">${img.title}</div>
+          <div class="flip-front-hint">toca para leer</div>
+        </div>`;
+      const back = el('div', 'flip-back');
+      back.innerHTML = `
+        <div class="flip-back-title">${img.title}</div>
+        <div class="flip-back-text">${img.description || ''}</div>`;
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+      card.onclick = () => card.classList.toggle('flipped');
+      grid.appendChild(card);
+    });
+    c.appendChild(grid);
+    c.appendChild(el('hr', 'divider'));
+  }
+
+  const notesHead = el('p', 'flip-section-title');
+  notesHead.textContent = 'Mis notas';
+  c.appendChild(notesHead);
 
   if (!S.notes.length) {
     c.appendChild(emptyState('Aún no hay notas'));
   } else {
+    const gallery = el('div', 'note-gallery');
     S.notes.forEach(n => {
-      const nc = el('div', 'note-card');
+      const nc = el('div', 'note-gallery-card');
       nc.innerHTML = `
-        <div class="note-top">
-          <div><div class="note-date">${fmtDate(n.date)}</div>${n.title?`<div class="note-title">${n.title}</div>`:''}</div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem">
-            <div class="note-mood">${n.mood}</div>
-            <div style="display:flex;gap:.35rem">
-              <button class="btn btn-ghost" style="padding:.28rem .5rem" onclick="editNote(${n.id})">${ICONS.edit}</button>
-              <button class="btn btn-danger" style="padding:.28rem .5rem" onclick="deleteNote(${n.id})">${ICONS.trash}</button>
-            </div>
+        <div class="note-card-top">
+          <span class="note-card-date">${fmtDate(n.date)}</span>
+          <span class="note-card-mood">${n.mood || ''}</span>
+        </div>
+        <div class="note-card-body">
+          ${n.title ? `<div class="note-card-title">${n.title}</div>` : ''}
+          <div class="note-card-text">${n.content}</div>
+          <div class="note-card-actions">
+            <button class="btn btn-ghost" style="padding:.28rem .5rem" onclick="editNote(${n.id})">${ICONS.edit}</button>
+            <button class="btn btn-danger" style="padding:.28rem .5rem" onclick="deleteNote(${n.id})">${ICONS.trash}</button>
           </div>
         </div>
-        <div class="note-content" style="margin-top:.5rem">${n.content}</div>
       `;
-      c.appendChild(nc);
+      gallery.appendChild(nc);
     });
+    c.appendChild(gallery);
   }
 
   const fab = el('button', 'fab');
@@ -542,14 +574,8 @@ async function renderPoems() {
   S.poems = await api('GET', '/poems');
   const c = $('content');
   c.innerHTML = '';
-
-  const head = el('div', 'section-head');
-  head.innerHTML = `<h2>Poemas & Canciones</h2>`;
-  c.appendChild(head);
-
-  const desc = el('p', 'section-desc');
-  desc.textContent = 'Palabras que nacen del corazón para llegar a las manos de Yasmin.';
-  c.appendChild(desc);
+  c.appendChild(backBtn());
+  c.appendChild(sectionTitle('Verso a verso', 'Poemas', 'Lo que la prosa no alcanza a decir se queda aquí, en líneas cortas.'));
 
   const ff = el('div', 'poem-filters');
   [{ key:'all',label:'Todos' },{ key:'poem',label:'Poemas' },{ key:'song',label:'Canciones' },{ key:'story',label:'Historias' }].forEach(f => {
@@ -631,14 +657,8 @@ async function renderGallery() {
   S.gallery = await api('GET', '/gallery');
   const c = $('content');
   c.innerHTML = '';
-
-  const head = el('div', 'section-head');
-  head.innerHTML = `<h2>Galería</h2>`;
-  c.appendChild(head);
-
-  const desc = el('p', 'section-desc');
-  desc.textContent = 'Momentos guardados para siempre, con las palabras que les dan vida.';
-  c.appendChild(desc);
+  c.appendChild(backBtn());
+  c.appendChild(sectionTitle('Álbum', 'Galería', 'Pétalos, papeles y luz de tarde. Las cosas que fotografío porque me recuerdan a ti.'));
 
   // Upload zone
   const uz = el('label', 'gallery-upload-zone');
@@ -713,20 +733,23 @@ async function renderBarbie() {
   S.movies = await api('GET', '/movies');
   const c = $('content');
   c.innerHTML = '';
+  c.appendChild(backBtn());
 
-  const hero = el('div', 'barbie-hero');
-  hero.innerHTML = `
-    <h2>Mundo Barbie</h2>
-    <p>Las películas favoritas de Yasmin, siempre listas para ver juntos</p>
-  `;
-  c.appendChild(hero);
+  c.appendChild(sectionTitle('Tu color favorito', 'Barbie', 'Tu lado rosa, sin pedir permiso: lazos, perlas, brillo y ese gusto tan tuyo por lo bonito.'));
 
-  const head = el('div', 'section-head');
-  head.innerHTML = `<span></span><button class="btn btn-primary" onclick="openMovieForm()">${ICONS.plus} Añadir película</button>`;
-  c.appendChild(head);
+  const actionRow = el('div', 'sec-action-row');
+  actionRow.innerHTML = `<button class="btn btn-primary" onclick="openMovieForm()">${ICONS.plus} Añadir película</button>`;
+  c.appendChild(actionRow);
 
   if (!S.movies.length) {
-    c.appendChild(emptyState('Añade vuestras películas favoritas'));
+    const empty = el('div', 'barbie-empty');
+    empty.innerHTML = `
+      <p style="text-align:center;font-family:var(--font-body);font-style:italic;color:var(--text-muted);margin-bottom:1rem">
+        Añade películas pegando el enlace de Google Drive.<br>
+        En Drive: clic derecho en el vídeo → Compartir → Copiar enlace.
+      </p>
+    `;
+    c.appendChild(empty);
     return;
   }
 
@@ -799,14 +822,8 @@ window.deleteMovie = async (id) => {
 async function renderDetails() {
   const c = $('content');
   c.innerHTML = '';
-
-  const head = el('div', 'section-head');
-  head.innerHTML = `<h2>Detalles & Sorpresas</h2>`;
-  c.appendChild(head);
-
-  const desc = el('p', 'section-desc');
-  desc.textContent = 'Cada experiencia fue creada con amor, una por una, solo para Yasmin.';
-  c.appendChild(desc);
+  c.appendChild(backBtn());
+  c.appendChild(sectionTitle('Para ti', 'Detalles', 'Cada experiencia fue creada con amor, una por una, solo para Yasmin.'));
 
   EXPERIENCES.forEach(exp => {
     const ec = el('div', 'exp-card');
@@ -835,6 +852,22 @@ async function renderDetails() {
 }
 
 // ── HELPERS ──
+function sectionTitle(eyebrow, title, desc) {
+  const w = el('div', 'sec-title-wrap anim');
+  w.innerHTML = `
+    <p class="sec-eyebrow">${eyebrow}</p>
+    <h2 class="sec-title">${title}</h2>
+    <div class="sec-line"></div>
+    ${desc ? `<p class="sec-desc">${desc}</p>` : ''}
+  `;
+  return w;
+}
+function backBtn() {
+  const b = el('button', 'back-btn anim');
+  b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="15 18 9 12 15 6"/></svg> Inicio`;
+  b.onclick = () => App.navigate('home');
+  return b;
+}
 function emptyState(text) {
   const d = el('div', 'empty-state');
   d.innerHTML = `<div class="empty-icon">${ICONS.poems}</div><div class="empty-text">${text}</div>`;
@@ -849,7 +882,7 @@ async function init() {
   } catch (_) {}
 
   document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.onclick = () => App.navigate(btn.dataset.section);
+    btn.onclick = () => { App.navigate(btn.dataset.section); App.closeMenu(); };
   });
 
   await App.navigate('home');

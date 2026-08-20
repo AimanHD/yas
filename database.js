@@ -145,7 +145,7 @@ async function seed() {
 
   /* SETTINGS */
   if (!(await db.getSetting('start_date'))) {
-    await db.setSetting('start_date', '2026-07-01');
+    await db.setSetting('start_date', '2026-06-30');
     await db.setSetting('her_name',   'Yasmin');
     await db.setSetting('your_name',  'Aiman');
   }
@@ -213,6 +213,23 @@ async function seed() {
       await db.insert('gallery', { src, title:p.title, description:desc, seeded:true });
     }
     console.log('  Galería:', await db.count('gallery'));
+  }
+
+  /* NOTES */
+  if ((await db.count('notes')) === 0) {
+    const notes = [
+      { date:'2026-07-01', title:'El primer día', mood:'🥰', content:'Hoy empezó todo. No sé cómo explicarlo, pero desde que estás tú, el mundo huele diferente. Estoy muy feliz.' },
+      { date:'2026-07-08', title:'Una semana juntos', mood:'🌸', content:'Una semana ya. Parece poco tiempo pero contigo cada día tiene el peso de una vida entera. Me has mirado hoy de una manera que no voy a olvidar.' },
+      { date:'2026-07-15', title:'Te vi reír', mood:'🌟', content:'Hoy te vi reír a carcajadas por algo tonto y pensé: quiero escuchar esa risa el resto de mi vida. No hay música mejor.' },
+      { date:'2026-07-22', title:'Un miércoles normal', mood:'😊', content:'No pasó nada especial. Solo estuvimos juntos. Y fue perfecto. Eso es lo que más me gusta de estar contigo, que los días normales se vuelven especiales.' },
+      { date:'2026-07-29', title:'Te echaba de menos', mood:'💭', content:'Hoy no te vi y lo noté en todo. En el café de la mañana, en el silencio del cuarto, en las canciones que me ponía. Te echo de menos cuando no estás.' },
+      { date:'2026-08-05', title:'Agosto contigo', mood:'🔥', content:'Agosto siempre fue mi mes favorito. Este año lo es aún más. Tú eres el motivo.' },
+      { date:'2026-08-10', title:'Lo que más me gusta de ti', mood:'💫', content:'Tu forma de escuchar. Cuando te cuento algo, lo escuchas de verdad. No finges. Me miras. Y eso vale más que mil palabras bonitas.' },
+      { date:'2026-08-14', title:'Dos meses casi', mood:'🥰', content:'Casi dos meses. Me parece imposible que haya un tiempo en el que no te conocía. ¿Cómo era todo antes?' },
+      { date:'2026-08-19', title:'Dos meses', mood:'🌙', content:'Dos meses contigo. Dos meses de aprender qué es querer a alguien de verdad. Gracias por existir, Yasmin.' },
+    ];
+    for (const n of notes) await db.insert('notes', n);
+    console.log('  Notas:', await db.count('notes'));
   }
 
   /* DATES */
