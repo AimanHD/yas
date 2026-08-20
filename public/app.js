@@ -152,10 +152,13 @@ function imgSrc(item) {
   return BACKEND + '/uploads/' + encodeURIComponent(item.filename || '');
 }
 function driveEmbedUrl(url) {
-  // Archivo individual: /file/d/ID  →  preview
+  // YouTube: watch?v=ID o youtu.be/ID o shorts/ID
+  const ytM = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (ytM) return `https://www.youtube.com/embed/${ytM[1]}?autoplay=1&rel=0`;
+  // Google Drive archivo individual: /file/d/ID  →  preview
   const fileM = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if (fileM) return `https://drive.google.com/file/d/${fileM[1]}/preview`;
-  // Carpeta: /folders/ID  →  vista de carpeta embebida
+  // Google Drive carpeta
   const folderM = url.match(/\/folders\/([a-zA-Z0-9_-]+)/);
   if (folderM) return `https://drive.google.com/embeddedfolderview?id=${folderM[1]}&usp=sharing#list`;
   return url;
@@ -788,9 +791,9 @@ window.openMovieForm = (movie) => {
   App.openModal(`
     <div class="form-group"><label class="form-label">Nombre de la película</label><input class="form-input" id="mv-title" value="${movie?.title || ''}" placeholder="Barbie (2023)…"></div>
     <div class="form-group">
-      <label class="form-label">Enlace de Google Drive</label>
-      <input class="form-input" id="mv-url" value="${movie?.drive_url || ''}" placeholder="https://drive.google.com/file/d/…">
-      <small style="color:var(--text-muted);font-size:.74rem;margin-top:.3rem;display:block">Pega el enlace de compartir de Google Drive</small>
+      <label class="form-label">Enlace de YouTube o Google Drive</label>
+      <input class="form-input" id="mv-url" value="${movie?.drive_url || ''}" placeholder="https://youtube.com/watch?v=… o drive.google.com/…">
+      <small style="color:var(--text-muted);font-size:.74rem;margin-top:.3rem;display:block">Pega el enlace de YouTube o de Google Drive</small>
     </div>
     <div class="form-group"><label class="form-label">Descripción (opcional)</label><textarea class="form-textarea" id="mv-desc" rows="2" placeholder="Un apunte sobre esta peli…">${movie?.description || ''}</textarea></div>
     <div style="display:flex;gap:.6rem">
