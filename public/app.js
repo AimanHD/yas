@@ -1,5 +1,24 @@
-/* ── YASMIN APP ♥ ── */
+/* ── YASMIN APP ── */
 
+// ── SVG ICONS ──
+const ICONS = {
+  home:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  letters: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  notes:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 9.5-9.5z"/></svg>`,
+  poems:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/></svg>`,
+  gallery: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+  barbie:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
+  details: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  pdf:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+  play:    `<svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+  plus:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  edit:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+  trash:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+  upload:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>`,
+  wheel:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg>`,
+};
+
+// ── FRASES ──
 const FRASES = [
   "Eres el jazmín, la luz y el cielo, todo junto en una persona.",
   "Mis latidos, según como estés tú, laten más o menos tranquilos.",
@@ -36,56 +55,44 @@ const FRASES = [
 ];
 
 const EXPERIENCES = [
-  {
-    icon: '👁️', title: 'La Linterna de Yasmin',
-    desc: 'Mueve la luz por la oscuridad y descubre las palabras escondidas en su mirada',
-    url: '/experience/linterna'
-  },
-  {
-    icon: '🪞', title: 'El Espejo Empañado',
-    desc: 'Pasa el dedo por el espejo y descubre los mensajes ocultos bajo el vaho',
-    url: '/experience/espejo'
-  },
-  {
-    icon: '🌙', title: 'Buenas Noches, Yasmin',
-    desc: 'Toca las estrellas en el cielo nocturno y descubre los pensamientos secretos',
-    url: '/experience/estrellas'
-  },
-  {
-    icon: '🎈', title: 'Los Globos de Colores',
-    desc: 'Revienta los globos uno a uno y descubre las palabras que te describen',
-    url: '/experience/globos'
-  },
-  {
-    icon: '📖', title: 'Las Mil Maneras en que me Amas',
-    desc: 'Un libro antiguo con todas las formas en que su amor se manifiesta cada día',
-    url: '/experience/libro'
-  },
+  { icon:'eye',    title:'La Linterna de Yasmin',          desc:'Mueve la luz por la oscuridad y descubre las palabras escondidas en su mirada', url:'/experience/linterna' },
+  { icon:'mirror', title:'El Espejo Empañado',             desc:'Pasa el dedo por el espejo y descubre los mensajes ocultos bajo el vaho',       url:'/experience/espejo'   },
+  { icon:'moon',   title:'Buenas Noches, Yasmin',          desc:'Toca las estrellas en el cielo nocturno y descubre los pensamientos secretos',   url:'/experience/estrellas'},
+  { icon:'flower', title:'Los Globos de Colores',          desc:'Revienta los globos uno a uno y descubre las palabras que te describen',         url:'/experience/globos'   },
+  { icon:'book',   title:'Las Mil Maneras en que me Amas', desc:'Un libro antiguo con todas las formas en que su amor se manifiesta cada día',    url:'/experience/libro'    },
 ];
 
+const EXP_ICONS = {
+  eye:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  mirror: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8" ry="10"/><line x1="12" y1="22" x2="12" y2="24"/><line x1="8" y1="24" x2="16" y2="24"/></svg>`,
+  moon:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`,
+  flower: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 010 6M12 16a3 3 0 010 6M2 12a3 3 0 016 0M16 12a3 3 0 016 0M4.93 4.93a3 3 0 014.24 4.24M14.83 14.83a3 3 0 004.24 4.24M4.93 19.07a3 3 0 014.24-4.24M14.83 9.17a3 3 0 014.24-4.24"/></svg>`,
+  book:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
+};
+
 const ROULETTE_PLANS = [
-  '🌙 Una cena romántica en casa con velas',
-  '🎬 Maraton de películas abrazados',
-  '🌹 Escribirle una carta de amor',
-  '☕ Desayuno sorpresa en la cama',
-  '💃 Bailar juntos sin música',
-  '⭐ Contar estrellas desde algún sitio bonito',
-  '📸 Sesión de fotos de los dos',
-  '🍓 Preparar algo rico juntos',
-  '🛁 Un baño relajante con pétalos de rosa',
-  '📖 Leerle un cuento en voz alta',
-  '🎵 Crear vuestra playlist de amor',
-  '🌅 Ver el amanecer o el atardecer juntos',
-  '💌 Intercambiar cartas escritas a mano',
-  '🎂 Sorpresa dulce sin motivo',
-  '🌊 Un paseo por la orilla del mar',
+  'Una cena romántica en casa con velas',
+  'Maratón de películas abrazados',
+  'Escribirle una carta de amor',
+  'Desayuno sorpresa en la cama',
+  'Bailar juntos sin música',
+  'Contar estrellas desde algún sitio bonito',
+  'Sesión de fotos de los dos',
+  'Preparar algo rico juntos',
+  'Un baño relajante con pétalos de rosa',
+  'Leerle un cuento en voz alta',
+  'Crear vuestra playlist de amor',
+  'Ver el amanecer o el atardecer juntos',
+  'Intercambiar cartas escritas a mano',
+  'Sorpresa dulce sin motivo',
+  'Un paseo por la orilla del mar',
 ];
 
 // ── STATE ──
 const S = {
   section: 'home',
   settings: { start_date: '2026-07-01', her_name: 'Yasmin', your_name: 'Aiman' },
-  letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [],
+  letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [], movies: [],
   poemFilter: 'all',
   bookLetter: null,
   bookPage: 0,
@@ -114,35 +121,37 @@ const el = (tag, cls, html) => {
   return e;
 };
 function fmtDate(d) {
-  const opt = { day: 'numeric', month: 'long', year: 'numeric' };
-  return new Date(d).toLocaleDateString('es-ES', opt);
+  return new Date(d).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
 }
 function daysTogether() {
-  const start = new Date(S.settings.start_date);
-  const diff  = Math.floor((Date.now() - start) / 86400000);
+  const diff = Math.floor((Date.now() - new Date(S.settings.start_date)) / 86400000);
   return Math.max(0, diff);
 }
 function fraseDelDia() {
-  const idx = Math.floor(Date.now() / 86400000) % FRASES.length;
-  return FRASES[idx];
+  return FRASES[Math.floor(Date.now() / 86400000) % FRASES.length];
 }
 function typeLabel(type) {
   return { poem:'Poema', song:'Canción', story:'Historia', letter:'Carta' }[type] || type;
 }
-function typeIcon(type) {
-  return type === 'story' ? '📖' : type === 'song' ? '🎵' : '💌';
+function imgSrc(item) {
+  return item.src || '/uploads/' + encodeURIComponent(item.filename || '');
+}
+function driveEmbedUrl(url) {
+  // Archivo individual: /file/d/ID  →  preview
+  const fileM = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileM) return `https://drive.google.com/file/d/${fileM[1]}/preview`;
+  // Carpeta: /folders/ID  →  vista de carpeta embebida
+  const folderM = url.match(/\/folders\/([a-zA-Z0-9_-]+)/);
+  if (folderM) return `https://drive.google.com/embeddedfolderview?id=${folderM[1]}&usp=sharing#list`;
+  return url;
 }
 function splitPages(text, maxChars = 700) {
   const paras = text.split(/\n\n+/);
   const pages = [];
   let cur = '';
   for (const p of paras) {
-    if (cur && (cur + '\n\n' + p).length > maxChars) {
-      pages.push(cur.trim());
-      cur = p;
-    } else {
-      cur = cur ? cur + '\n\n' + p : p;
-    }
+    if (cur && (cur + '\n\n' + p).length > maxChars) { pages.push(cur.trim()); cur = p; }
+    else cur = cur ? cur + '\n\n' + p : p;
   }
   if (cur) pages.push(cur.trim());
   return pages.length ? pages : [''];
@@ -160,7 +169,7 @@ const App = window.App = {
   openModal(html, title) {
     $('modal-inner').innerHTML = `
       <div class="modal-handle"></div>
-      <div class="modal-title">${title}</div>
+      ${title ? `<div class="modal-title">${title}</div>` : ''}
       ${html}
     `;
     $('modal-overlay').classList.add('open');
@@ -173,26 +182,14 @@ const App = window.App = {
   },
   openBook(letter) {
     S.bookLetter = letter;
-    S.bookPage = 0;
-    if (letter.content) {
-      S.bookPages = splitPages(letter.content);
-    } else {
-      S.bookPages = null;
-    }
+    S.bookPage   = 0;
+    S.bookPages  = letter.content ? splitPages(letter.content) : null;
     renderBook();
     $('book-overlay').classList.add('open');
   },
-  closeBook() {
-    $('book-overlay').classList.remove('open');
-  },
-  openExp(url) {
-    $('exp-frame').src = url;
-    $('exp-overlay').classList.add('open');
-  },
-  closeExp() {
-    $('exp-frame').src = '';
-    $('exp-overlay').classList.remove('open');
-  },
+  closeBook()  { $('book-overlay').classList.remove('open') },
+  openExp(url) { $('exp-frame').src = url; $('exp-overlay').classList.add('open') },
+  closeExp()   { $('exp-frame').src = ''; $('exp-overlay').classList.remove('open') },
   async openSettings() {
     const s = S.settings;
     App.openModal(`
@@ -209,12 +206,10 @@ const App = window.App = {
         <input class="form-input" id="s-you" value="${s.your_name}">
       </div>
       <button class="btn btn-primary" style="width:100%" onclick="App.saveSettings()">Guardar</button>
-    `, '⚙️ Configuración');
+    `, 'Configuración');
   },
   async saveSettings() {
-    const date = $('s-date').value;
-    const her  = $('s-her').value;
-    const you  = $('s-you').value;
+    const date = $('s-date').value, her = $('s-her').value, you = $('s-you').value;
     await api('PUT', '/settings/start_date', { value: date });
     await api('PUT', '/settings/her_name',  { value: her });
     await api('PUT', '/settings/your_name', { value: you });
@@ -227,32 +222,17 @@ const App = window.App = {
 // ── RENDER DISPATCHER ──
 async function render() {
   const c = $('content');
-  c.innerHTML = '<div class="loading">✦ cargando…</div>';
-
-  const fns = {
-    home:    renderHome,
-    letters: renderLetters,
-    notes:   renderNotes,
-    poems:   renderPoems,
-    gallery: renderGallery,
-    details: renderDetails,
-  };
+  c.innerHTML = '<div class="loading">cargando…</div>';
+  const fns = { home:renderHome, letters:renderLetters, notes:renderNotes, poems:renderPoems, gallery:renderGallery, barbie:renderBarbie, details:renderDetails };
   await (fns[S.section] || renderHome)();
 }
 
 // ── HOME ──
 async function renderHome() {
   const [notes, poems, letters] = await Promise.all([
-    api('GET', '/notes'),
-    api('GET', '/poems'),
-    api('GET', '/letters'),
+    api('GET', '/notes'), api('GET', '/poems'), api('GET', '/letters'),
   ]);
   S.notes = notes; S.poems = poems; S.letters = letters;
-
-  const days = daysTogether();
-  const frase = fraseDelDia();
-  const lastNote = notes[0];
-  const lastPoem = poems[0];
 
   const c = $('content');
   c.innerHTML = '';
@@ -260,8 +240,8 @@ async function renderHome() {
   // Hero
   const hero = el('div', 'home-hero');
   hero.innerHTML = `
-    <div class="hero-days">${days}</div>
-    <div class="hero-label">días juntos con ${S.settings.her_name} ♥</div>
+    <div class="hero-days">${daysTogether()}</div>
+    <div class="hero-label">días juntos con ${S.settings.her_name}</div>
     <div class="hero-date">${new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
   `;
   c.appendChild(hero);
@@ -269,20 +249,19 @@ async function renderHome() {
   // Frase del día
   const fc = el('div', 'frase-card');
   fc.innerHTML = `
-    <div class="frase-label">✦ Frase del día ✦</div>
-    <div class="frase-text">"${frase}"</div>
+    <div class="frase-label">Frase del día</div>
+    <div class="frase-text">${fraseDelDia()}</div>
   `;
   c.appendChild(fc);
 
   // Quick access
   const qg = el('div', 'quick-grid');
-  const qItems = [
-    { icon:'💌', label:'Cartas', count:`${letters.length} cartas`, section:'letters' },
-    { icon:'📝', label:'Notas', count:`${notes.length} notas`, section:'notes' },
-    { icon:'🌸', label:'Poemas', count:`${poems.length} escritos`, section:'poems' },
-    { icon:'✨', label:'Detalles', count:'Juegos & sorpresas', section:'details' },
-  ];
-  qItems.forEach(q => {
+  [
+    { icon:ICONS.letters, label:'Cartas',    count:`${letters.length} cartas`,  section:'letters' },
+    { icon:ICONS.notes,   label:'Notas',     count:`${notes.length} notas`,     section:'notes'   },
+    { icon:ICONS.poems,   label:'Poemas',    count:`${poems.length} escritos`,  section:'poems'   },
+    { icon:ICONS.details, label:'Detalles',  count:'Sorpresas',                 section:'details' },
+  ].forEach(q => {
     const qc = el('div', 'quick-card');
     qc.innerHTML = `<div class="qc-icon">${q.icon}</div><div class="qc-label">${q.label}</div><div class="qc-count">${q.count}</div>`;
     qc.onclick = () => App.navigate(q.section);
@@ -290,69 +269,55 @@ async function renderHome() {
   });
   c.appendChild(qg);
 
-  // Last note
-  if (lastNote) {
-    const h = el('h3', '', 'Última nota ✍️');
-    h.style.cssText = 'font-family:var(--font-title);color:var(--rose);margin-bottom:.7rem;font-size:1.2rem';
+  // Last note preview
+  if (notes[0]) {
+    const h = el('h3', '');
+    h.style.cssText = 'font-family:var(--font-title);color:var(--rose);margin:.9rem 0 .7rem;font-size:1.15rem;font-style:italic';
+    h.textContent = 'Última nota';
     c.appendChild(h);
     const nc = el('div', 'note-card');
     nc.innerHTML = `
       <div class="note-top">
-        <div>
-          <div class="note-date">${fmtDate(lastNote.date)}</div>
-          ${lastNote.title ? `<div class="note-title">${lastNote.title}</div>` : ''}
-        </div>
-        <div class="note-mood">${lastNote.mood}</div>
+        <div><div class="note-date">${fmtDate(notes[0].date)}</div>${notes[0].title?`<div class="note-title">${notes[0].title}</div>`:''}</div>
+        <div class="note-mood">${notes[0].mood}</div>
       </div>
-      <div class="note-content" style="margin-top:.5rem;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden">${lastNote.content}</div>
+      <div class="note-content" style="margin-top:.5rem;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden">${notes[0].content}</div>
     `;
     nc.onclick = () => App.navigate('notes');
     c.appendChild(nc);
   }
 
-  // Last poem
-  if (lastPoem) {
-    const h2 = el('h3', '', 'Último escrito 🌸');
-    h2.style.cssText = 'font-family:var(--font-title);color:var(--rose);margin:.9rem 0 .7rem;font-size:1.2rem';
+  // Last poem preview
+  if (poems[0]) {
+    const h2 = el('h3', '');
+    h2.style.cssText = 'font-family:var(--font-title);color:var(--rose);margin:.9rem 0 .7rem;font-size:1.15rem;font-style:italic';
+    h2.textContent = 'Último escrito';
     c.appendChild(h2);
     const pc = el('div', 'poem-card');
-    pc.innerHTML = `
-      <div class="poem-type-tag">${typeLabel(lastPoem.type)}</div>
-      <div class="poem-title">${lastPoem.title}</div>
-      <div class="poem-preview">${lastPoem.content}</div>
-    `;
+    pc.innerHTML = `<div class="poem-type-tag">${typeLabel(poems[0].type)}</div><div class="poem-title">${poems[0].title}</div><div class="poem-preview">${poems[0].content}</div>`;
     pc.onclick = () => App.navigate('poems');
     c.appendChild(pc);
   }
 
-  // Roulette teaser
-  const rl = el('div', 'card mt-2');
-  rl.style.cssText += ';cursor:pointer;background:linear-gradient(135deg,#fff0f8,#fff)';
+  // Roulette
+  const rl = el('div', 'roulette-card');
   rl.innerHTML = `
-    <div style="display:flex;align-items:center;gap:.8rem">
-      <span style="font-size:2rem">🎡</span>
-      <div>
-        <div class="card-title" style="margin:0">Ruleta romántica</div>
-        <div class="card-sub">Gira para elegir el plan de esta noche</div>
-      </div>
-    </div>
+    <div class="roulette-icon">${ICONS.wheel}</div>
+    <div><div class="card-title" style="margin:0">Ruleta romántica</div><div class="card-sub">Gira para elegir el plan de esta noche</div></div>
   `;
   rl.onclick = openRoulette;
   c.appendChild(rl);
 }
 
 function openRoulette() {
-  const idx = Math.floor(Math.random() * ROULETTE_PLANS.length);
+  const plan = ROULETTE_PLANS[Math.floor(Math.random() * ROULETTE_PLANS.length)];
   App.openModal(`
     <div style="text-align:center;padding:1rem 0">
-      <div style="font-size:4rem;margin-bottom:.8rem;animation:hpulse 1s ease-in-out infinite">🎡</div>
-      <div style="font-family:var(--font-title);font-size:1.5rem;color:var(--rose);margin-bottom:.5rem">Plan para hoy</div>
-      <div style="font-family:var(--font-body);font-style:italic;font-size:1.2rem;line-height:1.6;color:var(--text);padding:1rem;background:var(--rose-pale);border-radius:var(--radius);margin-bottom:1rem">
-        ${ROULETTE_PLANS[idx]}
-      </div>
+      <div style="font-family:var(--font-title);font-size:1.45rem;color:var(--rose);margin-bottom:1rem;font-style:italic">Plan para esta noche</div>
+      <div style="font-family:var(--font-body);font-style:italic;font-size:1.2rem;line-height:1.7;color:var(--text);padding:1.2rem;background:var(--blush);border-radius:var(--radius);margin-bottom:1.2rem">${plan}</div>
       <div style="display:flex;gap:.7rem;justify-content:center">
-        <button class="btn btn-ghost" onclick="openRoulette()">🔄 Otra vez</button>
-        <button class="btn btn-primary" onclick="App.closeModal()">♥ Este me gusta</button>
+        <button class="btn btn-ghost" onclick="openRoulette()">Otra vez</button>
+        <button class="btn btn-primary" onclick="App.closeModal()">Este me gusta</button>
       </div>
     </div>
   `, '');
@@ -360,29 +325,67 @@ function openRoulette() {
 
 // ── LETTERS ──
 async function renderLetters() {
-  S.letters = await api('GET', '/letters');
+  [S.letters, S.gallery] = await Promise.all([api('GET', '/letters'), api('GET', '/gallery')]);
   const c = $('content');
   c.innerHTML = '';
 
   const head = el('div', 'section-head');
-  head.innerHTML = `<h2>💌 Cartas & Escritos</h2>
-    <button class="btn btn-ghost" onclick="openAddLetter()">+ Añadir</button>`;
+  head.innerHTML = `<h2>Cartas & Escritos</h2><button class="btn btn-ghost" onclick="openAddLetter()">${ICONS.plus} Añadir</button>`;
   c.appendChild(head);
 
   const desc = el('p', 'section-desc');
   desc.textContent = 'Cada carta es un pedazo de corazón puesto en palabras.';
   c.appendChild(desc);
 
-  if (!S.letters.length) {
-    c.appendChild(emptyState('💌', 'No hay cartas aún'));
-    return;
+  // ── FOTOS & PALABRAS (flip cards) ──
+  const fotos = S.gallery.filter(g => g.seeded);
+  if (fotos.length) {
+    const ft = el('p', 'flip-section-title', 'Fotos & Palabras');
+    c.appendChild(ft);
+
+    const grid = el('div', 'flip-grid');
+    fotos.forEach(img => {
+      const card = el('div', 'flip-card');
+      const inner = el('div', 'flip-card-inner');
+
+      const front = el('div', 'flip-front');
+      front.innerHTML = `
+        <img src="${imgSrc(img)}" alt="${img.title}" loading="lazy">
+        <div class="flip-front-overlay">
+          <div class="flip-front-title">${img.title}</div>
+          <div class="flip-front-hint">toca para leer</div>
+        </div>
+      `;
+
+      const back = el('div', 'flip-back');
+      back.innerHTML = `
+        <div class="flip-back-title">${img.title}</div>
+        <div class="flip-back-text">${img.description || ''}</div>
+      `;
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+
+      card.onclick = () => card.classList.toggle('flipped');
+      grid.appendChild(card);
+    });
+    c.appendChild(grid);
+
+    const div = el('hr', 'divider');
+    c.appendChild(div);
   }
+
+  if (!S.letters.length) { c.appendChild(emptyState('Aún no hay cartas')); return; }
 
   const grid = el('div', 'letter-grid');
   S.letters.forEach(l => {
     const lc = el('div', 'letter-card');
+    const iconSvg = l.type === 'story'
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
     lc.innerHTML = `
-      <div class="letter-type-icon">${typeIcon(l.type)}</div>
+      <div class="letter-type-icon">${iconSvg}</div>
       <div class="letter-info">
         <div class="letter-title">${l.title}</div>
         ${l.subtitle ? `<div class="letter-sub">${l.subtitle}</div>` : ''}
@@ -401,16 +404,13 @@ function renderBook() {
 
   if (!letter.content && letter.filename) {
     bc.innerHTML = `
-      <div class="book-header">
-        <h2>${letter.title}</h2>
-        ${letter.subtitle ? `<p>${letter.subtitle}</p>` : ''}
-      </div>
+      <div class="book-header"><h2>${letter.title}</h2>${letter.subtitle?`<p>${letter.subtitle}</p>`:''}</div>
       <div class="book-pages">
         <div class="pdf-view">
-          <div class="pdf-icon">📄</div>
+          <div class="pdf-icon">${ICONS.pdf}</div>
           <h3>${letter.title}</h3>
           ${letter.subtitle ? `<p>${letter.subtitle}</p>` : ''}
-          <a href="/love/${encodeURIComponent(letter.filename)}" target="_blank">Abrir carta ↗</a>
+          <a href="/love/${encodeURIComponent(letter.filename)}" target="_blank">Abrir carta</a>
         </div>
       </div>
     `;
@@ -420,15 +420,9 @@ function renderBook() {
   const pages = S.bookPages;
   const page  = S.bookPage;
   const total = pages.length;
-
   bc.innerHTML = `
-    <div class="book-header">
-      <h2>${letter.title}</h2>
-      ${letter.subtitle ? `<p>${letter.subtitle}</p>` : ''}
-    </div>
-    <div class="book-pages">
-      <div class="book-text">${pages[page] ? pages[page].replace(/\n/g,'<br>') : ''}</div>
-    </div>
+    <div class="book-header"><h2>${letter.title}</h2>${letter.subtitle?`<p>${letter.subtitle}</p>`:''}</div>
+    <div class="book-pages"><div class="book-text">${(pages[page]||'').replace(/\n/g,'<br>')}</div></div>
     <div class="book-nav-row">
       <button class="book-nav-btn" onclick="bookPrev()" ${page===0?'disabled':''}>← Anterior</button>
       <span class="book-page-counter">${page+1} / ${total}</span>
@@ -442,36 +436,18 @@ window.bookNext = () => { if (S.bookPage < S.bookPages.length-1) { S.bookPage++;
 
 function openAddLetter() {
   App.openModal(`
-    <div class="form-group">
-      <label class="form-label">Título</label>
-      <input class="form-input" id="l-title" placeholder="Título de la carta...">
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="l-title" placeholder="Título de la carta..."></div>
+    <div class="form-group"><label class="form-label">Subtítulo</label><input class="form-input" id="l-sub" placeholder="Una frase bonita..."></div>
+    <div class="form-group"><label class="form-label">Tipo</label>
+      <select class="form-select" id="l-type"><option value="letter">Carta</option><option value="story">Historia</option></select>
     </div>
-    <div class="form-group">
-      <label class="form-label">Subtítulo (opcional)</label>
-      <input class="form-input" id="l-sub" placeholder="Una frase bonita...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Tipo</label>
-      <select class="form-select" id="l-type">
-        <option value="letter">Carta</option>
-        <option value="story">Historia</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Contenido</label>
-      <textarea class="form-textarea" id="l-content" rows="7" placeholder="Escribe aquí..."></textarea>
-    </div>
+    <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-textarea" id="l-content" rows="7" placeholder="Escribe aquí..."></textarea></div>
     <button class="btn btn-primary" style="width:100%" onclick="saveLetter()">Guardar carta</button>
-  `, '💌 Nueva carta');
+  `, 'Nueva carta');
 }
 
 window.saveLetter = async () => {
-  const data = {
-    title: $('l-title').value.trim(),
-    subtitle: $('l-sub').value.trim(),
-    content: $('l-content').value.trim(),
-    type: $('l-type').value,
-  };
+  const data = { title:$('l-title').value.trim(), subtitle:$('l-sub').value.trim(), content:$('l-content').value.trim(), type:$('l-type').value };
   if (!data.title || !data.content) return;
   await api('POST', '/letters', data);
   App.closeModal();
@@ -485,7 +461,7 @@ async function renderNotes() {
   c.innerHTML = '';
 
   const head = el('div', 'section-head');
-  head.innerHTML = `<h2>📝 Notas diarias</h2>`;
+  head.innerHTML = `<h2>Notas diarias</h2>`;
   c.appendChild(head);
 
   const desc = el('p', 'section-desc');
@@ -493,21 +469,18 @@ async function renderNotes() {
   c.appendChild(desc);
 
   if (!S.notes.length) {
-    c.appendChild(emptyState('📝', 'No hay notas todavía'));
+    c.appendChild(emptyState('Aún no hay notas'));
   } else {
     S.notes.forEach(n => {
       const nc = el('div', 'note-card');
       nc.innerHTML = `
         <div class="note-top">
-          <div>
-            <div class="note-date">${fmtDate(n.date)}</div>
-            ${n.title ? `<div class="note-title">${n.title}</div>` : ''}
-          </div>
-          <div>
+          <div><div class="note-date">${fmtDate(n.date)}</div>${n.title?`<div class="note-title">${n.title}</div>`:''}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem">
             <div class="note-mood">${n.mood}</div>
-            <div class="card-actions" style="margin-top:.5rem">
-              <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.8rem" onclick="editNote(${n.id})">✏️</button>
-              <button class="btn btn-danger" style="padding:.3rem .6rem;font-size:.8rem" onclick="deleteNote(${n.id})">🗑</button>
+            <div style="display:flex;gap:.35rem">
+              <button class="btn btn-ghost" style="padding:.28rem .5rem" onclick="editNote(${n.id})">${ICONS.edit}</button>
+              <button class="btn btn-danger" style="padding:.28rem .5rem" onclick="deleteNote(${n.id})">${ICONS.trash}</button>
             </div>
           </div>
         </div>
@@ -517,7 +490,6 @@ async function renderNotes() {
     });
   }
 
-  // FAB
   const fab = el('button', 'fab');
   fab.innerHTML = '+';
   fab.title = 'Nueva nota';
@@ -528,31 +500,17 @@ async function renderNotes() {
 function openNoteForm(note) {
   const today = new Date().toISOString().split('T')[0];
   const moods = ['🥰','😊','🌟','💭','😴','🌸','😢','🔥','💫','🌙'];
-  const sel   = (note && note.mood) || '🥰';
+  const sel = (note && note.mood) || '🥰';
   App.openModal(`
-    <div class="form-group">
-      <label class="form-label">Fecha</label>
-      <input class="form-input" type="date" id="n-date" value="${note ? note.date : today}">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Título (opcional)</label>
-      <input class="form-input" id="n-title" placeholder="Un título bonito…" value="${note ? note.title||'' : ''}">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Estado de ánimo</label>
-      <div class="mood-row">
-        ${moods.map(m => `<span class="mood-opt${m===sel?' selected':''}" onclick="selectMood(this,'${m}')">${m}</span>`).join('')}
-      </div>
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="n-date" value="${note ? note.date : today}"></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="n-title" placeholder="Un título bonito…" value="${note ? note.title||'' : ''}"></div>
+    <div class="form-group"><label class="form-label">Estado de ánimo</label>
+      <div class="mood-row">${moods.map(m=>`<span class="mood-opt${m===sel?' selected':''}" onclick="selectMood(this,'${m}')">${m}</span>`).join('')}</div>
       <input type="hidden" id="n-mood" value="${sel}">
     </div>
-    <div class="form-group">
-      <label class="form-label">Nota</label>
-      <textarea class="form-textarea" id="n-content" placeholder="¿Qué ocurrió hoy?">${note ? note.content : ''}</textarea>
-    </div>
-    <button class="btn btn-primary" style="width:100%" onclick="saveNote(${note ? note.id : 'null'})">
-      ${note ? 'Actualizar' : 'Guardar nota'}
-    </button>
-  `, note ? '✏️ Editar nota' : '📝 Nueva nota');
+    <div class="form-group"><label class="form-label">Nota</label><textarea class="form-textarea" id="n-content" placeholder="¿Qué ocurrió hoy?">${note ? note.content : ''}</textarea></div>
+    <button class="btn btn-primary" style="width:100%" onclick="saveNote(${note ? note.id : 'null'})">${note ? 'Actualizar' : 'Guardar nota'}</button>
+  `, note ? 'Editar nota' : 'Nueva nota');
 }
 
 window.selectMood = (el, mood) => {
@@ -562,24 +520,14 @@ window.selectMood = (el, mood) => {
 };
 
 window.saveNote = async (id) => {
-  const data = {
-    date: $('n-date').value,
-    title: $('n-title').value.trim(),
-    content: $('n-content').value.trim(),
-    mood: $('n-mood').value,
-  };
+  const data = { date:$('n-date').value, title:$('n-title').value.trim(), content:$('n-content').value.trim(), mood:$('n-mood').value };
   if (!data.content) return;
   if (id) await api('PUT', `/notes/${id}`, data);
   else    await api('POST', '/notes', data);
   App.closeModal();
   await renderNotes();
 };
-
-window.editNote = async (id) => {
-  const note = S.notes.find(n => n.id === id);
-  if (note) openNoteForm(note);
-};
-
+window.editNote   = (id) => { const n = S.notes.find(n => n.id === id); if (n) openNoteForm(n) };
 window.deleteNote = async (id) => {
   if (!confirm('¿Eliminar esta nota?')) return;
   await api('DELETE', `/notes/${id}`);
@@ -593,43 +541,34 @@ async function renderPoems() {
   c.innerHTML = '';
 
   const head = el('div', 'section-head');
-  head.innerHTML = `<h2>🌸 Poemas & Canciones</h2>`;
+  head.innerHTML = `<h2>Poemas & Canciones</h2>`;
   c.appendChild(head);
 
   const desc = el('p', 'section-desc');
   desc.textContent = 'Palabras que nacen del corazón para llegar a las manos de Yasmin.';
   c.appendChild(desc);
 
-  // Filters
   const ff = el('div', 'poem-filters');
-  const filters = [
-    { key:'all', label:'Todos' },
-    { key:'poem', label:'Poemas' },
-    { key:'song', label:'Canciones' },
-    { key:'story', label:'Historias' },
-  ];
-  filters.forEach(f => {
+  [{ key:'all',label:'Todos' },{ key:'poem',label:'Poemas' },{ key:'song',label:'Canciones' },{ key:'story',label:'Historias' }].forEach(f => {
     const b = el('button', `filter-btn${S.poemFilter===f.key?' active':''}`, f.label);
     b.onclick = () => { S.poemFilter = f.key; renderPoems() };
     ff.appendChild(b);
   });
   c.appendChild(ff);
 
-  const filtered = S.poemFilter === 'all'
-    ? S.poems
-    : S.poems.filter(p => p.type === S.poemFilter);
+  const filtered = S.poemFilter === 'all' ? S.poems : S.poems.filter(p => p.type === S.poemFilter);
 
   if (!filtered.length) {
-    c.appendChild(emptyState('🌸', 'No hay escritos en esta categoría'));
+    c.appendChild(emptyState('No hay escritos en esta categoría'));
   } else {
     filtered.forEach(p => {
       const pc = el('div', 'poem-card');
       pc.innerHTML = `
         <div class="flex-row" style="justify-content:space-between;margin-bottom:.5rem">
           <div class="poem-type-tag">${typeLabel(p.type)}</div>
-          <div style="display:flex;gap:.4rem">
-            <button class="btn btn-ghost" style="padding:.25rem .5rem;font-size:.78rem" onclick="event.stopPropagation();editPoem(${p.id})">✏️</button>
-            <button class="btn btn-danger" style="padding:.25rem .5rem;font-size:.78rem" onclick="event.stopPropagation();deletePoem(${p.id})">🗑</button>
+          <div style="display:flex;gap:.35rem">
+            <button class="btn btn-ghost" style="padding:.28rem .5rem" onclick="event.stopPropagation();editPoem(${p.id})">${ICONS.edit}</button>
+            <button class="btn btn-danger" style="padding:.28rem .5rem" onclick="event.stopPropagation();deletePoem(${p.id})">${ICONS.trash}</button>
           </div>
         </div>
         <div class="poem-title">${p.title}</div>
@@ -640,19 +579,15 @@ async function renderPoems() {
     });
   }
 
-  // FAB
-  const fab = el('button', 'fab');
-  fab.innerHTML = '+';
+  const fab = el('button', 'fab', '+');
   fab.onclick = () => openPoemForm();
   c.appendChild(fab);
 }
 
 function openPoemRead(p) {
   App.openModal(`
-    <div style="text-align:center;margin-bottom:1rem">
-      <span class="tag ${p.type==='song'?'tag-song':p.type==='story'?'tag-story':''}">${typeLabel(p.type)}</span>
-    </div>
-    <h3 style="font-family:var(--font-title);font-size:1.5rem;color:var(--rose);text-align:center;margin-bottom:1.2rem">${p.title}</h3>
+    <div style="text-align:center;margin-bottom:1rem"><span class="tag ${p.type==='song'?'tag-song':p.type==='story'?'tag-story':''}">${typeLabel(p.type)}</span></div>
+    <h3 style="font-family:var(--font-title);font-size:1.45rem;color:var(--rose);text-align:center;margin-bottom:1.2rem;font-style:italic">${p.title}</h3>
     <div class="poem-full">${p.content}</div>
     <div class="card-date text-center mt-2">${fmtDate(p.created_at)}</div>
   `, '');
@@ -660,46 +595,28 @@ function openPoemRead(p) {
 
 function openPoemForm(poem) {
   App.openModal(`
-    <div class="form-group">
-      <label class="form-label">Título</label>
-      <input class="form-input" id="p-title" placeholder="Título…" value="${poem ? poem.title : ''}">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Tipo</label>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="p-title" placeholder="Título…" value="${poem ? poem.title : ''}"></div>
+    <div class="form-group"><label class="form-label">Tipo</label>
       <select class="form-select" id="p-type">
         <option value="poem"  ${(!poem||poem.type==='poem' )?'selected':''}>Poema</option>
-        <option value="song"  ${poem&&poem.type==='song'  ?'selected':''}>Canción</option>
-        <option value="story" ${poem&&poem.type==='story' ?'selected':''}>Historia</option>
+        <option value="song"  ${poem&&poem.type==='song'   ?'selected':''}>Canción</option>
+        <option value="story" ${poem&&poem.type==='story'  ?'selected':''}>Historia</option>
       </select>
     </div>
-    <div class="form-group">
-      <label class="form-label">Contenido</label>
-      <textarea class="form-textarea" id="p-content" rows="9" style="min-height:200px">${poem ? poem.content : ''}</textarea>
-    </div>
-    <button class="btn btn-primary" style="width:100%" onclick="savePoem(${poem ? poem.id : 'null'})">
-      ${poem ? 'Actualizar' : 'Guardar'}
-    </button>
-  `, poem ? '✏️ Editar' : '🌸 Nuevo escrito');
+    <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-textarea" id="p-content" rows="9" style="min-height:200px">${poem ? poem.content : ''}</textarea></div>
+    <button class="btn btn-primary" style="width:100%" onclick="savePoem(${poem ? poem.id : 'null'})">${poem ? 'Actualizar' : 'Guardar'}</button>
+  `, poem ? 'Editar escrito' : 'Nuevo escrito');
 }
 
 window.savePoem = async (id) => {
-  const data = {
-    title:   $('p-title').value.trim(),
-    content: $('p-content').value.trim(),
-    type:    $('p-type').value,
-  };
+  const data = { title:$('p-title').value.trim(), content:$('p-content').value.trim(), type:$('p-type').value };
   if (!data.title || !data.content) return;
   if (id) await api('PUT', `/poems/${id}`, data);
   else    await api('POST', '/poems', data);
   App.closeModal();
   await renderPoems();
 };
-
-window.editPoem = (id) => {
-  const p = S.poems.find(p => p.id === id);
-  if (p) openPoemForm(p);
-};
-
+window.editPoem   = (id) => { const p = S.poems.find(p => p.id === id); if (p) openPoemForm(p) };
 window.deletePoem = async (id) => {
   if (!confirm('¿Eliminar este escrito?')) return;
   await api('DELETE', `/poems/${id}`);
@@ -713,7 +630,7 @@ async function renderGallery() {
   c.innerHTML = '';
 
   const head = el('div', 'section-head');
-  head.innerHTML = `<h2>📷 Galería</h2>`;
+  head.innerHTML = `<h2>Galería</h2>`;
   c.appendChild(head);
 
   const desc = el('p', 'section-desc');
@@ -724,25 +641,20 @@ async function renderGallery() {
   const uz = el('label', 'gallery-upload-zone');
   uz.setAttribute('for', 'gallery-file');
   uz.innerHTML = `
-    <div class="upload-icon">📸</div>
+    <div class="upload-icon">${ICONS.upload}</div>
     <div class="upload-text">Toca para añadir una foto</div>
     <input type="file" id="gallery-file" accept="image/*" style="display:none" onchange="handleGalleryUpload(event)">
   `;
   c.appendChild(uz);
 
-  if (!S.gallery.length) {
-    c.appendChild(emptyState('🌸', 'La galería está esperando tus fotos'));
-    return;
-  }
+  if (!S.gallery.length) { c.appendChild(emptyState('La galería está esperando tus fotos')); return; }
 
   const grid = el('div', 'gallery-grid');
   S.gallery.forEach(img => {
     const item = el('div', 'gallery-item');
     item.innerHTML = `
-      <img src="/uploads/${encodeURIComponent(img.filename)}" alt="${img.title||''}" loading="lazy">
-      <div class="gallery-cap">
-        <div class="gallery-cap-title">${img.title || ''}</div>
-      </div>
+      <img src="${imgSrc(img)}" alt="${img.title||''}" loading="lazy">
+      <div class="gallery-cap"><div class="gallery-cap-title">${img.title || ''}</div></div>
     `;
     item.onclick = () => openGalleryItem(img);
     grid.appendChild(item);
@@ -757,16 +669,10 @@ window.handleGalleryUpload = (e) => {
     <div style="text-align:center;margin-bottom:1rem">
       <img src="${URL.createObjectURL(file)}" style="max-height:200px;border-radius:var(--radius);object-fit:cover;width:100%">
     </div>
-    <div class="form-group">
-      <label class="form-label">Título</label>
-      <input class="form-input" id="gi-title" placeholder="Título de la foto…">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Descripción bonita ✍️</label>
-      <textarea class="form-textarea" id="gi-desc" rows="4" placeholder="Escribe algo sobre este momento…"></textarea>
-    </div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gi-title" placeholder="Título de la foto…"></div>
+    <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-textarea" id="gi-desc" rows="4" placeholder="Escribe algo sobre este momento…"></textarea></div>
     <button class="btn btn-primary" style="width:100%" onclick="uploadGalleryImg()">Guardar foto</button>
-  `, '📷 Nueva foto');
+  `, 'Nueva foto');
   window._pendingFile = file;
 };
 
@@ -784,13 +690,11 @@ window.uploadGalleryImg = async () => {
 
 function openGalleryItem(img) {
   App.openModal(`
-    <img src="/uploads/${encodeURIComponent(img.filename)}" style="width:100%;border-radius:var(--radius-sm);margin-bottom:1rem;object-fit:cover;max-height:280px">
-    ${img.title ? `<h3 style="font-family:var(--font-title);font-size:1.3rem;color:var(--rose);margin-bottom:.5rem">${img.title}</h3>` : ''}
-    ${img.description ? `<p style="font-family:var(--font-body);font-style:italic;line-height:1.7;color:var(--text)">${img.description}</p>` : ''}
+    <img src="${imgSrc(img)}" style="width:100%;border-radius:var(--radius-sm);margin-bottom:1rem;object-fit:cover;max-height:300px">
+    ${img.title ? `<h3 style="font-family:var(--font-title);font-size:1.3rem;color:var(--rose);margin-bottom:.6rem;font-style:italic">${img.title}</h3>` : ''}
+    ${img.description ? `<p style="font-family:var(--font-body);font-style:italic;line-height:1.75;color:var(--text)">${img.description}</p>` : ''}
     <div class="card-date mt-2">${fmtDate(img.created_at)}</div>
-    <div class="card-actions mt-2">
-      <button class="btn btn-danger" onclick="deleteGalleryImg(${img.id})">🗑 Eliminar</button>
-    </div>
+    ${!img.seeded ? `<div class="card-actions mt-2"><button class="btn btn-danger" onclick="deleteGalleryImg(${img.id})">${ICONS.trash} Eliminar</button></div>` : ''}
   `, '');
 }
 
@@ -801,13 +705,100 @@ window.deleteGalleryImg = async (id) => {
   await renderGallery();
 };
 
+// ── BARBIE ──
+async function renderBarbie() {
+  S.movies = await api('GET', '/movies');
+  const c = $('content');
+  c.innerHTML = '';
+
+  const hero = el('div', 'barbie-hero');
+  hero.innerHTML = `
+    <h2>Mundo Barbie</h2>
+    <p>Las películas favoritas de Yasmin, siempre listas para ver juntos</p>
+  `;
+  c.appendChild(hero);
+
+  const head = el('div', 'section-head');
+  head.innerHTML = `<span></span><button class="btn btn-primary" onclick="openMovieForm()">${ICONS.plus} Añadir película</button>`;
+  c.appendChild(head);
+
+  if (!S.movies.length) {
+    c.appendChild(emptyState('Añade vuestras películas favoritas'));
+    return;
+  }
+
+  const grid = el('div', 'movies-grid');
+  S.movies.forEach(m => {
+    const card = el('div', 'movie-card');
+    card.innerHTML = `
+      <div class="movie-poster">
+        <div class="movie-play">${ICONS.play}</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-title">${m.title}</div>
+        ${m.description ? `<div class="movie-desc">${m.description}</div>` : ''}
+      </div>
+    `;
+    card.onclick = () => App.openExp(driveEmbedUrl(m.drive_url));
+
+    // Long press / right-click to edit
+    let pressTimer;
+    card.addEventListener('touchstart', () => { pressTimer = setTimeout(() => openMovieForm(m), 600) });
+    card.addEventListener('touchend',   () => clearTimeout(pressTimer));
+    card.addEventListener('contextmenu', e => { e.preventDefault(); openMovieForm(m) });
+
+    grid.appendChild(card);
+  });
+  c.appendChild(grid);
+
+  const hint = el('p', '');
+  hint.style.cssText = 'text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:1rem;font-style:italic';
+  hint.textContent = 'Mantén pulsada una película para editarla';
+  c.appendChild(hint);
+}
+
+window.openMovieForm = (movie) => {
+  S.editItem = movie || null;
+  App.openModal(`
+    <div class="form-group"><label class="form-label">Nombre de la película</label><input class="form-input" id="mv-title" value="${movie?.title || ''}" placeholder="Barbie (2023)…"></div>
+    <div class="form-group">
+      <label class="form-label">Enlace de Google Drive</label>
+      <input class="form-input" id="mv-url" value="${movie?.drive_url || ''}" placeholder="https://drive.google.com/file/d/…">
+      <small style="color:var(--text-muted);font-size:.74rem;margin-top:.3rem;display:block">Pega el enlace de compartir de Google Drive</small>
+    </div>
+    <div class="form-group"><label class="form-label">Descripción (opcional)</label><textarea class="form-textarea" id="mv-desc" rows="2" placeholder="Un apunte sobre esta peli…">${movie?.description || ''}</textarea></div>
+    <div style="display:flex;gap:.6rem">
+      ${movie ? `<button class="btn btn-danger" onclick="deleteMovie(${movie.id})">${ICONS.trash}</button>` : ''}
+      <button class="btn btn-primary" style="flex:1" onclick="saveMovie()">Guardar</button>
+    </div>
+  `, movie ? 'Editar película' : 'Nueva película');
+};
+
+window.saveMovie = async () => {
+  const title = $('mv-title').value.trim();
+  const url   = $('mv-url').value.trim();
+  const desc  = $('mv-desc').value.trim();
+  if (!title || !url) return;
+  if (S.editItem) await api('PUT', `/movies/${S.editItem.id}`, { title, drive_url:url, description:desc });
+  else            await api('POST', '/movies', { title, drive_url:url, description:desc });
+  App.closeModal();
+  await renderBarbie();
+};
+
+window.deleteMovie = async (id) => {
+  if (!confirm('¿Eliminar esta película?')) return;
+  await api('DELETE', `/movies/${id}`);
+  App.closeModal();
+  await renderBarbie();
+};
+
 // ── DETAILS ──
 async function renderDetails() {
   const c = $('content');
   c.innerHTML = '';
 
   const head = el('div', 'section-head');
-  head.innerHTML = `<h2>✨ Detalles & Sorpresas</h2>`;
+  head.innerHTML = `<h2>Detalles & Sorpresas</h2>`;
   c.appendChild(head);
 
   const desc = el('p', 'section-desc');
@@ -817,12 +808,12 @@ async function renderDetails() {
   EXPERIENCES.forEach(exp => {
     const ec = el('div', 'exp-card');
     ec.innerHTML = `
-      <div class="exp-icon">${exp.icon}</div>
+      <div class="exp-icon">${EXP_ICONS[exp.icon] || ICONS.details}</div>
       <div class="exp-info">
         <div class="exp-title">${exp.title}</div>
         <div class="exp-desc">${exp.desc}</div>
       </div>
-      <button class="exp-launch" onclick="event.stopPropagation();App.openExp('${exp.url}')">Lanzar ✨</button>
+      <button class="exp-launch" onclick="event.stopPropagation();App.openExp('${exp.url}')">Lanzar</button>
     `;
     ec.onclick = () => App.openExp(exp.url);
     c.appendChild(ec);
@@ -832,52 +823,32 @@ async function renderDetails() {
   const rl = el('div', 'exp-card');
   rl.style.cssText = 'cursor:pointer;background:linear-gradient(135deg,#1a0520,#2d0a30)';
   rl.innerHTML = `
-    <div class="exp-icon">🎡</div>
-    <div class="exp-info">
-      <div class="exp-title">Ruleta romántica</div>
-      <div class="exp-desc">Gira para elegir qué plan romántico hacer esta noche</div>
-    </div>
-    <button class="exp-launch" onclick="event.stopPropagation();openRoulette()">Girar 🎡</button>
+    <div class="exp-icon">${ICONS.wheel}</div>
+    <div class="exp-info"><div class="exp-title">Ruleta romántica</div><div class="exp-desc">Gira para elegir qué plan romántico hacer esta noche</div></div>
+    <button class="exp-launch" onclick="event.stopPropagation();openRoulette()">Girar</button>
   `;
   rl.onclick = openRoulette;
   c.appendChild(rl);
-
-  // Info about future experiences
-  const info = el('div', 'card mt-2');
-  info.style.cssText = 'background:var(--rose-pale);border:1px solid var(--rose-border)';
-  info.innerHTML = `
-    <div class="card-title">Próximamente...</div>
-    <div class="card-sub" style="line-height:1.8">
-      🕯️ El espejo empañado<br>
-      🌙 El jardín de estrellas<br>
-      🎈 Los globos de colores<br>
-      ⏰ Cápsulas del tiempo
-    </div>
-  `;
-  c.appendChild(info);
 }
 
 // ── HELPERS ──
-function emptyState(icon, text) {
+function emptyState(text) {
   const d = el('div', 'empty-state');
-  d.innerHTML = `<div class="empty-icon">${icon}</div><div class="empty-text">${text}</div>`;
+  d.innerHTML = `<div class="empty-icon">${ICONS.poems}</div><div class="empty-text">${text}</div>`;
   return d;
 }
 
 // ── INIT ──
 async function init() {
-  // Load settings
   try {
     const settings = await api('GET', '/settings');
     if (settings) S.settings = { ...S.settings, ...settings };
   } catch (_) {}
 
-  // Nav listeners
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.onclick = () => App.navigate(btn.dataset.section);
   });
 
-  // Initial render
   await App.navigate('home');
 }
 

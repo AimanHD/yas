@@ -1,0 +1,9 @@
+{
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/api/:path*",        "destination": "https://yasmin-app.onrender.com/api/:path*" },
+    { "source": "/love/:path*",       "destination": "https://yasmin-app.onrender.com/love/:path*" },
+    { "source": "/uploads/:path*",    "destination": "https://yasmin-app.onrender.com/uploads/:path*" },
+    { "source": "/experience/:path*", "destination": "https://yasmin-app.onrender.com/experience/:path*" }
+  ]
+}

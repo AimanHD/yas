@@ -38,16 +38,17 @@ app.use('/api/gallery',  require('./routes/gallery'));
 app.use('/api/capsules', require('./routes/capsules'));
 app.use('/api/dates',    require('./routes/dates'));
 app.use('/api/settings', require('./routes/settings'));
+app.use('/api/movies',   require('./routes/movies'));
 
 // SPA fallback
 app.get('*', (_req, res) =>
   res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-seed();
-
-app.listen(PORT, () => {
-  console.log('');
-  console.log('  ♥ ♥ ♥  Yasmin App  ♥ ♥ ♥');
-  console.log(`  → http://localhost:${PORT}`);
-  console.log('');
-});
+seed().then(() => {
+  app.listen(PORT, () => {
+    console.log('');
+    console.log('  ♥ ♥ ♥  Yasmin App  ♥ ♥ ♥');
+    console.log(`  → http://localhost:${PORT}`);
+    console.log('');
+  });
+}).catch(err => { console.error('Seed failed:', err); process.exit(1); });
