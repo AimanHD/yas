@@ -192,29 +192,32 @@ async function seed() {
     } catch(_) {}
   }
 
-  /* GALLERY */
-  if ((await db.count('gallery')) === 0) {
+  /* GALLERY — inserta solo las fotos que aún no están */
+  {
     const photos = [
-      { photo:'notas de fotos/foto1.jpeg', nota:'notas de fotos/nota1.txt', title:'Tu confianza'        },
-      { photo:'notas de fotos/foto2.jpeg', nota:'notas de fotos/nota2.txt', title:'La perfección'       },
-      { photo:'notas de fotos/foto3.jpeg', nota:'notas de fotos/nota3.txt', title:'Mi fantasía'         },
-      { photo:'notas de fotos/foto4.jpeg', nota:'notas de fotos/nota4.txt', title:'Mis ojos'            },
-      { photo:'notas de fotos/foto5.jpeg', nota:'notas de fotos/nota5.txt', title:'Perfecta'            },
-      { photo:'notas de fotos/foto6.jpeg', nota:'notas de fotos/nota6.txt', title:'Tu piel'             },
-      { photo:'notas de fotos/foto7.jpeg', nota:'notas de fotos/nota7.txt', title:'Esos ojos'           },
-      { photo:'notas de fotos/foto8.jpeg', nota:'notas de fotos/nota8.txt', title:'La niña de mis ojos' },
-      { photo:'notas de fotos/foto9.jpeg',  nota:'notas de fotos/nota9.txt',  title:'Tu brillo'          },
-      { photo:'notas de fotos/foto10.jpeg', nota:'notas de fotos/nota10.txt', title:'La primera vez'     },
-      { photo:'notas de fotos/foto11.jpeg', nota:'notas de fotos/nota11.txt', title:'La Alhambra contigo'},
-      { photo:'notas de fotos/foto12.jpeg', nota:'notas de fotos/nota12.txt', title:'Pizza en el portal' },
-      { photo:'notas de fotos/foto13.jpeg', nota:'notas de fotos/nota13.txt', title:'Viéndote disfrutar' },
-      { photo:'fotonormal/foto.jpeg',       nota:'fotonormal/fotonormal.txt', title:'Conectados'         },
+      { photo:'notas de fotos/foto1.jpeg',  nota:'notas de fotos/nota1.txt',  title:'Tu confianza'         },
+      { photo:'notas de fotos/foto2.jpeg',  nota:'notas de fotos/nota2.txt',  title:'La perfección'        },
+      { photo:'notas de fotos/foto3.jpeg',  nota:'notas de fotos/nota3.txt',  title:'Mi fantasía'          },
+      { photo:'notas de fotos/foto4.jpeg',  nota:'notas de fotos/nota4.txt',  title:'Mis ojos'             },
+      { photo:'notas de fotos/foto5.jpeg',  nota:'notas de fotos/nota5.txt',  title:'Perfecta'             },
+      { photo:'notas de fotos/foto6.jpeg',  nota:'notas de fotos/nota6.txt',  title:'Tu piel'              },
+      { photo:'notas de fotos/foto7.jpeg',  nota:'notas de fotos/nota7.txt',  title:'Esos ojos'            },
+      { photo:'notas de fotos/foto8.jpeg',  nota:'notas de fotos/nota8.txt',  title:'La niña de mis ojos'  },
+      { photo:'notas de fotos/foto9.jpeg',  nota:'notas de fotos/nota9.txt',  title:'Tu brillo'            },
+      { photo:'notas de fotos/foto10.jpeg', nota:'notas de fotos/nota10.txt', title:'La primera vez'       },
+      { photo:'notas de fotos/foto11.jpeg', nota:'notas de fotos/nota11.txt', title:'La Alhambra contigo'  },
+      { photo:'notas de fotos/foto12.jpeg', nota:'notas de fotos/nota12.txt', title:'Pizza en el portal'   },
+      { photo:'notas de fotos/foto13.jpeg', nota:'notas de fotos/nota13.txt', title:'Viéndote disfrutar'   },
+      { photo:'fotonormal/foto.jpeg',       nota:'fotonormal/fotonormal.txt', title:'Conectados'           },
     ];
+    const existing = await db.getAll('gallery');
+    const existingSrcs = new Set(existing.map(g => g.src));
     for (const p of photos) {
       if (!fs.existsSync(path.join(loveDir, p.photo))) continue;
+      const src = '/love/' + p.photo.split('/').map(encodeURIComponent).join('/');
+      if (existingSrcs.has(src)) continue;
       let desc = '';
       try { desc = fs.readFileSync(path.join(loveDir, p.nota),'utf-8').trim() } catch(_) {}
-      const src = '/love/' + p.photo.split('/').map(encodeURIComponent).join('/');
       await db.insert('gallery', { src, title:p.title, description:desc, seeded:true });
     }
     console.log('  Galería:', await db.count('gallery'));
