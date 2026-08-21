@@ -951,8 +951,19 @@ function emptyState(text) {
   return d;
 }
 
+// ── SPLASH ──
+function dismissSplash() {
+  const s = $('splash');
+  if (!s || s.classList.contains('out')) return;
+  s.classList.add('out');
+  setTimeout(() => s?.remove(), 950);
+}
+
 // ── INIT ──
 async function init() {
+  // Auto-dismiss splash after 2.4s
+  setTimeout(dismissSplash, 2400);
+
   try {
     const settings = await api('GET', '/settings');
     if (settings) S.settings = { ...S.settings, ...settings };
