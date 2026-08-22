@@ -107,7 +107,7 @@ let _counterTimer = null;
 const S = {
   section: 'home',
   settings: { start_date: '2026-06-30', her_name: 'Yasmin', your_name: 'Aiman' },
-  letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [], movies: [],
+  letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [], movies: [], memories: [],
   poemFilter: 'all',
   bookLetter: null,
   bookPage: 0,
@@ -262,7 +262,7 @@ async function render() {
   c.classList.add('fade-out');
   await new Promise(r => setTimeout(r, 140));
   c.innerHTML = '';
-  const fns = { home:renderHome, letters:renderLetters, notes:renderNotes, poems:renderPoems, gallery:renderGallery, barbie:renderBarbie, details:renderDetails };
+  const fns = { home:renderHome, letters:renderLetters, notes:renderNotes, poems:renderPoems, gallery:renderGallery, memories:renderMemories, barbie:renderBarbie, details:renderDetails };
   await (fns[S.section] || renderHome)();
   requestAnimationFrame(() => c.classList.remove('fade-out'));
 }
@@ -311,8 +311,19 @@ async function renderHome() {
   tick();
   _counterTimer = setInterval(tick, 1000);
 
+  // ── LOS OJOS DE MI VIDA ──
+  const ojosCard = el('div', 'ojos-card anim anim-d1');
+  ojosCard.innerHTML = `
+    <img src="${BACKEND}/love/ojosyas.jpeg" alt="Los ojos de mi vida" loading="eager">
+    <div class="ojos-overlay">
+      <p class="ojos-label">los ojos de mi vida</p>
+      <p class="ojos-name">Yasmin</p>
+    </div>
+  `;
+  c.appendChild(ojosCard);
+
   // ── FRASE DEL DÍA ──
-  const fc = el('div', 'frase-card anim anim-d1');
+  const fc = el('div', 'frase-card anim anim-d2');
   fc.innerHTML = `
     <div class="frase-label">Frase del día</div>
     <div class="frase-text">${fraseDelDia()}</div>
@@ -950,6 +961,188 @@ function emptyState(text) {
   d.innerHTML = `<div class="empty-icon">${ICONS.poems}</div><div class="empty-text">${text}</div>`;
   return d;
 }
+
+// ── TOAST ──
+function toast(msg, duration = 2800) {
+  let t = document.getElementById('toast-el');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast-el';
+    t.className = 'toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('toast-in');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('toast-in'), duration);
+}
+
+// ── MEMORIES ──
+async function renderMemories() {
+  S.memories = await api('GET', '/memories');
+  const c = $('content');
+  c.innerHTML = '';
+  c.appendChild(backBtn());
+  c.appendChild(sectionTitle('Recuerdos', 'Nuestros momentos', 'Cada lugar, cada instante contigo guarda una parte de mí.'));
+
+  const addBtn = el('div', 'sec-action-row anim');
+  addBtn.innerHTML = `<button class="btn btn-ghost" onclick="openMemoryForm()">${ICONS.plus} Añadir recuerdo</button>`;
+  c.appendChild(addBtn);
+
+  if (!S.memories.length) { c.appendChild(emptyState('Aún no hay recuerdos guardados')); return; }
+
+  // Group by group_key, preserving order
+  const groups = [];
+  const gMap = {};
+  S.memories.forEach(m => {
+    if (!gMap[m.group_key]) {
+      const g = { key: m.group_key, title: m.group_title, sub: m.group_sub, text: m.group_text, featured: [], items: [] };
+      gMap[m.group_key] = g;
+      groups.push(g);
+    }
+    if (m.is_featured) gMap[m.group_key].featured.push(m);
+    else gMap[m.group_key].items.push(m);
+  });
+
+  groups.forEach((g, gi) => {
+    const delay = `anim-d${Math.min(gi % 5 + 1, 5)}`;
+
+    const section = el('div', `memory-group anim ${delay}`);
+
+    const hdr = el('div', 'memory-header');
+    hdr.innerHTML = `
+      <div class="memory-eyebrow">${g.sub || ''}</div>
+      <h3 class="memory-title">${g.title}</h3>
+      ${g.text ? `<p class="memory-text">${g.text}</p>` : ''}
+    `;
+    section.appendChild(hdr);
+
+    // Featured: 2×2 hero grid
+    if (g.featured.length) {
+      const feat = el('div', 'memory-featured');
+      g.featured.forEach(m => {
+        const imgSrc = m.src ? `${BACKEND}${m.src}` : `${BACKEND}/uploads/${m.filename}`;
+        const fi = el('div', 'memory-feat-item');
+        fi.innerHTML = `
+          <img src="${imgSrc}" alt="${m.photo_note || g.title}" loading="lazy" onclick="openMemoryPhoto('${imgSrc}','${(m.photo_note||'').replace(/'/g,'&apos;')}')">
+          ${m.photo_note ? `<div class="memory-feat-note">${m.photo_note}</div>` : ''}
+        `;
+        feat.appendChild(fi);
+      });
+      section.appendChild(feat);
+    }
+
+    // Regular grid
+    if (g.items.length) {
+      const grid = el('div', 'memory-grid');
+      g.items.forEach(m => {
+        const imgSrc = m.src ? `${BACKEND}${m.src}` : `${BACKEND}/uploads/${m.filename}`;
+        const mi = el('div', 'memory-item');
+        mi.innerHTML = `
+          <img src="${imgSrc}" alt="${m.photo_note || g.title}" loading="lazy" onclick="openMemoryPhoto('${imgSrc}','${(m.photo_note||'').replace(/'/g,'&apos;')}')">
+          ${m.photo_note ? `<div class="memory-item-note">${m.photo_note}</div>` : ''}
+        `;
+        grid.appendChild(mi);
+      });
+      section.appendChild(grid);
+    }
+
+    // Delete button for user-added memories
+    if (!g.key.startsWith('user-')) {
+      // seeded group – no delete
+    } else {
+      const del = el('button', 'btn btn-ghost memory-del-btn');
+      del.textContent = 'Eliminar recuerdo';
+      del.onclick = () => window.deleteMemory(g.key);
+      section.appendChild(del);
+    }
+
+    if (gi < groups.length - 1) {
+      const div = el('div', 'memory-divider');
+      section.appendChild(div);
+    }
+
+    c.appendChild(section);
+  });
+}
+
+function openMemoryPhoto(src, note) {
+  App.openModal(`
+    <div style="text-align:center">
+      <img src="${src}" alt="${note}" style="max-width:100%;max-height:70vh;border-radius:var(--radius);object-fit:contain;display:block;margin:0 auto">
+      ${note ? `<p style="margin-top:1rem;font-family:var(--font-body);font-style:italic;font-size:1.05rem;color:var(--text-mid);line-height:1.6">${note}</p>` : ''}
+    </div>
+  `, '');
+}
+
+function openMemoryForm() {
+  App.openModal(`
+    <h3 style="font-family:var(--font-title);font-size:1.3rem;color:var(--rose);margin-bottom:1.2rem;font-style:italic">Nuevo recuerdo</h3>
+    <div class="form-group">
+      <label class="form-label">Título</label>
+      <input id="mf-title" class="form-input" type="text" placeholder="¿Dónde fue?">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fecha</label>
+      <input id="mf-date" class="form-input" type="text" placeholder="Ej: 21 de julio de 2026">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nota</label>
+      <textarea id="mf-text" class="form-input" rows="3" placeholder="Cuéntame algo de ese momento..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Foto</label>
+      <div class="upload-area" onclick="document.getElementById('mf-file').click()">
+        ${ICONS.upload}
+        <div class="upload-text">Toca para elegir una foto</div>
+        <div id="mf-preview" style="margin-top:.8rem"></div>
+      </div>
+      <input id="mf-file" type="file" accept="image/*" style="display:none" onchange="previewMemPhoto(this)">
+    </div>
+    <div style="display:flex;gap:.7rem;margin-top:1.2rem">
+      <button class="btn btn-ghost" onclick="App.closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="window.saveMemory()">Guardar</button>
+    </div>
+  `, '');
+}
+
+window.previewMemPhoto = function(input) {
+  const prev = $('mf-preview');
+  if (!prev || !input.files[0]) return;
+  const url = URL.createObjectURL(input.files[0]);
+  prev.innerHTML = `<img src="${url}" style="max-width:100%;max-height:180px;border-radius:var(--radius-sm);object-fit:cover">`;
+};
+
+window.saveMemory = async function() {
+  const title = $('mf-title')?.value.trim();
+  const date  = $('mf-date')?.value.trim();
+  const text  = $('mf-text')?.value.trim();
+  const file  = $('mf-file')?.files[0];
+  if (!title) { toast('Añade un título'); return; }
+  if (!file)  { toast('Elige una foto'); return; }
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('date',  date);
+  fd.append('text',  text);
+  fd.append('photo', file);
+  try {
+    await fetch(`${BACKEND}/api/memories`, { method:'POST', body: fd });
+    App.closeModal();
+    toast('Recuerdo guardado');
+    await renderMemories();
+  } catch(_) { toast('Error al guardar'); }
+};
+
+window.deleteMemory = async function(groupKey) {
+  const toDelete = S.memories.filter(m => m.group_key === groupKey);
+  if (!toDelete.length) return;
+  if (!confirm('¿Eliminar este recuerdo?')) return;
+  try {
+    await Promise.all(toDelete.map(m => api('DELETE', `/memories/${m.id}`)));
+    toast('Recuerdo eliminado');
+    await renderMemories();
+  } catch(_) { toast('Error al eliminar'); }
+};
 
 // ── SPLASH ──
 function dismissSplash() {

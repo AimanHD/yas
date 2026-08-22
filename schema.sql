@@ -70,3 +70,18 @@ CREATE TABLE IF NOT EXISTS settings (
   key         TEXT          PRIMARY KEY,
   value       TEXT
 );
+
+CREATE TABLE IF NOT EXISTS memories (
+  id           BIGSERIAL    PRIMARY KEY,
+  group_key    TEXT         NOT NULL DEFAULT '',
+  group_title  TEXT         NOT NULL DEFAULT '',
+  group_sub    TEXT         DEFAULT '',
+  group_text   TEXT         DEFAULT '',
+  photo_note   TEXT         DEFAULT '',
+  src          TEXT,
+  filename     TEXT,
+  is_featured  BOOLEAN      DEFAULT FALSE,
+  sort_order   INTEGER      DEFAULT 0,
+  seeded       BOOLEAN      DEFAULT FALSE,
+  created_at   TIMESTAMPTZ  DEFAULT NOW()
+);

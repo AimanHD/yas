@@ -39,6 +39,7 @@ app.use('/api/capsules', require('./routes/capsules'));
 app.use('/api/dates',    require('./routes/dates'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/movies',   require('./routes/movies'));
+app.use('/api/memories', require('./routes/memories'));
 
 // SPA fallback
 app.get('*', (_req, res) =>

@@ -19,7 +19,7 @@ class JSONDB {
 
   _load() {
     try { this.d = JSON.parse(fs.readFileSync(this._path, 'utf-8')) }
-    catch { this.d = { letters:[],notes:[],poems:[],gallery:[],capsules:[],dates:[],movies:[],settings:{} } }
+    catch { this.d = { letters:[],notes:[],poems:[],gallery:[],capsules:[],dates:[],movies:[],memories:[],settings:{} } }
   }
   _save() { fs.writeFileSync(this._path, JSON.stringify(this.d, null, 2)) }
   _nextId(t) { const r = this.d[t]||[]; return r.length ? Math.max(...r.map(x=>x.id))+1 : 1 }
@@ -244,6 +244,118 @@ async function seed() {
   if ((await db.count('dates')) === 0) {
     await db.insert('dates', { title:'Primer día juntos',    date:'2026-07-01', description:'El día que comenzó todo', icon:'', recurring:true });
     await db.insert('dates', { title:'Cumpleaños de Yasmin', date:'2026-01-01', description:'El día más especial',     icon:'', recurring:true });
+  }
+
+  /* MEMORIES — seed desde love/lugares_sitios_que_me_recuerdan_a_ti/ */
+  {
+    const memDir = path.join(loveDir, 'lugares_sitios_que_me_recuerdan_a_ti');
+    if (fs.existsSync(memDir)) {
+      const existing   = await db.getAll('memories');
+      const existSrcs  = new Set(existing.map(m => m.src).filter(Boolean));
+      const rtxt = p  => { try { return fs.readFileSync(p,'utf-8').trim() } catch(_){ return '' } };
+      const mUrl = f  => '/love/lugares_sitios_que_me_recuerdan_a_ti/' + f.split('/').map(encodeURIComponent).join('/');
+
+      const GROUPS = [
+        {
+          key:'05-06-26', title:'5 de junio de 2026', sub:'Antes de ti, ya eras todo', sort:0,
+          text: rtxt(path.join(memDir,'05-06-26','texto.txt')),
+          photos:[
+            { f:'05-06-26/WhatsApp Image 2026-08-22 at 17.23.00.jpeg' },
+            { f:'05-06-26/WhatsApp Image 2026-08-22 at 17.23.01.jpeg' },
+          ],
+        },
+        {
+          key:'30-06-26', title:'30 de junio de 2026', sub:'El primer día juntos', sort:1,
+          text: rtxt(path.join(memDir,'30-06-26','texto.txt')),
+          photos:[{ f:'30-06-26/WhatsApp Image 2026-08-22 at 17.23.03.jpeg' }],
+        },
+        {
+          key:'12-07-26', title:'12 de julio de 2026', sub:'Los primeros días', sort:2,
+          text: rtxt(path.join(memDir,'12-07-26','texto.txt')),
+          photos:[{ f:'12-07-26/WhatsApp Image 2026-08-22 at 17.23.03.jpeg' }],
+        },
+        {
+          key:'21-07-26', title:'21 de julio de 2026', sub:'Cuando te pensaba desde lejos', sort:3,
+          text: rtxt(path.join(memDir,'21-07-26','textp.txt')),
+          photos:[
+            { f:'21-07-26/1.jpeg',    feat:true },
+            { f:'21-07-26/11.jpeg',   feat:true },
+            { f:'21-07-26/111.jpeg',  feat:true },
+            { f:'21-07-26/1111.jpeg', feat:true },
+            { f:'21-07-26/WhatsApp Image 2026-08-22 at 17.23.01.jpeg' },
+            { f:'21-07-26/WhatsApp Image 2026-08-22 at 17.23.02.jpeg' },
+            { f:'21-07-26/g.jpeg' },
+          ],
+        },
+        {
+          key:'28-07-26', title:'28 de julio de 2026', sub:'Tu primera visita', sort:4,
+          text: rtxt(path.join(memDir,'28-07-26','texto.txt')),
+          photos:[{ f:'28-07-26/WhatsApp Image 2026-08-22 at 17.23.01.jpeg' }],
+        },
+        {
+          key:'06-08-26', title:'6 de agosto de 2026', sub:'Merienda en Algeciras', sort:5,
+          text: rtxt(path.join(memDir,'06-08-26','text.txt')),
+          photos:[{ f:'06-08-26/foto1.jpeg' }],
+        },
+        {
+          key:'21-08-26', title:'21 de agosto de 2026', sub:'Villa en Marbella', sort:6,
+          text: rtxt(path.join(memDir,'21-08-26','texto.txt')),
+          photos:[
+            { f:'21-08-26/WhatsApp Image 2026-08-22 at 16.06.35.jpeg' },
+            { f:'21-08-26/WhatsApp Image 2026-08-22 at 16.06.35 (1).jpeg' },
+            { f:'21-08-26/WhatsApp Image 2026-08-22 at 16.06.35 (2).jpeg' },
+            { f:'21-08-26/WhatsApp Image 2026-08-22 at 16.06.35 (3).jpeg' },
+            { f:'21-08-26/foto2.jpeg' },
+          ],
+        },
+        {
+          key:'Flores', title:'Las flores de Yasmin', sub:'Tu jardín', sort:7,
+          text: rtxt(path.join(memDir,'Flores','texto1.txt')),
+          photos:[{ f:'Flores/foto2.jpeg' }],
+        },
+        {
+          key:'Paisajes', title:'Paisajes que te llevan', sub:'Donde te pienso', sort:8,
+          text:'',
+          photos:[
+            { f:'Paisajes/foto1.jpeg', note: rtxt(path.join(memDir,'Paisajes','foto1.txt')) },
+            { f:'Paisajes/foto2.jpeg', note: rtxt(path.join(memDir,'Paisajes','texto2.txt')) },
+          ],
+        },
+        {
+          key:'Cosas', title:'Cositas que te llevan', sub:'Objetos que me recuerdan a ti', sort:9,
+          text:'',
+          photos:[
+            { f:'Cosas/foto1.jpeg', note: rtxt(path.join(memDir,'Cosas','texto1.txt')) },
+            { f:'Cosas/foto2.jpeg', note: rtxt(path.join(memDir,'Cosas','texto2.txt')) },
+            { f:'Cosas/foto3.jpeg', note: rtxt(path.join(memDir,'Cosas','texto3.txt')) },
+            { f:'Cosas/foto4.jpeg', note: rtxt(path.join(memDir,'Cosas','texto4.txt')) },
+          ],
+        },
+      ];
+
+      for (const g of GROUPS) {
+        let idx = 0;
+        for (const p of g.photos) {
+          const full = path.join(memDir, p.f.replace(/\//g, path.sep));
+          if (!fs.existsSync(full)) { idx++; continue; }
+          const src = mUrl(p.f);
+          if (existSrcs.has(src)) { idx++; continue; }
+          await db.insert('memories', {
+            group_key:   g.key,
+            group_title: g.title,
+            group_sub:   g.sub,
+            group_text:  g.text || '',
+            photo_note:  p.note || '',
+            src,
+            is_featured: p.feat || false,
+            sort_order:  g.sort * 100 + idx,
+            seeded:      true,
+          });
+          idx++;
+        }
+      }
+      console.log('  Recuerdos:', await db.count('memories'));
+    }
   }
 
   console.log('  Base de datos lista');
