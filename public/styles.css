@@ -998,14 +998,14 @@ img { max-width:100%; display:block }
 /* ── OJOS DE MI VIDA ── */
 .ojos-card {
   position:relative; border-radius:var(--radius); overflow:hidden;
-  aspect-ratio:16/9; cursor:default; box-shadow:var(--card-shadow);
-  margin-bottom:.2rem;
+  background:#12000e; cursor:default; box-shadow:var(--card-shadow);
+  margin-bottom:.2rem; display:flex; justify-content:center;
 }
 .ojos-card img {
-  width:100%; height:100%; object-fit:cover; display:block;
+  width:100%; max-height:420px; object-fit:contain; display:block;
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
-.ojos-card:hover img { transform:scale(1.04) }
+.ojos-card:hover img { transform:scale(1.02) }
 .ojos-overlay {
   position:absolute; inset:0;
   background:linear-gradient(to top, rgba(60,0,30,.72) 0%, rgba(60,0,30,.18) 55%, transparent 100%);
@@ -1048,11 +1048,12 @@ img { max-width:100%; display:block }
   transition:transform .4s ease;
 }
 .memory-feat-item:hover img { transform:scale(1.05) }
-.memory-feat-note {
+.memory-tap-hint {
   position:absolute; bottom:0; left:0; right:0;
-  background:linear-gradient(to top, rgba(60,0,30,.75), transparent);
-  color:#fff; font-family:var(--font-body); font-style:italic;
-  font-size:.82rem; padding:.55rem .7rem .4rem; line-height:1.4;
+  background:linear-gradient(to top, rgba(60,0,30,.68), transparent);
+  color:rgba(255,255,255,.88); font-family:var(--font-ui); font-size:.72rem;
+  font-weight:500; letter-spacing:.03em;
+  padding:.45rem .6rem .35rem; display:flex; align-items:center; gap:.3rem;
 }
 
 /* Regular photo grid */
@@ -1066,12 +1067,6 @@ img { max-width:100%; display:block }
   transition:transform .4s ease;
 }
 .memory-item:hover img { transform:scale(1.06) }
-.memory-item-note {
-  position:absolute; bottom:0; left:0; right:0;
-  background:linear-gradient(to top, rgba(60,0,30,.75), transparent);
-  color:#fff; font-family:var(--font-body); font-style:italic;
-  font-size:.78rem; padding:.45rem .55rem .35rem; line-height:1.3;
-}
 .memory-divider {
   height:1px; background:var(--rose-border); opacity:.4; margin:1.2rem 0 2.2rem;
 }

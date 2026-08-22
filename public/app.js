@@ -1025,7 +1025,7 @@ async function renderMemories() {
         const fi = el('div', 'memory-feat-item');
         fi.innerHTML = `
           <img src="${imgSrc}" alt="${m.photo_note || g.title}" loading="lazy" onclick="openMemoryPhoto('${imgSrc}','${(m.photo_note||'').replace(/'/g,'&apos;')}')">
-          ${m.photo_note ? `<div class="memory-feat-note">${m.photo_note}</div>` : ''}
+          ${m.photo_note ? `<div class="memory-tap-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> pulsa para leer</div>` : ''}
         `;
         feat.appendChild(fi);
       });
@@ -1040,7 +1040,7 @@ async function renderMemories() {
         const mi = el('div', 'memory-item');
         mi.innerHTML = `
           <img src="${imgSrc}" alt="${m.photo_note || g.title}" loading="lazy" onclick="openMemoryPhoto('${imgSrc}','${(m.photo_note||'').replace(/'/g,'&apos;')}')">
-          ${m.photo_note ? `<div class="memory-item-note">${m.photo_note}</div>` : ''}
+          ${m.photo_note ? `<div class="memory-tap-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> pulsa para leer</div>` : ''}
         `;
         grid.appendChild(mi);
       });
