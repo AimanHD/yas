@@ -1075,6 +1075,56 @@ img { max-width:100%; display:block }
   opacity:.7; padding:.3rem .8rem;
 }
 
+/* ── NOTITA ESPECIAL ── */
+#nota-overlay {
+  position:fixed; inset:0; z-index:9500;
+  background:rgba(18,0,14,.65); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  padding:1.2rem;
+  opacity:0; transition:opacity .4s ease;
+  pointer-events:none;
+}
+#nota-overlay.nota-in  { opacity:1; pointer-events:auto }
+#nota-overlay.nota-out { opacity:0; pointer-events:none }
+.nota-card {
+  background:var(--cream);
+  border-radius:var(--radius);
+  box-shadow:0 24px 80px rgba(60,0,30,.45);
+  padding:2rem 1.8rem 1.6rem;
+  max-width:480px; width:100%;
+  position:relative;
+  transform:translateY(24px);
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  max-height:90vh; overflow-y:auto;
+}
+#nota-overlay.nota-in .nota-card { transform:translateY(0) }
+.nota-deco {
+  font-size:1.8rem; color:var(--rose); text-align:center;
+  line-height:1; margin-bottom:.6rem;
+  animation:shimmer 2s ease-in-out infinite;
+}
+.nota-eyebrow {
+  font-family:var(--font-ui); font-size:.7rem; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--rose);
+  text-align:center; margin-bottom:1.1rem;
+}
+.nota-body {
+  font-family:var(--font-body); font-size:1.08rem; line-height:1.85;
+  color:var(--text); font-style:italic; white-space:pre-wrap;
+}
+.nota-firma {
+  font-family:var(--font-logo); font-size:1.5rem; color:var(--rose);
+  text-align:right; margin-top:1.2rem; opacity:.85;
+}
+.nota-close {
+  display:flex; align-items:center; gap:.4rem; margin-top:1.4rem;
+  background:none; border:1px solid var(--rose-border); border-radius:60px;
+  padding:.45rem 1.1rem; font-family:var(--font-ui); font-size:.82rem;
+  color:var(--text-mid); cursor:pointer; transition:background .2s;
+  margin-left:auto;
+}
+.nota-close:hover { background:var(--blush) }
+
 /* ── TOAST ── */
 .toast {
   position:fixed; bottom:calc(1.2rem + var(--safe-bot)); left:50%; transform:translateX(-50%) translateY(20px);

@@ -1152,10 +1152,34 @@ function dismissSplash() {
   setTimeout(() => s?.remove(), 950);
 }
 
+// ── NOTITA ESPECIAL ──
+const NOTA_ESPECIAL = `Buenas amor como estas,, sé que estas cansadita y quemada del trabajo, sé que no te apetece nada solo desaparecer del mundo y estar a tu bola, de verdad amor , que todo lleva esfuerzo y dedicación, yo de verdad te lo digo que poco a poco te irás liberando de esto, no te mereces nada trabajar toda la vida de esto, tu vida vale más que un restaurante, poco a poco te quitaré de trabajar, algún día tendrás toda aquella paz que te prometo que vas a tener, eres la mejor, pronto tendrás tus días llenos de planes guays, pilates, comprar cosas, etc, mientras yo trabaje por ti y vivamos bajo el mismo techo, de verdad, poco a poco, estaremos juntos en las buenas y en las malas, y no pasa nada que haya días que por culpa del trabajo estes sin ganas de hablar o hacer nada, te amo mi vida, estaré contigo siempre.`;
+
+function showNotaEspecial() {
+  const overlay = document.createElement('div');
+  overlay.id = 'nota-overlay';
+  overlay.innerHTML = `
+    <div class="nota-card" id="nota-card">
+      <div class="nota-deco" aria-hidden="true">♥</div>
+      <div class="nota-eyebrow">una notita para ti</div>
+      <div class="nota-body">${NOTA_ESPECIAL}</div>
+      <div class="nota-firma">Siempre tuyo</div>
+      <button class="nota-close" onclick="document.getElementById('nota-overlay').classList.add('nota-out');setTimeout(()=>document.getElementById('nota-overlay')?.remove(),500)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        cerrar
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('nota-in'));
+}
+
 // ── INIT ──
 async function init() {
   // Auto-dismiss splash after 2.4s
   setTimeout(dismissSplash, 2400);
+  // Notita especial después del splash
+  setTimeout(showNotaEspecial, 3600);
 
   try {
     const settings = await api('GET', '/settings');
