@@ -103,7 +103,7 @@ input, textarea, select { font-family:inherit; font-size:inherit }
 img { max-width:100%; display:block }
 
 /* ── LAYOUT ── */
-#app { display:flex; flex-direction:column; height:100dvh; overflow:hidden }
+#app { display:flex; flex-direction:column; height:100dvh; overflow:hidden; position:relative }
 
 /* ── TOP BAR ── */
 #top-bar {
@@ -308,14 +308,18 @@ img { max-width:100%; display:block }
   display:flex; justify-content:flex-end; margin-bottom:1.2rem;
 }
 
-/* ── FOOTER ── */
+/* ── FOOTER (aparece solo al llegar al fondo) ── */
 #footer {
-  flex-shrink:0;
+  position:absolute; left:0; right:0; bottom:0; z-index:40;
   background:var(--white);
   border-top:1px solid rgba(244,167,195,.25);
-  padding:2rem 1.5rem 2.5rem;
+  padding:2rem 1.5rem calc(2.5rem + var(--safe-bot, 0px));
   text-align:center;
+  transform:translateY(100%);
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
 }
+#footer.reveal { transform:translateY(0); pointer-events:auto }
 .footer-logo {
   font-family:var(--font-logo); font-size:2.2rem;
   color:var(--rose); margin-bottom:.5rem;
@@ -1077,123 +1081,80 @@ img { max-width:100%; display:block }
   opacity:.7; padding:.3rem .8rem;
 }
 
-/* ── NOTITA ESPECIAL ── */
-#nota-overlay {
-  position:fixed; inset:0; z-index:9500;
-  background:rgba(18,0,14,.65); backdrop-filter:blur(6px);
-  display:flex; align-items:center; justify-content:center;
-  padding:1.2rem;
-  opacity:0; transition:opacity .4s ease;
-  pointer-events:none;
+/* ── FLORES ── */
+.flores-hero {
+  text-align:center;
+  padding:1.4rem 0 .4rem;
+  margin-bottom:2.2rem;
 }
-#nota-overlay.nota-in  { opacity:1; pointer-events:auto }
-#nota-overlay.nota-out { opacity:0; pointer-events:none }
-.nota-card {
-  background:var(--cream);
-  border-radius:var(--radius);
-  box-shadow:0 24px 80px rgba(60,0,30,.45);
-  padding:2rem 1.8rem 1.6rem;
-  max-width:480px; width:100%;
-  position:relative;
-  transform:translateY(24px);
-  transition:transform .4s cubic-bezier(.22,1,.36,1);
-  max-height:90vh; overflow-y:auto;
+.flores-hero-deco {
+  width:34px; height:34px; margin:0 auto .8rem;
+  color:var(--rose); opacity:.75;
+  animation:shimmer 3s ease-in-out infinite;
 }
-#nota-overlay.nota-in .nota-card { transform:translateY(0) }
-.nota-deco {
-  font-size:1.8rem; color:var(--rose); text-align:center;
-  line-height:1; margin-bottom:.6rem;
-  animation:shimmer 2s ease-in-out infinite;
-}
-.nota-eyebrow {
-  font-family:var(--font-ui); font-size:.7rem; font-weight:600;
-  letter-spacing:.14em; text-transform:uppercase; color:var(--rose);
-  text-align:center; margin-bottom:1.1rem;
-}
-.nota-body {
-  font-family:var(--font-body); font-size:1.08rem; line-height:1.85;
-  color:var(--text); font-style:italic; white-space:pre-wrap;
-}
-.nota-firma {
-  font-family:var(--font-logo); font-size:1.5rem; color:var(--rose);
-  text-align:right; margin-top:1.2rem; opacity:.85;
-}
-.nota-close {
-  display:flex; align-items:center; gap:.4rem; margin-top:1.4rem;
-  background:none; border:1px solid var(--rose-border); border-radius:60px;
-  padding:.45rem 1.1rem; font-family:var(--font-ui); font-size:.82rem;
-  color:var(--text-mid); cursor:pointer; transition:background .2s;
-  margin-left:auto;
-}
-.nota-close:hover { background:var(--blush) }
-
-/* ── CUESTIONARIO DE CITA ── */
-.cita-progress {
-  height:4px; border-radius:60px; background:var(--rose-border);
-  overflow:hidden; margin:0 0 1.2rem;
-}
-.cita-progress span {
-  display:block; height:100%; background:var(--rose);
-  transition:width .35s cubic-bezier(.22,1,.36,1);
-}
-.cita-titulo {
-  font-family:var(--font-title,var(--font-body)); font-size:1.45rem;
-  color:var(--text); text-align:center; line-height:1.25;
-}
-.cita-sub {
-  font-family:var(--font-body); font-size:1rem; color:var(--text-mid);
-  text-align:center; margin:.3rem 0 1.3rem; font-style:italic;
-}
-.cita-opciones { display:flex; flex-direction:column; gap:.6rem; }
-.cita-opcion {
-  font-family:var(--font-ui); font-size:.95rem; color:var(--text);
-  background:var(--cream); border:1px solid var(--rose-border);
-  border-radius:14px; padding:.85rem 1rem; cursor:pointer;
-  transition:background .18s, border-color .18s, transform .12s;
-  text-align:left;
-}
-.cita-opcion:hover { background:var(--blush); border-color:var(--rose); }
-.cita-opcion:active { transform:scale(.98); }
-.cita-opcion.sel { background:var(--blush); border-color:var(--rose); font-weight:600; }
-.cita-horas { display:flex; flex-direction:column; gap:.9rem; }
-.cita-hora { display:flex; flex-direction:column; gap:.35rem; }
-.cita-hora span {
-  font-family:var(--font-ui); font-size:.78rem; font-weight:600;
-  letter-spacing:.08em; text-transform:uppercase; color:var(--rose);
-}
-.cita-hora input {
-  font-family:var(--font-ui); font-size:1rem; color:var(--text);
-  background:var(--cream); border:1px solid var(--rose-border);
-  border-radius:12px; padding:.7rem .9rem;
-}
-.cita-next {
-  margin-top:1.3rem; width:100%;
-  font-family:var(--font-ui); font-size:.95rem; font-weight:600;
-  color:#fff; background:var(--rose-dark); border:none;
-  border-radius:60px; padding:.8rem 1rem; cursor:pointer;
-  transition:background .2s;
-}
-.cita-next:hover { background:var(--rose); }
-.cita-back {
-  display:block; margin:1rem auto 0; background:none; border:none;
-  font-family:var(--font-ui); font-size:.82rem; color:var(--text-muted);
-  cursor:pointer;
-}
-.cita-resumen {
-  display:flex; flex-direction:column; gap:.55rem; margin:.4rem 0 .2rem;
-}
-.cita-fila {
-  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
-  padding:.6rem .9rem; border:1px solid var(--rose-border);
-  border-radius:12px; background:var(--cream);
-}
-.cita-fila span {
+.flores-hero-deco svg { width:100%; height:100% }
+.flores-eyebrow {
   font-family:var(--font-ui); font-size:.72rem; font-weight:600;
-  letter-spacing:.08em; text-transform:uppercase; color:var(--rose);
+  letter-spacing:.18em; text-transform:uppercase; color:var(--rose);
+  margin:0 0 .35rem;
 }
-.cita-fila strong {
-  font-family:var(--font-body); font-size:1.02rem; color:var(--text);
-  font-weight:600; text-align:right;
+.flores-title {
+  font-family:var(--font-logo); font-size:2.8rem; line-height:1;
+  color:var(--text); margin:0;
+}
+.flores-hero-line {
+  width:54px; height:2px; background:var(--rose); opacity:.5;
+  margin:1rem auto 1.4rem; border-radius:2px;
+}
+.flores-hero-text {
+  font-family:var(--font-body); font-size:1.12rem; line-height:1.9;
+  color:var(--text); font-style:italic;
+  max-width:640px; margin:0 auto; text-align:left;
+}
+.flores-hero-text p { margin:0 0 1rem }
+.flores-hero-text p:last-child { margin-bottom:0 }
+
+.flores-hint {
+  display:flex; align-items:center; justify-content:center; gap:.4rem;
+  font-family:var(--font-ui); font-size:.75rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--text-muted);
+  margin:0 0 2rem;
+}
+
+.flores-fecha { margin-bottom:.5rem }
+.flores-fecha-hdr { margin-bottom:1rem; text-align:center }
+.flores-fecha-count {
+  font-family:var(--font-ui); font-size:.68rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--rose);
+}
+.flores-fecha-label {
+  font-family:var(--font-title); font-size:1.4rem; font-style:italic;
+  color:var(--text); margin:.2rem 0 0;
+}
+.flores-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+  gap:8px;
+}
+.flores-item {
+  position:relative; aspect-ratio:3/4; overflow:hidden;
+  border-radius:var(--radius-sm); cursor:pointer;
+  background:var(--blush);
+}
+.flores-item img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .45s ease;
+}
+.flores-item:hover img { transform:scale(1.05) }
+
+.flores-outro {
+  margin-top:2rem; text-align:center;
+  font-family:var(--font-body); font-size:1.05rem; line-height:1.8;
+  color:var(--text-mid); font-style:italic;
+}
+.flores-outro p { margin:0 0 .6rem }
+.flores-firma {
+  font-family:var(--font-logo); font-size:1.5rem; color:var(--rose);
+  margin-top:.8rem; opacity:.85;
 }
 
 /* ── TOAST ── */

@@ -308,11 +308,7 @@ async function seed() {
             { f:'21-08-26/foto2.jpeg' },
           ],
         },
-        {
-          key:'Flores', title:'Las flores de Yasmin', sub:'Tu jardín', sort:7,
-          text: rtxt(path.join(memDir,'Flores','texto1.txt')),
-          photos:[{ f:'Flores/foto2.jpeg' }],
-        },
+        // "Flores" ahora es su propia sección (routes/flores.js) — ya no se siembra aquí
         {
           key:'Paisajes', title:'Paisajes que te llevan', sub:'Donde te pienso', sort:8,
           text:'',

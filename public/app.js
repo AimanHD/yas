@@ -16,6 +16,7 @@ const ICONS = {
   trash:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
   upload:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>`,
   wheel:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg>`,
+  flower:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 010 6M12 16a3 3 0 010 6M2 12a3 3 0 016 0M16 12a3 3 0 016 0M4.93 4.93a3 3 0 014.24 4.24M14.83 14.83a3 3 0 004.24 4.24M4.93 19.07a3 3 0 014.24-4.24M14.83 9.17a3 3 0 014.24-4.24"/></svg>`,
 };
 
 // ── FRASES ──
@@ -108,6 +109,7 @@ const S = {
   section: 'home',
   settings: { start_date: '2026-06-30', her_name: 'Yasmin', your_name: 'Aiman' },
   letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [], movies: [], memories: [],
+  flores: null,
   poemFilter: 'all',
   bookLetter: null,
   bookPage: 0,
@@ -262,9 +264,10 @@ async function render() {
   c.classList.add('fade-out');
   await new Promise(r => setTimeout(r, 140));
   c.innerHTML = '';
-  const fns = { home:renderHome, letters:renderLetters, notes:renderNotes, poems:renderPoems, gallery:renderGallery, memories:renderMemories, barbie:renderBarbie, details:renderDetails };
+  const fns = { home:renderHome, letters:renderLetters, notes:renderNotes, poems:renderPoems, gallery:renderGallery, memories:renderMemories, flores:renderFlores, barbie:renderBarbie, details:renderDetails };
   await (fns[S.section] || renderHome)();
-  requestAnimationFrame(() => c.classList.remove('fade-out'));
+  c.scrollTop = 0;
+  requestAnimationFrame(() => { c.classList.remove('fade-out'); syncFooter(); });
 }
 
 // ── HOME ──
@@ -995,6 +998,7 @@ async function renderMemories() {
   const groups = [];
   const gMap = {};
   S.memories.forEach(m => {
+    if (m.group_key === 'Flores' || /^flores-/.test(m.group_key)) return; // ahora es su propia sección
     if (!gMap[m.group_key]) {
       const g = { key: m.group_key, title: m.group_title, sub: m.group_sub, text: m.group_text, featured: [], items: [] };
       gMap[m.group_key] = g;
@@ -1064,6 +1068,77 @@ async function renderMemories() {
 
     c.appendChild(section);
   });
+}
+
+// ── FLORES ──
+async function renderFlores() {
+  const data = await api('GET', '/flores');
+  S.flores = data;
+  const c = $('content');
+  c.innerHTML = '';
+  c.appendChild(backBtn());
+
+  const paras = t => String(t || '')
+    .split(/\n+/).map(s => s.trim()).filter(Boolean)
+    .map(p => `<p>${p}</p>`).join('');
+
+  // ── TEXTO PRINCIPAL (elemento principal de la página) ──
+  const hero = el('div', 'flores-hero anim');
+  hero.innerHTML = `
+    <div class="flores-hero-deco" aria-hidden="true">${ICONS.flower}</div>
+    <p class="flores-eyebrow">Nuestro jardín</p>
+    <h2 class="flores-title">Flores</h2>
+    <div class="flores-hero-line"></div>
+    <div class="flores-hero-text">${paras(data.intro) || '<p>Aquí irán todas tus flores, según las fechas.</p>'}</div>
+  `;
+  c.appendChild(hero);
+
+  const dates = Array.isArray(data.dates) ? data.dates : [];
+
+  if (!dates.length) {
+    c.appendChild(emptyState('Aún no hay ramos guardados'));
+    return;
+  }
+
+  // ── GALERÍA POR FECHAS (según se baja) ──
+  const scroll = el('div', 'flores-hint anim anim-d1');
+  scroll.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+    baja para ver cada ramo
+  `;
+  c.appendChild(scroll);
+
+  dates.forEach((d, di) => {
+    const delay = `anim-d${Math.min(di % 4 + 1, 5)}`;
+    const block = el('div', `flores-fecha anim ${delay}`);
+
+    const hdr = el('div', 'flores-fecha-hdr');
+    hdr.innerHTML = `
+      <span class="flores-fecha-count">${d.photos.length} ${d.photos.length === 1 ? 'foto' : 'fotos'}</span>
+      <h3 class="flores-fecha-label">${d.label}</h3>
+    `;
+    block.appendChild(hdr);
+
+    const grid = el('div', 'flores-grid');
+    d.photos.forEach(src => {
+      const full = `${BACKEND}${src}`;
+      const item = el('div', 'flores-item');
+      item.innerHTML = `<img src="${full}" alt="${d.label}" loading="lazy">`;
+      item.onclick = () => openMemoryPhoto(full, d.label);
+      grid.appendChild(item);
+    });
+    block.appendChild(grid);
+
+    if (di < dates.length - 1) block.appendChild(el('div', 'memory-divider'));
+    c.appendChild(block);
+  });
+
+  // ── CIERRE ──
+  if (data.outro) {
+    const outro = el('div', 'flores-outro anim');
+    outro.innerHTML = `${paras(data.outro)}<div class="flores-firma">Siempre tuyo</div>`;
+    c.appendChild(outro);
+  }
 }
 
 function openMemoryPhoto(src, note) {
@@ -1152,156 +1227,21 @@ function dismissSplash() {
   setTimeout(() => s?.remove(), 950);
 }
 
-// ── CUESTIONARIO DE CITA ──
-const CITA_STEPS = [
-  {
-    key: 'momento',
-    titulo: 'Pon tu cita idónea de hoy',
-    sub: '¿A qué hora te apetece?',
-    opciones: ['Por la tarde', 'Por la noche'],
-  },
-  {
-    key: 'comida',
-    titulo: '¿Qué comida te gustaría?',
-    sub: 'Elige tu antojo de hoy',
-    opciones: ['Pizza', 'Hamburguesa', 'Pasta', 'Solo me apetece helado'],
-  },
-  {
-    key: 'plan',
-    titulo: '¿Qué plan te apetece?',
-    sub: 'Tú decides el rollito',
-    opciones: [
-      'Chill en la playa',
-      'Sentaditos en el coche en algún mirador',
-      'Bolos en Pause&Play',
-      'Simplemente charlar',
-    ],
-  },
-  {
-    key: 'horarios',
-    titulo: 'Horarios',
-    sub: 'Hora de recogida y hora de dejada en casa, tú decides',
-    horas: true,
-  },
-  {
-    key: 'fruta',
-    titulo: 'Fruta que te apetezca hoy',
-    sub: 'Para picar juntos',
-    opciones: ['Uva', 'Frambuesa', 'Arándanos', 'Moras'],
-  },
-];
-
-function showCitaCuestionario() {
-  const respuestas = {};
-  let paso = 0;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'nota-overlay';
-  const card = document.createElement('div');
-  card.className = 'nota-card';
-  card.id = 'nota-card';
-  overlay.appendChild(card);
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('nota-in'));
-
-  const cerrar = () => {
-    overlay.classList.add('nota-out');
-    setTimeout(() => overlay.remove(), 500);
-  };
-
-  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-  function renderPaso() {
-    const step = CITA_STEPS[paso];
-    const total = CITA_STEPS.length;
-
-    let cuerpo = '';
-    if (step.horas) {
-      cuerpo = `
-        <div class="cita-horas">
-          <label class="cita-hora">
-            <span>Recogida</span>
-            <input type="time" id="cita-recogida" value="${respuestas.recogida || '18:00'}">
-          </label>
-          <label class="cita-hora">
-            <span>Dejada en casa</span>
-            <input type="time" id="cita-dejada" value="${respuestas.dejada || '23:00'}">
-          </label>
-        </div>
-        <button class="cita-next" id="cita-next">Continuar</button>
-      `;
-    } else {
-      cuerpo = `<div class="cita-opciones">` + step.opciones.map((o, i) =>
-        `<button class="cita-opcion${respuestas[step.key] === o ? ' sel' : ''}" data-val="${esc(o)}">${esc(o)}</button>`
-      ).join('') + `</div>`;
-    }
-
-    card.innerHTML = `
-      <div class="nota-deco" aria-hidden="true">♥</div>
-      <div class="nota-eyebrow">cuestionario de cita · ${paso + 1}/${total}</div>
-      <div class="cita-progress"><span style="width:${((paso) / total) * 100}%"></span></div>
-      <div class="cita-titulo">${esc(step.titulo)}</div>
-      <div class="cita-sub">${esc(step.sub)}</div>
-      ${cuerpo}
-      ${paso > 0 ? '<button class="cita-back" id="cita-back">← atrás</button>' : ''}
-    `;
-
-    card.querySelectorAll('.cita-opcion').forEach(btn => {
-      btn.onclick = () => {
-        respuestas[step.key] = btn.dataset.val;
-        avanzar();
-      };
-    });
-    const nextBtn = card.querySelector('#cita-next');
-    if (nextBtn) nextBtn.onclick = () => {
-      respuestas.recogida = card.querySelector('#cita-recogida').value;
-      respuestas.dejada = card.querySelector('#cita-dejada').value;
-      avanzar();
-    };
-    const backBtn = card.querySelector('#cita-back');
-    if (backBtn) backBtn.onclick = () => { paso--; renderPaso(); };
-  }
-
-  function avanzar() {
-    if (paso < CITA_STEPS.length - 1) { paso++; renderPaso(); }
-    else renderFinal();
-  }
-
-  function renderFinal() {
-    const filas = [
-      ['Momento', respuestas.momento],
-      ['Comida', respuestas.comida],
-      ['Plan', respuestas.plan],
-      ['Recogida', respuestas.recogida],
-      ['Dejada en casa', respuestas.dejada],
-      ['Fruta', respuestas.fruta],
-    ];
-    card.innerHTML = `
-      <div class="nota-deco" aria-hidden="true">♥</div>
-      <div class="nota-eyebrow">tu cita de hoy</div>
-      <div class="cita-titulo">Todo listo</div>
-      <div class="cita-sub">Estas son tus elecciones</div>
-      <div class="cita-resumen">
-        ${filas.map(([k, v]) => `<div class="cita-fila"><span>${esc(k)}</span><strong>${esc(v || '—')}</strong></div>`).join('')}
-      </div>
-      <div class="nota-firma">Siempre tuyo</div>
-      <button class="nota-close" id="cita-cerrar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        cerrar
-      </button>
-    `;
-    card.querySelector('#cita-cerrar').onclick = cerrar;
-  }
-
-  renderPaso();
+// ── FOOTER (solo visible al llegar al fondo) ──
+function syncFooter() {
+  const c = $('content'), f = $('footer');
+  if (!c || !f) return;
+  const fh = f.offsetHeight || 0;
+  c.style.paddingBottom = (fh + 24) + 'px';
+  const scrollable = c.scrollHeight - c.clientHeight > fh + 40;
+  const atBottom   = c.scrollTop + c.clientHeight >= c.scrollHeight - 8;
+  f.classList.toggle('reveal', scrollable && atBottom);
 }
 
 // ── INIT ──
 async function init() {
   // Auto-dismiss splash after 2.4s
   setTimeout(dismissSplash, 2400);
-  // Cuestionario de cita después del splash
-  setTimeout(showCitaCuestionario, 3600);
 
   try {
     const settings = await api('GET', '/settings');
@@ -1311,6 +1251,11 @@ async function init() {
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.onclick = () => { App.navigate(btn.dataset.section); App.closeMenu(); };
   });
+
+  // Footer: aparece solo al llegar al fondo del contenido
+  const contentEl = $('content');
+  if (contentEl) contentEl.addEventListener('scroll', syncFooter, { passive: true });
+  window.addEventListener('resize', syncFooter);
 
   // Easter egg: triple-tap en el logo → lluvia de corazones
   let _logoTaps = 0, _logoTimer;
