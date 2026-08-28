@@ -1152,34 +1152,156 @@ function dismissSplash() {
   setTimeout(() => s?.remove(), 950);
 }
 
-// ── NOTITA ESPECIAL ──
-const NOTA_ESPECIAL = `Buenas amor como estas,, sé que estas cansadita y quemada del trabajo, sé que no te apetece nada solo desaparecer del mundo y estar a tu bola, de verdad amor , que todo lleva esfuerzo y dedicación, yo de verdad te lo digo que poco a poco te irás liberando de esto, no te mereces nada trabajar toda la vida de esto, tu vida vale más que un restaurante, poco a poco te quitaré de trabajar, algún día tendrás toda aquella paz que te prometo que vas a tener, eres la mejor, pronto tendrás tus días llenos de planes guays, pilates, comprar cosas, etc, mientras yo trabaje por ti y vivamos bajo el mismo techo, de verdad, poco a poco, estaremos juntos en las buenas y en las malas, y no pasa nada que haya días que por culpa del trabajo estes sin ganas de hablar o hacer nada, te amo mi vida, estaré contigo siempre.`;
+// ── CUESTIONARIO DE CITA ──
+const CITA_STEPS = [
+  {
+    key: 'momento',
+    titulo: 'Pon tu cita idónea de hoy',
+    sub: '¿A qué hora te apetece?',
+    opciones: ['Por la tarde', 'Por la noche'],
+  },
+  {
+    key: 'comida',
+    titulo: '¿Qué comida te gustaría?',
+    sub: 'Elige tu antojo de hoy',
+    opciones: ['Pizza', 'Hamburguesa', 'Pasta', 'Solo me apetece helado'],
+  },
+  {
+    key: 'plan',
+    titulo: '¿Qué plan te apetece?',
+    sub: 'Tú decides el rollito',
+    opciones: [
+      'Chill en la playa',
+      'Sentaditos en el coche en algún mirador',
+      'Bolos en Pause&Play',
+      'Simplemente charlar',
+    ],
+  },
+  {
+    key: 'horarios',
+    titulo: 'Horarios',
+    sub: 'Hora de recogida y hora de dejada en casa, tú decides',
+    horas: true,
+  },
+  {
+    key: 'fruta',
+    titulo: 'Fruta que te apetezca hoy',
+    sub: 'Para picar juntos',
+    opciones: ['Uva', 'Frambuesa', 'Arándanos', 'Moras'],
+  },
+];
 
-function showNotaEspecial() {
+function showCitaCuestionario() {
+  const respuestas = {};
+  let paso = 0;
+
   const overlay = document.createElement('div');
   overlay.id = 'nota-overlay';
-  overlay.innerHTML = `
-    <div class="nota-card" id="nota-card">
+  const card = document.createElement('div');
+  card.className = 'nota-card';
+  card.id = 'nota-card';
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('nota-in'));
+
+  const cerrar = () => {
+    overlay.classList.add('nota-out');
+    setTimeout(() => overlay.remove(), 500);
+  };
+
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function renderPaso() {
+    const step = CITA_STEPS[paso];
+    const total = CITA_STEPS.length;
+
+    let cuerpo = '';
+    if (step.horas) {
+      cuerpo = `
+        <div class="cita-horas">
+          <label class="cita-hora">
+            <span>Recogida</span>
+            <input type="time" id="cita-recogida" value="${respuestas.recogida || '18:00'}">
+          </label>
+          <label class="cita-hora">
+            <span>Dejada en casa</span>
+            <input type="time" id="cita-dejada" value="${respuestas.dejada || '23:00'}">
+          </label>
+        </div>
+        <button class="cita-next" id="cita-next">Continuar</button>
+      `;
+    } else {
+      cuerpo = `<div class="cita-opciones">` + step.opciones.map((o, i) =>
+        `<button class="cita-opcion${respuestas[step.key] === o ? ' sel' : ''}" data-val="${esc(o)}">${esc(o)}</button>`
+      ).join('') + `</div>`;
+    }
+
+    card.innerHTML = `
       <div class="nota-deco" aria-hidden="true">♥</div>
-      <div class="nota-eyebrow">una notita para ti</div>
-      <div class="nota-body">${NOTA_ESPECIAL}</div>
+      <div class="nota-eyebrow">cuestionario de cita · ${paso + 1}/${total}</div>
+      <div class="cita-progress"><span style="width:${((paso) / total) * 100}%"></span></div>
+      <div class="cita-titulo">${esc(step.titulo)}</div>
+      <div class="cita-sub">${esc(step.sub)}</div>
+      ${cuerpo}
+      ${paso > 0 ? '<button class="cita-back" id="cita-back">← atrás</button>' : ''}
+    `;
+
+    card.querySelectorAll('.cita-opcion').forEach(btn => {
+      btn.onclick = () => {
+        respuestas[step.key] = btn.dataset.val;
+        avanzar();
+      };
+    });
+    const nextBtn = card.querySelector('#cita-next');
+    if (nextBtn) nextBtn.onclick = () => {
+      respuestas.recogida = card.querySelector('#cita-recogida').value;
+      respuestas.dejada = card.querySelector('#cita-dejada').value;
+      avanzar();
+    };
+    const backBtn = card.querySelector('#cita-back');
+    if (backBtn) backBtn.onclick = () => { paso--; renderPaso(); };
+  }
+
+  function avanzar() {
+    if (paso < CITA_STEPS.length - 1) { paso++; renderPaso(); }
+    else renderFinal();
+  }
+
+  function renderFinal() {
+    const filas = [
+      ['Momento', respuestas.momento],
+      ['Comida', respuestas.comida],
+      ['Plan', respuestas.plan],
+      ['Recogida', respuestas.recogida],
+      ['Dejada en casa', respuestas.dejada],
+      ['Fruta', respuestas.fruta],
+    ];
+    card.innerHTML = `
+      <div class="nota-deco" aria-hidden="true">♥</div>
+      <div class="nota-eyebrow">tu cita de hoy</div>
+      <div class="cita-titulo">Todo listo</div>
+      <div class="cita-sub">Estas son tus elecciones</div>
+      <div class="cita-resumen">
+        ${filas.map(([k, v]) => `<div class="cita-fila"><span>${esc(k)}</span><strong>${esc(v || '—')}</strong></div>`).join('')}
+      </div>
       <div class="nota-firma">Siempre tuyo</div>
-      <button class="nota-close" onclick="document.getElementById('nota-overlay').classList.add('nota-out');setTimeout(()=>document.getElementById('nota-overlay')?.remove(),500)">
+      <button class="nota-close" id="cita-cerrar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         cerrar
       </button>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => overlay.classList.add('nota-in'));
+    `;
+    card.querySelector('#cita-cerrar').onclick = cerrar;
+  }
+
+  renderPaso();
 }
 
 // ── INIT ──
 async function init() {
   // Auto-dismiss splash after 2.4s
   setTimeout(dismissSplash, 2400);
-  // Notita especial después del splash
-  setTimeout(showNotaEspecial, 3600);
+  // Cuestionario de cita después del splash
+  setTimeout(showCitaCuestionario, 3600);
 
   try {
     const settings = await api('GET', '/settings');

@@ -1127,6 +1127,75 @@ img { max-width:100%; display:block }
 }
 .nota-close:hover { background:var(--blush) }
 
+/* ── CUESTIONARIO DE CITA ── */
+.cita-progress {
+  height:4px; border-radius:60px; background:var(--rose-border);
+  overflow:hidden; margin:0 0 1.2rem;
+}
+.cita-progress span {
+  display:block; height:100%; background:var(--rose);
+  transition:width .35s cubic-bezier(.22,1,.36,1);
+}
+.cita-titulo {
+  font-family:var(--font-title,var(--font-body)); font-size:1.45rem;
+  color:var(--text); text-align:center; line-height:1.25;
+}
+.cita-sub {
+  font-family:var(--font-body); font-size:1rem; color:var(--text-mid);
+  text-align:center; margin:.3rem 0 1.3rem; font-style:italic;
+}
+.cita-opciones { display:flex; flex-direction:column; gap:.6rem; }
+.cita-opcion {
+  font-family:var(--font-ui); font-size:.95rem; color:var(--text);
+  background:var(--cream); border:1px solid var(--rose-border);
+  border-radius:14px; padding:.85rem 1rem; cursor:pointer;
+  transition:background .18s, border-color .18s, transform .12s;
+  text-align:left;
+}
+.cita-opcion:hover { background:var(--blush); border-color:var(--rose); }
+.cita-opcion:active { transform:scale(.98); }
+.cita-opcion.sel { background:var(--blush); border-color:var(--rose); font-weight:600; }
+.cita-horas { display:flex; flex-direction:column; gap:.9rem; }
+.cita-hora { display:flex; flex-direction:column; gap:.35rem; }
+.cita-hora span {
+  font-family:var(--font-ui); font-size:.78rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--rose);
+}
+.cita-hora input {
+  font-family:var(--font-ui); font-size:1rem; color:var(--text);
+  background:var(--cream); border:1px solid var(--rose-border);
+  border-radius:12px; padding:.7rem .9rem;
+}
+.cita-next {
+  margin-top:1.3rem; width:100%;
+  font-family:var(--font-ui); font-size:.95rem; font-weight:600;
+  color:#fff; background:var(--rose-dark); border:none;
+  border-radius:60px; padding:.8rem 1rem; cursor:pointer;
+  transition:background .2s;
+}
+.cita-next:hover { background:var(--rose); }
+.cita-back {
+  display:block; margin:1rem auto 0; background:none; border:none;
+  font-family:var(--font-ui); font-size:.82rem; color:var(--text-muted);
+  cursor:pointer;
+}
+.cita-resumen {
+  display:flex; flex-direction:column; gap:.55rem; margin:.4rem 0 .2rem;
+}
+.cita-fila {
+  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+  padding:.6rem .9rem; border:1px solid var(--rose-border);
+  border-radius:12px; background:var(--cream);
+}
+.cita-fila span {
+  font-family:var(--font-ui); font-size:.72rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--rose);
+}
+.cita-fila strong {
+  font-family:var(--font-body); font-size:1.02rem; color:var(--text);
+  font-weight:600; text-align:right;
+}
+
 /* ── TOAST ── */
 .toast {
   position:fixed; bottom:calc(1.2rem + var(--safe-bot)); left:50%; transform:translateX(-50%) translateY(20px);
