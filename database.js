@@ -187,6 +187,20 @@ async function seed() {
     console.log('  Cartas:', await db.count('letters'));
   }
 
+  /* CARTA EXTRA: tarjeta de cumpleaños (imagen) — se añade aunque ya existan otras cartas */
+  {
+    const file = 'Feliz_Cumple_Yasmin.png';
+    if (fs.existsSync(path.join(loveDir, file))) {
+      const existing = await db.getAll('letters');
+      if (!existing.some(l => l.filename === file)) {
+        await db.insert('letters', {
+          title: 'Feliz Cumpleaños, Yasmin', subtitle: 'Con todo mi amor',
+          filename: file, type: 'letter',
+        });
+      }
+    }
+  }
+
   /* POEMS */
   if ((await db.count('poems')) === 0) {
     try {

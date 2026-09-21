@@ -436,6 +436,16 @@ function renderBook() {
   const letter = S.bookLetter;
   const bc = $('book-container');
 
+  if (!letter.content && letter.filename && /\.(png|jpe?g|webp|gif)$/i.test(letter.filename)) {
+    bc.innerHTML = `
+      <div class="book-header"><h2>${letter.title}</h2>${letter.subtitle?`<p>${letter.subtitle}</p>`:''}</div>
+      <div class="book-pages book-pages-image">
+        <img class="book-image" src="${BACKEND}/love/${encodeURIComponent(letter.filename)}" alt="${letter.title}">
+      </div>
+    `;
+    return;
+  }
+
   if (!letter.content && letter.filename) {
     bc.innerHTML = `
       <div class="book-header"><h2>${letter.title}</h2>${letter.subtitle?`<p>${letter.subtitle}</p>`:''}</div>
@@ -1227,6 +1237,106 @@ function dismissSplash() {
   setTimeout(() => s?.remove(), 950);
 }
 
+// ── FELIZ CUMPLEAÑOS ──
+async function showFelizCumple() {
+  const overlay = document.createElement('div');
+  overlay.id = 'cumple-overlay';
+
+  const CONFETTI_COLORS = ['#F4A7C3', '#C2185B', '#F9D96B', '#A7D8D0', '#FFFFFF', '#E8B4E0'];
+  let confettiHtml = '';
+  for (let i = 0; i < 32; i++) {
+    const left  = (Math.random() * 100).toFixed(1);
+    const delay = (Math.random() * 4).toFixed(2);
+    const dur   = (3.5 + Math.random() * 2.5).toFixed(2);
+    const size  = (6 + Math.random() * 6).toFixed(1);
+    const rot   = Math.floor(Math.random() * 360);
+    const round = i % 3 === 0;
+    confettiHtml += `<span class="confetti-piece" style="left:${left}%;--delay:${delay}s;--dur:${dur}s;--rot:${rot}deg;width:${size}px;height:${round ? size : size * 1.4}px;background:${CONFETTI_COLORS[i % CONFETTI_COLORS.length]};border-radius:${round ? '50%' : '2px'}"></span>`;
+  }
+
+  const BALLOON_COLORS = ['#C2185B', '#F4A7C3', '#F9D96B', '#A7D8D0', '#E8B4E0'];
+  const BALLOON_LEFT   = [6, 20, 50, 80, 93];
+  const balloonsHtml = BALLOON_LEFT.map((left, i) =>
+    `<span class="cumple-balloon" style="left:${left}%;--bdelay:${(i * 0.55).toFixed(2)}s;background:${BALLOON_COLORS[i % BALLOON_COLORS.length]}"></span>`
+  ).join('');
+
+  overlay.innerHTML = `
+    <div class="cumple-confetti" aria-hidden="true">${confettiHtml}</div>
+    <div class="cumple-balloons" aria-hidden="true">${balloonsHtml}</div>
+    <div class="cumple-card" id="cumple-card">
+      <div class="cumple-collage" id="cumple-collage"></div>
+      <p class="cumple-eyebrow">Hoy es un día especial</p>
+      <h1 class="cumple-h1">¡Feliz Cumpleaños!</h1>
+      <p class="cumple-name">Yasmin</p>
+      <div class="cumple-cake" id="cumple-cake">
+        <div class="cake-scene">
+          <div class="cake-candles">
+            ${Array.from({ length: 5 }, (_, i) => `<span class="candle" style="--ci:${i}"><span class="flame"></span></span>`).join('')}
+          </div>
+          <div class="cake-top"></div>
+          <div class="cake-layer"></div>
+          <div class="cake-board"></div>
+        </div>
+      </div>
+      <p class="cumple-hint" id="cumple-hint">toca la tarta para soplar las velas</p>
+      <button class="cumple-close" id="cumple-close">Entrar</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('cumple-in'));
+
+  const cerrar = () => {
+    overlay.classList.add('cumple-out');
+    setTimeout(() => overlay.remove(), 500);
+  };
+  overlay.querySelector('#cumple-close').onclick = cerrar;
+
+  // Colage con fotos reales de la galería
+  try {
+    const gallery = await api('GET', '/gallery');
+    const pics = (gallery || []).slice(0, 4);
+    const collageEl = overlay.querySelector('#cumple-collage');
+    if (collageEl && pics.length) {
+      collageEl.innerHTML = pics.map((g, i) =>
+        `<div class="cumple-photo" style="--pi:${i}"><img src="${imgSrc(g)}" alt="" loading="eager"></div>`
+      ).join('');
+    }
+  } catch (_) {}
+
+  // Soplar las velas
+  const cakeEl = overlay.querySelector('#cumple-cake');
+  const hintEl = overlay.querySelector('#cumple-hint');
+  let blown = false;
+  cakeEl.onclick = () => {
+    if (blown) return;
+    blown = true;
+    cakeEl.classList.add('blown');
+    hintEl.textContent = 'Que se cumplan todos tus deseos, mi vida.';
+    hintEl.classList.add('cumple-hint-done');
+    burstConfettiAt(overlay, cakeEl);
+  };
+}
+
+function burstConfettiAt(overlay, anchorEl) {
+  const rect  = anchorEl.getBoundingClientRect();
+  const layer = overlay.querySelector('.cumple-confetti');
+  if (!layer) return;
+  const COLORS = ['#F4A7C3', '#C2185B', '#F9D96B', '#A7D8D0', '#FFFFFF'];
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.className = 'confetti-burst';
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 60 + Math.random() * 90;
+    s.style.setProperty('--bx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+    s.style.setProperty('--by', (Math.sin(angle) * dist - 40).toFixed(1) + 'px');
+    s.style.left = (rect.left + rect.width / 2) + 'px';
+    s.style.top  = (rect.top + rect.height / 2) + 'px';
+    s.style.background = COLORS[i % COLORS.length];
+    layer.appendChild(s);
+    setTimeout(() => s.remove(), 1200);
+  }
+}
+
 // ── FOOTER (solo visible al llegar al fondo) ──
 function syncFooter() {
   const c = $('content'), f = $('footer');
@@ -1242,6 +1352,8 @@ function syncFooter() {
 async function init() {
   // Auto-dismiss splash after 2.4s
   setTimeout(dismissSplash, 2400);
+  // Sorpresa de cumpleaños al entrar
+  setTimeout(showFelizCumple, 3600);
 
   try {
     const settings = await api('GET', '/settings');
