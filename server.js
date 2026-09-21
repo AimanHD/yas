@@ -46,11 +46,15 @@ app.use('/api/flores',   require('./routes/flores'));
 app.get('*', (_req, res) =>
   res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-seed().then(() => {
-  app.listen(PORT, () => {
-    console.log('');
-    console.log('  ♥ ♥ ♥  Yasmin App  ♥ ♥ ♥');
-    console.log(`  → http://localhost:${PORT}`);
-    console.log('');
-  });
-}).catch(err => { console.error('Seed failed:', err); process.exit(1); });
+// El servidor arranca ya mismo: así responde (estáticos, health checks) aunque
+// la base de datos tarde en despertar o falle. El seed corre en paralelo.
+app.listen(PORT, () => {
+  console.log('');
+  console.log('  ♥ ♥ ♥  Yasmin App  ♥ ♥ ♥');
+  console.log(`  → http://localhost:${PORT}`);
+  console.log('');
+});
+
+seed()
+  .then(() => console.log('  Seed OK'))
+  .catch(err => console.error('  Seed failed (el servidor sigue activo):', err.message));
