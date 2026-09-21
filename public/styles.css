@@ -1229,6 +1229,73 @@ img { max-width:100%; display:block }
 }
 @keyframes cumple-card-in { to { transform:translateY(0) scale(1); opacity:1 } }
 
+/* Regalo: se toca para revelar el colage */
+.cumple-gift-wrap {
+  margin:.6rem 0 1.1rem;
+  overflow:hidden;
+  transition:opacity .4s ease, max-height .4s ease, margin .4s ease;
+  max-height:150px;
+}
+.cumple-gift-wrap.gift-done { opacity:0; max-height:0; margin:0; pointer-events:none }
+
+.cumple-gift {
+  position:relative; width:96px; height:80px; margin:0 auto; padding:0;
+  border:none; background:none; cursor:pointer;
+  animation:gift-idle 2.4s ease-in-out infinite;
+}
+.cumple-gift:active { transform:scale(.95) }
+.cumple-gift.opened { animation:none }
+
+.gift-box {
+  position:absolute; left:2px; right:2px; bottom:0; height:54px;
+  background:linear-gradient(#E8547A, #C2185B);
+  border-radius:8px;
+  box-shadow:0 10px 22px rgba(60,0,30,.28);
+}
+.cumple-gift.opened .gift-box { animation:gift-box-pop .45s ease-out forwards }
+@keyframes gift-box-pop {
+  0%   { transform:scale(1); opacity:1 }
+  40%  { transform:scale(1.08) }
+  100% { transform:scale(.85); opacity:0 }
+}
+
+.gift-lid {
+  position:absolute; left:-6px; right:-6px; top:16px; height:18px;
+  background:linear-gradient(#F06292, #E8547A);
+  border-radius:6px;
+  box-shadow:0 4px 10px rgba(60,0,30,.2);
+  transform-origin:50% 100%;
+  transition:transform .5s cubic-bezier(.34,1.6,.64,1), opacity .4s ease .05s;
+}
+.cumple-gift.opened .gift-lid { transform:translateY(-64px) rotate(-32deg); opacity:0 }
+
+.gift-ribbon-v {
+  position:absolute; left:50%; top:0; bottom:0; width:11px; transform:translateX(-50%);
+  background:var(--rose-border);
+}
+.gift-ribbon-h {
+  position:absolute; left:2px; right:2px; top:30px; height:11px;
+  background:var(--rose-border);
+}
+.gift-bow {
+  position:absolute; left:50%; top:4px; width:26px; height:15px; transform:translate(-50%,-50%);
+  background:var(--rose-border);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+.cumple-gift.opened .gift-ribbon-v,
+.cumple-gift.opened .gift-ribbon-h,
+.cumple-gift.opened .gift-bow { transition:opacity .3s ease; opacity:0 }
+
+@keyframes gift-idle {
+  0%,100% { transform:translateY(0) rotate(-1.5deg) }
+  50%     { transform:translateY(-6px) rotate(1.5deg) }
+}
+.cumple-gift-hint {
+  font-family:var(--font-ui); font-size:.78rem; letter-spacing:.06em;
+  color:var(--text-muted); text-align:center; margin:.5rem 0 0;
+}
+
+.cumple-collage-hidden { display:none }
 .cumple-collage {
   display:flex; flex-wrap:wrap; justify-content:center; align-content:center;
   min-height:78px; margin-bottom:.6rem; row-gap:10px;

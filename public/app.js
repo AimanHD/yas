@@ -1298,10 +1298,23 @@ async function showFelizCumple() {
     <div class="cumple-confetti" aria-hidden="true">${confettiHtml}</div>
     <div class="cumple-balloons" aria-hidden="true">${balloonsHtml}</div>
     <div class="cumple-card" id="cumple-card">
-      <div class="cumple-collage" id="cumple-collage"></div>
       <p class="cumple-eyebrow">Hoy es un día especial</p>
       <h1 class="cumple-h1">¡Feliz Cumpleaños!</h1>
       <p class="cumple-name">Yasmin</p>
+
+      <div class="cumple-gift-wrap" id="cumple-gift-wrap">
+        <button class="cumple-gift" id="cumple-gift" aria-label="Abrir tu regalo">
+          <span class="gift-lid"></span>
+          <span class="gift-box"></span>
+          <span class="gift-ribbon-v"></span>
+          <span class="gift-ribbon-h"></span>
+          <span class="gift-bow"></span>
+        </button>
+        <p class="cumple-gift-hint" id="cumple-gift-hint">toca tu regalo</p>
+      </div>
+
+      <div class="cumple-collage cumple-collage-hidden" id="cumple-collage"></div>
+
       <div class="cumple-cake" id="cumple-cake">
         <div class="cake-scene">
           <div class="cake-candles">
@@ -1325,10 +1338,23 @@ async function showFelizCumple() {
   };
   overlay.querySelector('#cumple-close').onclick = cerrar;
 
-  // Colage: mezcla de fotos de Flores, Recuerdos y Galería
-  try {
-    const pics = await pickCumplePhotos(6);
-    const collageEl = overlay.querySelector('#cumple-collage');
+  // El colage se pide ya (para que esté listo), pero solo se muestra al abrir el regalo
+  const picsPromise = pickCumplePhotos(6).catch(() => []);
+
+  const giftBtn  = overlay.querySelector('#cumple-gift');
+  const giftWrap = overlay.querySelector('#cumple-gift-wrap');
+  const giftHint = overlay.querySelector('#cumple-gift-hint');
+  const collageEl = overlay.querySelector('#cumple-collage');
+  let giftOpened = false;
+
+  giftBtn.onclick = async () => {
+    if (giftOpened) return;
+    giftOpened = true;
+    giftBtn.classList.add('opened');
+    giftHint.textContent = 'Tu regalo…';
+    burstConfettiAt(overlay, giftBtn);
+
+    const pics = await picsPromise;
     if (collageEl && pics.length) {
       const mid = (pics.length - 1) / 2;
       collageEl.innerHTML = pics.map((src, i) => {
@@ -1336,7 +1362,12 @@ async function showFelizCumple() {
         return `<div class="cumple-photo" style="--pi:${i};--rot:${rot}deg"><img src="${src}" alt="" loading="eager"></div>`;
       }).join('');
     }
-  } catch (_) {}
+
+    setTimeout(() => {
+      giftWrap.classList.add('gift-done');
+      collageEl.classList.remove('cumple-collage-hidden');
+    }, 420);
+  };
 
   // Soplar las velas
   const cakeEl = overlay.querySelector('#cumple-cake');
