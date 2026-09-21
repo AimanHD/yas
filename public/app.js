@@ -1238,6 +1238,40 @@ function dismissSplash() {
 }
 
 // ── FELIZ CUMPLEAÑOS ──
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function pickCumplePhotos(n = 6) {
+  const [gallery, flores, memories] = await Promise.all([
+    api('GET', '/gallery').catch(() => []),
+    api('GET', '/flores').catch(() => ({ dates: [] })),
+    api('GET', '/memories').catch(() => []),
+  ]);
+  const galleryUrls = (gallery || []).map(imgSrc);
+  const floresUrls  = (flores?.dates || []).flatMap(d => (d.photos || []).map(p => BACKEND + p));
+  const memUrls     = (memories || [])
+    .filter(m => m.group_key !== 'Flores' && !/^flores-/.test(m.group_key))
+    .map(imgSrc);
+
+  // un poco de cada fuente: flores, momentos (recuerdos) y galería
+  const pools   = [floresUrls, memUrls, galleryUrls];
+  const perPool = Math.ceil(n / pools.length);
+  let pics = shuffle(pools.flatMap(p => shuffle(p).slice(0, perPool)));
+
+  if (pics.length < n) {
+    const used = new Set(pics);
+    const rest = shuffle([...floresUrls, ...memUrls, ...galleryUrls]).filter(u => !used.has(u));
+    pics = pics.concat(rest);
+  }
+  return pics.slice(0, n);
+}
+
 async function showFelizCumple() {
   const overlay = document.createElement('div');
   overlay.id = 'cumple-overlay';
@@ -1291,15 +1325,16 @@ async function showFelizCumple() {
   };
   overlay.querySelector('#cumple-close').onclick = cerrar;
 
-  // Colage con fotos reales de la galería
+  // Colage: mezcla de fotos de Flores, Recuerdos y Galería
   try {
-    const gallery = await api('GET', '/gallery');
-    const pics = (gallery || []).slice(0, 4);
+    const pics = await pickCumplePhotos(6);
     const collageEl = overlay.querySelector('#cumple-collage');
     if (collageEl && pics.length) {
-      collageEl.innerHTML = pics.map((g, i) =>
-        `<div class="cumple-photo" style="--pi:${i}"><img src="${imgSrc(g)}" alt="" loading="eager"></div>`
-      ).join('');
+      const mid = (pics.length - 1) / 2;
+      collageEl.innerHTML = pics.map((src, i) => {
+        const rot = ((i - mid) * 8).toFixed(1);
+        return `<div class="cumple-photo" style="--pi:${i};--rot:${rot}deg"><img src="${src}" alt="" loading="eager"></div>`;
+      }).join('');
     }
   } catch (_) {}
 
