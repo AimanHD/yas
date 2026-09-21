@@ -1253,11 +1253,15 @@ async function pickCumplePhotos(n = 6) {
     api('GET', '/flores').catch(() => ({ dates: [] })),
     api('GET', '/memories').catch(() => []),
   ]);
-  const galleryUrls = (gallery || []).map(imgSrc);
-  const floresUrls  = (flores?.dates || []).flatMap(d => (d.photos || []).map(p => BACKEND + p));
-  const memUrls     = (memories || [])
-    .filter(m => m.group_key !== 'Flores' && !/^flores-/.test(m.group_key))
-    .map(imgSrc);
+  // cada fuente se valida por separado: si una falla (ej. base de datos caída),
+  // las demás igualmente rellenan el colage en vez de dejarlo vacío
+  const galleryUrls = Array.isArray(gallery) ? gallery.map(imgSrc) : [];
+  const floresUrls  = Array.isArray(flores?.dates)
+    ? flores.dates.flatMap(d => (Array.isArray(d.photos) ? d.photos : []).map(p => BACKEND + p))
+    : [];
+  const memUrls     = Array.isArray(memories)
+    ? memories.filter(m => m.group_key !== 'Flores' && !/^flores-/.test(m.group_key)).map(imgSrc)
+    : [];
 
   // un poco de cada fuente: flores, momentos (recuerdos) y galería
   const pools   = [floresUrls, memUrls, galleryUrls];
