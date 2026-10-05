@@ -1424,3 +1424,162 @@ img { max-width:100%; display:block }
   white-space:nowrap;
 }
 .toast.toast-in { opacity:1; transform:translateX(-50%) translateY(0) }
+
+/* ════ Recuperado: notita / cuestionario de cita (ahora en Detalles) ════ */
+/* ── OVERLAY DE NOTA ── */
+#nota-overlay {
+  position:fixed; inset:0; z-index:9500;
+  background:rgba(18,0,14,.65); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  padding:1.2rem;
+  opacity:0; transition:opacity .4s ease;
+  pointer-events:none;
+}
+#nota-overlay.nota-in  { opacity:1; pointer-events:auto }
+#nota-overlay.nota-out { opacity:0; pointer-events:none }
+.nota-card {
+  background:var(--cream);
+  border-radius:var(--radius);
+  box-shadow:0 24px 80px rgba(60,0,30,.45);
+  padding:2rem 1.8rem 1.6rem;
+  max-width:480px; width:100%;
+  position:relative;
+  transform:translateY(24px);
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  max-height:90vh; overflow-y:auto;
+}
+#nota-overlay.nota-in .nota-card { transform:translateY(0) }
+.nota-deco {
+  font-size:1.8rem; color:var(--rose); text-align:center;
+  line-height:1; margin-bottom:.6rem;
+  animation:shimmer 2s ease-in-out infinite;
+}
+.nota-eyebrow {
+  font-family:var(--font-ui); font-size:.7rem; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--rose);
+  text-align:center; margin-bottom:1.1rem;
+}
+.nota-body {
+  font-family:var(--font-body); font-size:1.08rem; line-height:1.85;
+  color:var(--text); font-style:italic; white-space:pre-wrap;
+}
+.nota-firma {
+  font-family:var(--font-logo); font-size:1.5rem; color:var(--rose);
+  text-align:right; margin-top:1.2rem; opacity:.85;
+}
+.nota-close {
+  display:flex; align-items:center; gap:.4rem; margin-top:1.4rem;
+  background:none; border:1px solid var(--rose-border); border-radius:60px;
+  padding:.45rem 1.1rem; font-family:var(--font-ui); font-size:.82rem;
+  color:var(--text-mid); cursor:pointer; transition:background .2s;
+  margin-left:auto;
+}
+.nota-close:hover { background:var(--blush) }
+
+/* ── CUESTIONARIO DE CITA ── */
+.cita-progress {
+  height:4px; border-radius:60px; background:var(--rose-border);
+  overflow:hidden; margin:0 0 1.2rem;
+}
+.cita-progress span {
+  display:block; height:100%; background:var(--rose);
+  transition:width .35s cubic-bezier(.22,1,.36,1);
+}
+.cita-titulo {
+  font-family:var(--font-title,var(--font-body)); font-size:1.45rem;
+  color:var(--text); text-align:center; line-height:1.25;
+}
+.cita-sub {
+  font-family:var(--font-body); font-size:1rem; color:var(--text-mid);
+  text-align:center; margin:.3rem 0 1.3rem; font-style:italic;
+}
+.cita-opciones { display:flex; flex-direction:column; gap:.6rem; }
+.cita-opcion {
+  font-family:var(--font-ui); font-size:.95rem; color:var(--text);
+  background:var(--cream); border:1px solid var(--rose-border);
+  border-radius:14px; padding:.85rem 1rem; cursor:pointer;
+  transition:background .18s, border-color .18s, transform .12s;
+  text-align:left;
+}
+.cita-opcion:hover { background:var(--blush); border-color:var(--rose); }
+.cita-opcion:active { transform:scale(.98); }
+.cita-opcion.sel { background:var(--blush); border-color:var(--rose); font-weight:600; }
+.cita-horas { display:flex; flex-direction:column; gap:.9rem; }
+.cita-hora { display:flex; flex-direction:column; gap:.35rem; }
+.cita-hora span {
+  font-family:var(--font-ui); font-size:.78rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--rose);
+}
+.cita-hora input {
+  font-family:var(--font-ui); font-size:1rem; color:var(--text);
+  background:var(--cream); border:1px solid var(--rose-border);
+  border-radius:12px; padding:.7rem .9rem;
+}
+.cita-next {
+  margin-top:1.3rem; width:100%;
+  font-family:var(--font-ui); font-size:.95rem; font-weight:600;
+  color:#fff; background:var(--rose-dark); border:none;
+  border-radius:60px; padding:.8rem 1rem; cursor:pointer;
+  transition:background .2s;
+}
+.cita-next:hover { background:var(--rose); }
+.cita-back {
+  display:block; margin:1rem auto 0; background:none; border:none;
+  font-family:var(--font-ui); font-size:.82rem; color:var(--text-muted);
+  cursor:pointer;
+}
+.cita-resumen {
+  display:flex; flex-direction:column; gap:.55rem; margin:.4rem 0 .2rem;
+}
+.cita-fila {
+  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+  padding:.6rem .9rem; border:1px solid var(--rose-border);
+  border-radius:12px; background:var(--cream);
+}
+.cita-fila span {
+  font-family:var(--font-ui); font-size:.72rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--rose);
+}
+.cita-fila strong {
+  font-family:var(--font-body); font-size:1.02rem; color:var(--text);
+  font-weight:600; text-align:right;
+}
+
+.nota-deco svg { width:30px; height:30px; stroke:var(--rose); fill:var(--rose-pale2) }
+
+/* ── ESTADOS DE ÁNIMO (SVG) ── */
+.mood-ico { display:inline-flex; width:22px; height:22px; color:var(--rose) }
+.mood-ico svg { width:100%; height:100%; stroke:currentColor }
+.note-card-mood .mood-ico { color:#fff; width:18px; height:18px }
+.mood-opt { display:inline-flex; width:40px; height:40px; align-items:center; justify-content:center; color:var(--text-muted); background:var(--rose-pale) }
+.mood-opt svg { width:20px; height:20px }
+.mood-opt.selected { color:var(--rose); background:var(--blush) }
+
+/* ── FECHAS ── */
+.dates-card {
+  background:var(--cream); border:1px solid rgba(244,167,195,.4);
+  border-radius:var(--radius); padding:1.1rem 1.2rem; margin-bottom:1.2rem;
+  box-shadow:var(--card-shadow); cursor:pointer;
+}
+.date-row {
+  display:flex; align-items:center; gap:.8rem;
+  padding:.6rem 0; border-top:1px solid rgba(244,167,195,.25);
+}
+.frase-label + .date-row, .dates-card > .date-row:first-child { border-top:none }
+.date-ico {
+  width:34px; height:34px; flex-shrink:0; border-radius:50%;
+  background:var(--blush); display:flex; align-items:center; justify-content:center;
+}
+.date-ico svg { width:17px; height:17px; stroke:var(--rose) }
+.date-info { flex:1; min-width:0; display:flex; flex-direction:column }
+.date-info strong { font-family:var(--font-title); font-weight:400; font-size:1rem; color:var(--text) }
+.date-info small { font-family:var(--font-body); font-style:italic; font-size:.9rem; color:var(--text-muted) }
+.date-left {
+  font-family:var(--font-ui); font-size:.72rem; font-weight:600; letter-spacing:.04em;
+  color:var(--rose); white-space:nowrap;
+}
+.date-today .date-left { background:var(--rose); color:#fff; padding:.2rem .6rem; border-radius:60px }
+.date-del { padding:.28rem .5rem; flex-shrink:0 }
+
+/* ── DETALLES: juegos y sorpresas ── */
+.exp-card-alt { background:linear-gradient(135deg, #1a0520 0%, #3a0a2c 100%) }

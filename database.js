@@ -153,60 +153,68 @@ async function seed() {
     await db.setSetting('your_name',  'Aiman');
   }
 
-  /* LETTERS */
-  if ((await db.count('letters')) === 0) {
+  const rtxt = f => { try { return fs.readFileSync(path.join(loveDir, f), 'utf-8').trim() } catch(_) { return '' } };
+  const ymd  = d => (d instanceof Date ? d.toISOString() : String(d || '')).slice(0, 10);
+  // Inserta solo las filas cuya clave aún no existe → sirve para BD nuevas y para añadir contenido a la de producción
+  async function ensure(table, rows, key = r => r.title) {
+    const have = new Set((await db.getAll(table)).map(key));
+    for (const r of rows) if (!have.has(key(r))) await db.insert(table, r);
+  }
+
+  /* LETTERS — texto (lector de libro), PDF e imágenes (tarjetas) */
+  {
+    const letters = [];
     const txtLetters = [
-      { file:'En el interior de las calles de aqu.txt', title:'La floristería de Granada',        subtitle:'Una historia de jazmines mágicos',     type:'story'  },
-      { file:'Erase una vez, un chico joven de un.txt', title:'La luna llamada Yasmin',            subtitle:'Una historia de lunas y jardines',     type:'story'  },
-      { file:'Hoy a dia 14082026 a las 116, mi mu.txt', title:'¿Por qué te quiero tanto?',         subtitle:'14 de agosto de 2026, 1:16',           type:'letter' },
-      { file:'respiro.txt',                             title:'Te quiero en todas tus formas',      subtitle:'Una carta sobre el amor real',         type:'letter' },
-      { file:'barco.txt',                               title:'El barco que llegó hasta ti',        subtitle:'Una historia de mares y destinos',     type:'story'  },
-      { file:'19082026.txt',                            title:'Dos meses contigo',                  subtitle:'19 de agosto de 2026',                 type:'letter' },
-      { file:'verterespirar.txt',                       title:'Verte respirar',                     subtitle:'Una noche de luna llena en el puerto', type:'letter' },
-      { file:'epoca70.txt',                             title:'La playa eres tú',                   subtitle:'Una historia de los años 70',          type:'story'  },
+      { file:'En el interior de las calles de aqu.txt',           title:'La floristería de Granada',     subtitle:'Una historia de jazmines mágicos',         type:'story'  },
+      { file:'Erase una vez, un chico joven de un.txt',           title:'La luna llamada Yasmin',        subtitle:'Una historia de lunas y jardines',         type:'story'  },
+      { file:'Hoy a dia 14082026 a las 116, mi mu.txt',           title:'¿Por qué te quiero tanto?',     subtitle:'14 de agosto de 2026, 1:16',               type:'letter' },
+      { file:'respiro.txt',                                       title:'Te quiero en todas tus formas', subtitle:'Una carta sobre el amor real',             type:'letter' },
+      { file:'barco.txt',                                         title:'El barco que llegó hasta ti',   subtitle:'Una historia de mares y destinos',         type:'story'  },
+      { file:'19082026.txt',                                      title:'Dos meses contigo',             subtitle:'19 de agosto de 2026',                     type:'letter' },
+      { file:'verterespirar.txt',                                 title:'Verte respirar',                subtitle:'Una noche de luna llena en el puerto',     type:'letter' },
+      { file:'epoca70.txt',                                       title:'La playa eres tú',              subtitle:'Una historia de los años 70',              type:'story'  },
+      { file:'fotonormal/Hola soy Aiman Harrar Daoud, tengo.txt', title:'Esa eres tú',                   subtitle:'Todo lo que soñé, y lo que siempre serás', type:'letter' },
     ];
     for (const l of txtLetters) {
-      try {
-        const content = fs.readFileSync(path.join(loveDir, l.file), 'utf-8').trim();
-        await db.insert('letters', { title:l.title, subtitle:l.subtitle, content, type:l.type });
-      } catch(_) {}
+      const content = rtxt(l.file);
+      if (content) letters.push({ title:l.title, subtitle:l.subtitle, content, type:l.type });
     }
-    const pdfLetters = [
-      { file:'Carta_para_Yasmin.pdf',                  title:'Carta para Yasmin',                subtitle:'Con todo mi corazón'             },
-      { file:'Las-Mil-y-Una-Noches-de-Babilonia.pdf',  title:'Las Mil y Una Noches de Babilonia', subtitle:'Un cuento de amor eterno'        },
-      { file:'El_Eclipse_Eterno.pdf',                  title:'El Eclipse Eterno',                subtitle:'Cuando la luz eres tú'           },
-      { file:'La_Princesa_de_Ojos_de_Noche.pdf',       title:'La Princesa de Ojos de Noche',     subtitle:'Para ti, mi princesa'            },
-      { file:'Carta de amor a tus ojos.pdf',           title:'Carta de Amor a Tus Ojos',         subtitle:'Dedicada a tu mirada'            },
-      { file:'El Tesoro Mejor Guardado.pdf',           title:'El Tesoro Mejor Guardado',         subtitle:'Mi mayor tesoro eres tú'         },
-      { file:'Nota para Yasmin.pdf',                   title:'Nota para Yasmin',                 subtitle:'Un pensamiento para ti'          },
+    const fileLetters = [
+      { file:'Carta_para_Yasmin.pdf',                 title:'Carta para Yasmin',                subtitle:'Con todo mi corazón'      },
+      { file:'Las-Mil-y-Una-Noches-de-Babilonia.pdf', title:'Las Mil y Una Noches de Babilonia', subtitle:'Un cuento de amor eterno' },
+      { file:'El_Eclipse_Eterno.pdf',                 title:'El Eclipse Eterno',                subtitle:'Cuando la luz eres tú'    },
+      { file:'La_Princesa_de_Ojos_de_Noche.pdf',      title:'La Princesa de Ojos de Noche',     subtitle:'Para ti, mi princesa'     },
+      { file:'Carta de amor a tus ojos.pdf',          title:'Carta de Amor a Tus Ojos',         subtitle:'Dedicada a tu mirada'     },
+      { file:'El Tesoro Mejor Guardado.pdf',          title:'El Tesoro Mejor Guardado',         subtitle:'Mi mayor tesoro eres tú'  },
+      { file:'Nota para Yasmin.pdf',                  title:'Nota para Yasmin',                 subtitle:'Un pensamiento para ti'   },
+      { file:'notita para mi amor.png',               title:'Una notita para mi amor',          subtitle:'21 · 09 · 2001, el día que empezó todo' },
+      { file:'Feliz_Cumple_Yasmin.png',               title:'Feliz Cumpleaños, Yasmin',         subtitle:'Con todo mi amor'         },
+      { file:'Para_Yasmin_florecer.png',              title:'Para florecer',                    subtitle:'Poco a poco y sin presión' },
     ];
-    for (const l of pdfLetters) {
+    for (const l of fileLetters) {
       if (fs.existsSync(path.join(loveDir, l.file)))
-        await db.insert('letters', { title:l.title, subtitle:l.subtitle, filename:l.file, type:'letter' });
+        letters.push({ title:l.title, subtitle:l.subtitle, filename:l.file, type:'letter' });
     }
+    await ensure('letters', letters);
     console.log('  Cartas:', await db.count('letters'));
   }
 
-  /* CARTA EXTRA: tarjeta de cumpleaños (imagen) — se añade aunque ya existan otras cartas */
+  /* POEMS — textoflores.txt (chat de WhatsApp) se separa en un poema por flor */
   {
-    const file = 'Feliz_Cumple_Yasmin.png';
-    if (fs.existsSync(path.join(loveDir, file))) {
-      const existing = await db.getAll('letters');
-      if (!existing.some(l => l.filename === file)) {
-        await db.insert('letters', {
-          title: 'Feliz Cumpleaños, Yasmin', subtitle: 'Con todo mi amor',
-          filename: file, type: 'letter',
-        });
-      }
+    const raw = rtxt('textoflores.txt');
+    const TITLES = ['El trébol de cuatro hojas', 'El girasol', 'El hibisco', 'La flor caída', 'La flor de cerezo', 'Rosa, tulipán y ramo'];
+    const flores = raw.split(/\r?\n(?=\[)/)
+      .map(l => l.replace(/^\[[^\]]*\]\s*\.:\s*/, '').replace(/^[^:]*yasmin\s*:\s*/i, '').trim())
+      .filter(Boolean);
+    if (flores.length === TITLES.length) {
+      // el poema antiguo era el chat en bruto: se retira solo si nadie lo ha editado
+      for (const p of await db.getAll('poems'))
+        if (p.title === 'Las flores de Yasmin' && String(p.content).trim() === raw) await db.remove('poems', p.id);
+      // orden inverso: la lista se muestra por fecha de creación descendente
+      const rows = flores.map((content, i) => ({ title:TITLES[i], content, type:'poem' })).reverse();
+      await ensure('poems', rows);
     }
-  }
-
-  /* POEMS */
-  if ((await db.count('poems')) === 0) {
-    try {
-      const content = fs.readFileSync(path.join(loveDir,'textoflores.txt'),'utf-8').trim();
-      await db.insert('poems', { title:'Las flores de Yasmin', content, type:'poem' });
-    } catch(_) {}
+    console.log('  Poemas:', await db.count('poems'));
   }
 
   /* GALLERY — inserta solo las fotos que aún no están */
@@ -227,40 +235,55 @@ async function seed() {
       { photo:'notas de fotos/foto13.jpeg', nota:'notas de fotos/nota13.txt', title:'Viéndote disfrutar'   },
       { photo:'fotonormal/foto.jpeg',       nota:'fotonormal/fotonormal.txt', title:'Conectados'           },
     ];
-    const existing = await db.getAll('gallery');
-    const existingSrcs = new Set(existing.map(g => g.src));
-    for (const p of photos) {
-      if (!fs.existsSync(path.join(loveDir, p.photo))) continue;
-      const src = '/love/' + p.photo.split('/').map(encodeURIComponent).join('/');
-      if (existingSrcs.has(src)) continue;
-      let desc = '';
-      try { desc = fs.readFileSync(path.join(loveDir, p.nota),'utf-8').trim() } catch(_) {}
-      await db.insert('gallery', { src, title:p.title, description:desc, seeded:true });
-    }
+    const rows = photos
+      .filter(p => fs.existsSync(path.join(loveDir, p.photo)))
+      .map(p => ({
+        src: '/love/' + p.photo.split('/').map(encodeURIComponent).join('/'),
+        title: p.title, description: rtxt(p.nota), seeded: true,
+      }));
+    await ensure('gallery', rows, g => g.src);
     console.log('  Galería:', await db.count('gallery'));
   }
 
-  /* NOTES */
-  if ((await db.count('notes')) === 0) {
+  /* NOTES — mood es una clave (ver MOODS en app.js); las notas antiguas con emoji siguen funcionando */
+  {
     const notes = [
-      { date:'2026-07-01', title:'El primer día', mood:'🥰', content:'Hoy empezó todo. No sé cómo explicarlo, pero desde que estás tú, el mundo huele diferente. Estoy muy feliz.' },
-      { date:'2026-07-08', title:'Una semana juntos', mood:'🌸', content:'Una semana ya. Parece poco tiempo pero contigo cada día tiene el peso de una vida entera. Me has mirado hoy de una manera que no voy a olvidar.' },
-      { date:'2026-07-15', title:'Te vi reír', mood:'🌟', content:'Hoy te vi reír a carcajadas por algo tonto y pensé: quiero escuchar esa risa el resto de mi vida. No hay música mejor.' },
-      { date:'2026-07-22', title:'Un miércoles normal', mood:'😊', content:'No pasó nada especial. Solo estuvimos juntos. Y fue perfecto. Eso es lo que más me gusta de estar contigo, que los días normales se vuelven especiales.' },
-      { date:'2026-07-29', title:'Te echaba de menos', mood:'💭', content:'Hoy no te vi y lo noté en todo. En el café de la mañana, en el silencio del cuarto, en las canciones que me ponía. Te echo de menos cuando no estás.' },
-      { date:'2026-08-05', title:'Agosto contigo', mood:'🔥', content:'Agosto siempre fue mi mes favorito. Este año lo es aún más. Tú eres el motivo.' },
-      { date:'2026-08-10', title:'Lo que más me gusta de ti', mood:'💫', content:'Tu forma de escuchar. Cuando te cuento algo, lo escuchas de verdad. No finges. Me miras. Y eso vale más que mil palabras bonitas.' },
-      { date:'2026-08-14', title:'Dos meses casi', mood:'🥰', content:'Casi dos meses. Me parece imposible que haya un tiempo en el que no te conocía. ¿Cómo era todo antes?' },
-      { date:'2026-08-19', title:'Dos meses', mood:'🌙', content:'Dos meses contigo. Dos meses de aprender qué es querer a alguien de verdad. Gracias por existir, Yasmin.' },
+      { date:'2026-07-01', title:'El primer día', mood:'amor', content:'Hoy empezó todo. No sé cómo explicarlo, pero desde que estás tú, el mundo huele diferente. Estoy muy feliz.' },
+      { date:'2026-07-08', title:'Una semana juntos', mood:'flor', content:'Una semana ya. Parece poco tiempo pero contigo cada día tiene el peso de una vida entera. Me has mirado hoy de una manera que no voy a olvidar.' },
+      { date:'2026-07-15', title:'Te vi reír', mood:'brillo', content:'Hoy te vi reír a carcajadas por algo tonto y pensé: quiero escuchar esa risa el resto de mi vida. No hay música mejor.' },
+      { date:'2026-07-22', title:'Un miércoles normal', mood:'feliz', content:'No pasó nada especial. Solo estuvimos juntos. Y fue perfecto. Eso es lo que más me gusta de estar contigo, que los días normales se vuelven especiales.' },
+      { date:'2026-07-29', title:'Te echaba de menos', mood:'pensando', content:'Hoy no te vi y lo noté en todo. En el café de la mañana, en el silencio del cuarto, en las canciones que me ponía. Te echo de menos cuando no estás.' },
+      { date:'2026-08-05', title:'Agosto contigo', mood:'fuego', content:'Agosto siempre fue mi mes favorito. Este año lo es aún más. Tú eres el motivo.' },
+      { date:'2026-08-10', title:'Lo que más me gusta de ti', mood:'magia', content:'Tu forma de escuchar. Cuando te cuento algo, lo escuchas de verdad. No finges. Me miras. Y eso vale más que mil palabras bonitas.' },
+      { date:'2026-08-14', title:'Dos meses casi', mood:'amor', content:'Casi dos meses. Me parece imposible que haya un tiempo en el que no te conocía. ¿Cómo era todo antes?' },
+      { date:'2026-08-19', title:'Dos meses', mood:'luna', content:'Dos meses contigo. Dos meses de aprender qué es querer a alguien de verdad. Gracias por existir, Yasmin.' },
     ];
-    for (const n of notes) await db.insert('notes', n);
+    // textos reales de love/ que encajan como nota del día
+    const especial = rtxt('nota especial.txt');
+    if (especial) notes.push({ date:'2026-08-22', title:'Para tus días cansados', mood:'luna', content:especial });
+    const loQueVeo = rtxt('fotonormal/Independientemente de lo que tu pie.txt');
+    if (loQueVeo) notes.push({ date:'2026-09-21', title:'Lo que yo veo', mood:'brillo', content:loQueVeo });
+    await ensure('notes', notes);
     console.log('  Notas:', await db.count('notes'));
   }
 
-  /* DATES */
-  if ((await db.count('dates')) === 0) {
-    await db.insert('dates', { title:'Primer día juntos',    date:'2026-07-01', description:'El día que comenzó todo', icon:'', recurring:true });
-    await db.insert('dates', { title:'Cumpleaños de Yasmin', date:'2026-01-01', description:'El día más especial',     icon:'', recurring:true });
+  /* DATES — fechas que salen del propio contenido de love/ */
+  {
+    for (const d of await db.getAll('dates')) {
+      // restos del seed antiguo: el aniversario es el 30 de junio y el cumple no es el 1 de enero
+      if (d.title === 'Primer día juntos' && ymd(d.date) === '2026-07-01')
+        await db.update('dates', d.id, { date:'2026-06-30' });
+      if (d.title === 'Cumpleaños de Yasmin' && ymd(d.date) === '2026-01-01')
+        await db.remove('dates', d.id);
+    }
+    await ensure('dates', [
+      { title:'Primer día juntos',    date:'2026-06-30', description:'El día que comenzó todo',              icon:'heart',  recurring:true  },
+      { title:'Cumpleaños de Yasmin', date:'2001-09-21', description:'El día que el mundo empezó a brillar', icon:'cake',   recurring:true  },
+      { title:'Tu primera visita',    date:'2026-07-28', description:'Paseos, aceitunas y aquel pastel',     icon:'pin',    recurring:true  },
+      { title:'El primer ramo',       date:'2026-08-07', description:'Aquí empezó nuestro jardín',           icon:'flower', recurring:true  },
+      { title:'Los 100 días',         date:'2026-10-08', description:'Ese día se abre el sobre',             icon:'letter', recurring:false },
+    ]);
+    if (!(await db.getSetting('birthday'))) await db.setSetting('birthday', '2001-09-21');
   }
 
   /* MEMORIES — seed desde love/lugares_sitios_que_me_recuerdan_a_ti/ */

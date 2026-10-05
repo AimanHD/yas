@@ -16,13 +16,18 @@ npm start   # → http://localhost:3000
 - `uploads/` — Fotos subidas desde la app. Gitignored.
 
 ## Secciones de la app
-- **Inicio** — contador días juntos + frase del día + ruleta romántica
-- **Cartas** — lector de libro para cartas PDF y txt
-- **Notas** — notas diarias con estado de ánimo
-- **Poemas** — poemas, canciones e historias
-- **Galería** — fotos de Yasmin con descripciones (pre-seedadas desde `love/notas de fotos/`)
-- **Barbie** — reproductor de películas vía Google Drive embed
-- **Detalles** — 5 experiencias interactivas + ruleta romántica
+- **Inicio** — contador + ojos + frase del día + sobre 100 días + próximas fechas + accesos a todas las secciones
+- **Cartas** — agrupadas: Cartas (txt) · Historias · Tarjetas (png/jpg) · PDF
+- **Notas** — notas diarias; `mood` es una clave de `MOODS` (SVG). Los emojis antiguos se mapean vía `legacy`
+- **Poemas** — `textoflores.txt` se separa en un poema por flor
+- **Galería** — "Fotos & Palabras" (flip cards de las fotos seed con texto) + fotos subidas
+- **Recuerdos** / **Flores** — por fechas; Flores enlaza a los poemas de flores
+- **Barbie** — películas vía YouTube / Google Drive embed
+- **Detalles** — 5 experiencias + ruleta, cuestionario de cita, sorpresa de cumpleaños, lluvia de corazones, cápsulas del tiempo (`/api/capsules`) y fechas (`/api/dates`)
+- Sorpresa de cumpleaños: solo sale sola el día de `settings.birthday` (21-09-2001), editable en Configuración
+
+## Seed
+Idempotente con `ensure()` (por título, o `src` en galería): añade lo que falte también en la BD de producción. Para añadir contenido nuevo de `love/`, añadirlo a la lista correspondiente en `database.js`.
 
 ## Decisiones importantes
 - Sin emojis en la UI → iconos SVG en línea (ver `ICONS` en app.js)

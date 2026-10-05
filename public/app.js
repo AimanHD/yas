@@ -17,7 +17,45 @@ const ICONS = {
   upload:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>`,
   wheel:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg>`,
   flower:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 010 6M12 16a3 3 0 010 6M2 12a3 3 0 016 0M16 12a3 3 0 016 0M4.93 4.93a3 3 0 014.24 4.24M14.83 14.83a3 3 0 004.24 4.24M4.93 19.07a3 3 0 014.24-4.24M14.83 9.17a3 3 0 014.24-4.24"/></svg>`,
+  memories:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  heart:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>`,
+  cake:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 00-2-2H6a2 2 0 00-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3M12 8v3M17 8v3"/><path d="M7 4h.01M12 4h.01M17 4h.01"/></svg>`,
+  gift:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>`,
+  calendar:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+  lock:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`,
+  hourglass:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14M5 2h14"/><path d="M17 22v-4.17a2 2 0 00-.59-1.42L12 12l-4.41 4.41A2 2 0 007 17.83V22"/><path d="M7 2v4.17a2 2 0 00.59 1.42L12 12l4.41-4.41A2 2 0 0017 6.17V2"/></svg>`,
+  chat:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
+  image:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
 };
+ICONS.pin = ICONS.memories;
+ICONS.letter = ICONS.letters;
+
+// ── ESTADOS DE ÁNIMO (sin emojis: icono SVG + nombre) ──
+const MOOD_SVG = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const MOODS = {
+  amor:     { label:'Enamorado', legacy:'🥰', svg:MOOD_SVG('<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>') },
+  feliz:    { label:'Feliz',     legacy:'😊', svg:MOOD_SVG('<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>') },
+  brillo:   { label:'Brillante', legacy:'🌟', svg:MOOD_SVG('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>') },
+  pensando: { label:'Pensando en ti', legacy:'💭', svg:MOOD_SVG('<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>') },
+  cansado:  { label:'Cansado',   legacy:'😴', svg:MOOD_SVG('<path d="M4 7h6l-6 7h6"/><path d="M14 4h6l-6 7h6"/>') },
+  flor:     { label:'Florecido', legacy:'🌸', svg:ICONS.flower },
+  triste:   { label:'Triste',    legacy:'😢', svg:MOOD_SVG('<path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>') },
+  fuego:    { label:'Con fuego', legacy:'🔥', svg:MOOD_SVG('<path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 002.5 2.5z"/>') },
+  magia:    { label:'Mágico',    legacy:'💫', svg:MOOD_SVG('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>') },
+  luna:     { label:'De luna',   legacy:'🌙', svg:MOOD_SVG('<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>') },
+};
+// acepta tanto la clave nueva como el emoji de las notas antiguas
+function moodKey(m) {
+  if (MOODS[m]) return m;
+  return Object.keys(MOODS).find(k => MOODS[k].legacy === m) || 'amor';
+}
+function moodIcon(m) {
+  const k = moodKey(m);
+  return `<span class="mood-ico" title="${MOODS[k].label}">${MOODS[k].svg}</span>`;
+}
+
+// ── TEXTO SEGURO ──
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
 // ── FRASES ──
 const FRASES = [
@@ -102,12 +140,21 @@ const ROULETTE_PLANS = [
   'Un paseo por la orilla del mar',
 ];
 
+// Cuestionario de cita (antes salía como popup al abrir la app; ahora vive en Detalles)
+const CITA_STEPS = [
+  { key:'momento', titulo:'Pon tu cita idónea de hoy', sub:'¿A qué hora te apetece?', opciones:['Por la tarde', 'Por la noche'] },
+  { key:'comida',  titulo:'¿Qué comida te gustaría?',  sub:'Elige tu antojo de hoy',  opciones:['Pizza', 'Hamburguesa', 'Pasta', 'Solo me apetece helado'] },
+  { key:'plan',    titulo:'¿Qué plan te apetece?',     sub:'Tú decides el rollito',   opciones:['Chill en la playa', 'Sentaditos en el coche en algún mirador', 'Bolos en Pause&Play', 'Simplemente charlar'] },
+  { key:'horarios',titulo:'Horarios',                  sub:'Hora de recogida y hora de dejada en casa, tú decides', horas:true },
+  { key:'fruta',   titulo:'Fruta que te apetezca hoy', sub:'Para picar juntos',       opciones:['Uva', 'Frambuesa', 'Arándanos', 'Moras'] },
+];
+
 // ── STATE ──
 let _counterTimer = null;
 
 const S = {
   section: 'home',
-  settings: { start_date: '2026-06-30', her_name: 'Yasmin', your_name: 'Aiman' },
+  settings: { start_date: '2026-06-30', her_name: 'Yasmin', your_name: 'Aiman', birthday: '2001-09-21' },
   letters: [], notes: [], poems: [], gallery: [], capsules: [], dates: [], movies: [], memories: [],
   flores: null,
   poemFilter: 'all',
@@ -143,11 +190,11 @@ function fmtDate(d) {
   return new Date(d).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
 }
 function daysTogether() {
-  const diff = Math.floor((Date.now() - new Date(S.settings.start_date)) / 86400000);
+  const diff = Math.floor((Date.now() - localDate(S.settings.start_date)) / 86400000);
   return Math.max(0, diff);
 }
 function timeTogether() {
-  const ms = Date.now() - new Date(S.settings.start_date).getTime();
+  const ms = Date.now() - localDate(S.settings.start_date).getTime();
   if (ms < 0) return { days:0, hours:0, mins:0, secs:0 };
   return {
     days:  Math.floor(ms / 86400000),
@@ -189,6 +236,34 @@ function splitPages(text, maxChars = 700) {
   if (cur) pages.push(cur.trim());
   return pages.length ? pages : [''];
 }
+
+// ── FECHAS ──
+const ymd = d => String(d || '').slice(0, 10);   // Postgres manda ISO completo, JSON solo la fecha
+function localDate(s) { const [y, m, d] = ymd(s).split('-').map(Number); return new Date(y, m - 1, d) }
+function todayLocal() { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()) }
+// próxima vez que toca una fecha (aniversario si es recurrente); null si ya pasó y no se repite
+function nextOccurrence(item) {
+  const base = localDate(item.date), today = todayLocal();
+  if (!item.recurring || item.recurring === 0) return base >= today ? base : null;
+  let next = new Date(today.getFullYear(), base.getMonth(), base.getDate());
+  if (next < today) next = new Date(today.getFullYear() + 1, base.getMonth(), base.getDate());
+  return next;
+}
+function upcomingDates(dates) {
+  const today = todayLocal();
+  return (dates || [])
+    .map(d => { const next = nextOccurrence(d); return next && { ...d, next, left: Math.round((next - today) / 86400000) } })
+    .filter(Boolean)
+    .sort((a, b) => a.left - b.left);
+}
+function leftLabel(n) { return n === 0 ? 'Hoy' : n === 1 ? 'Mañana' : `En ${n} días` }
+function isBirthdayToday() {
+  const b = S.settings.birthday;
+  if (!b) return false;
+  const bd = localDate(b), t = todayLocal();
+  return bd.getMonth() === t.getMonth() && bd.getDate() === t.getDate();
+}
+function isImageFile(f) { return /\.(png|jpe?g|webp|gif)$/i.test(f || '') }
 
 // ── ROUTER / NAV ──
 const App = window.App = {
@@ -233,25 +308,32 @@ const App = window.App = {
     App.openModal(`
       <div class="form-group">
         <label class="form-label">Fecha de inicio de la relación</label>
-        <input class="form-input" type="date" id="s-date" value="${s.start_date}">
+        <input class="form-input" type="date" id="s-date" value="${ymd(s.start_date)}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cumpleaños de ella</label>
+        <input class="form-input" type="date" id="s-bday" value="${ymd(s.birthday)}">
+        <small style="color:var(--text-muted);font-size:.74rem;margin-top:.3rem;display:block">Ese día, al abrir la app, sale la sorpresa de cumpleaños</small>
       </div>
       <div class="form-group">
         <label class="form-label">Su nombre</label>
-        <input class="form-input" id="s-her" value="${s.her_name}">
+        <input class="form-input" id="s-her" value="${esc(s.her_name)}">
       </div>
       <div class="form-group">
         <label class="form-label">Tu nombre</label>
-        <input class="form-input" id="s-you" value="${s.your_name}">
+        <input class="form-input" id="s-you" value="${esc(s.your_name)}">
       </div>
       <button class="btn btn-primary" style="width:100%" onclick="App.saveSettings()">Guardar</button>
     `, 'Configuración');
   },
   async saveSettings() {
-    const date = $('s-date').value, her = $('s-her').value, you = $('s-you').value;
-    await api('PUT', '/settings/start_date', { value: date });
-    await api('PUT', '/settings/her_name',  { value: her });
-    await api('PUT', '/settings/your_name', { value: you });
-    S.settings = { start_date: date, her_name: her, your_name: you };
+    const next = {
+      start_date: $('s-date').value, birthday: $('s-bday').value,
+      her_name: $('s-her').value.trim(), your_name: $('s-you').value.trim(),
+    };
+    await Promise.all(Object.entries(next).map(([k, v]) => api('PUT', `/settings/${k}`, { value: v })));
+    S.settings = { ...S.settings, ...next };
+    toast('Guardado');
     App.closeModal();
     await render();
   },
@@ -274,10 +356,14 @@ async function render() {
 async function renderHome() {
   if (_counterTimer) { clearInterval(_counterTimer); _counterTimer = null; }
 
-  const [notes, poems, letters] = await Promise.all([
-    api('GET', '/notes'), api('GET', '/poems'), api('GET', '/letters'),
+  const arr = p => p.then(r => Array.isArray(r) ? r : []).catch(() => []);
+  const [notes, poems, letters, gallery, memories, dates] = await Promise.all([
+    arr(api('GET', '/notes')), arr(api('GET', '/poems')), arr(api('GET', '/letters')),
+    arr(api('GET', '/gallery')), arr(api('GET', '/memories')), arr(api('GET', '/dates')),
   ]);
-  S.notes = notes; S.poems = poems; S.letters = letters;
+  Object.assign(S, { notes, poems, letters, gallery, memories, dates });
+  const startLabel = localDate(S.settings.start_date).toLocaleDateString('es-ES', { day:'numeric', month:'long' });
+  const memGroups  = new Set(memories.map(m => m.group_key)).size;
 
   const c = $('content');
   c.innerHTML = '';
@@ -288,7 +374,7 @@ async function renderHome() {
     <div class="hero-petals" aria-hidden="true">
       ${Array.from({length:12},(_,i)=>`<span class="petal petal-${i+1}"></span>`).join('')}
     </div>
-    <div class="hero-eyebrow">desde el 30 de junio contigo</div>
+    <div class="hero-eyebrow">desde el ${startLabel} contigo</div>
     <div class="hero-counter">
       <div class="hero-unit"><div class="hero-num" id="h-days">0</div><div class="hero-unit-label">días</div></div>
       <div class="hero-sep">·</div>
@@ -298,7 +384,7 @@ async function renderHome() {
       <div class="hero-sep">·</div>
       <div class="hero-unit"><div class="hero-num" id="h-secs">00</div><div class="hero-unit-label">seg</div></div>
     </div>
-    <div class="hero-tagline">juntos, ${S.settings.her_name}</div>
+    <div class="hero-tagline">juntos, ${esc(S.settings.her_name)}</div>
     <div class="hero-date-line">${new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
   `;
   c.appendChild(hero);
@@ -336,13 +422,34 @@ async function renderHome() {
   // ── SOBRE DE LOS 100 DÍAS ──
   renderEnvelopeCard(c);
 
-  // ── ACCESOS RÁPIDOS ──
+  // ── PRÓXIMAS FECHAS ──
+  const proximas = upcomingDates(dates).slice(0, 3);
+  if (proximas.length) {
+    const dc = el('div', 'dates-card anim anim-d2');
+    dc.innerHTML = `
+      <div class="frase-label">Próximas fechas</div>
+      ${proximas.map(d => `
+        <div class="date-row${d.left === 0 ? ' date-today' : ''}">
+          <span class="date-ico">${ICONS[d.icon] || ICONS.heart}</span>
+          <span class="date-info"><strong>${esc(d.title)}</strong><small>${d.next.toLocaleDateString('es-ES', { day:'numeric', month:'long' })}</small></span>
+          <span class="date-left">${leftLabel(d.left)}</span>
+        </div>`).join('')}
+    `;
+    dc.onclick = () => App.navigate('details');
+    c.appendChild(dc);
+  }
+
+  // ── ACCESOS RÁPIDOS (todas las secciones) ──
   const qg = el('div', 'quick-grid anim anim-d2');
   [
-    { icon:ICONS.letters, label:'Cartas',   count:`${letters.length} cartas`, section:'letters' },
-    { icon:ICONS.notes,   label:'Notas',    count:`${notes.length} notas`,    section:'notes'   },
-    { icon:ICONS.poems,   label:'Poemas',   count:`${poems.length} escritos`, section:'poems'   },
-    { icon:ICONS.details, label:'Detalles', count:'Sorpresas',                section:'details' },
+    { icon:ICONS.letters,  label:'Cartas',    count:`${letters.length} cartas`,     section:'letters'  },
+    { icon:ICONS.notes,    label:'Notas',     count:`${notes.length} notas`,        section:'notes'    },
+    { icon:ICONS.poems,    label:'Poemas',    count:`${poems.length} escritos`,     section:'poems'    },
+    { icon:ICONS.gallery,  label:'Galería',   count:`${gallery.length} fotos`,      section:'gallery'  },
+    { icon:ICONS.memories, label:'Recuerdos', count:`${memGroups} momentos`,        section:'memories' },
+    { icon:ICONS.flower,   label:'Flores',    count:'Nuestro jardín',               section:'flores'   },
+    { icon:ICONS.barbie,   label:'Barbie',    count:'Tus películas',                section:'barbie'   },
+    { icon:ICONS.details,  label:'Detalles',  count:'Sorpresas',                    section:'details'  },
   ].forEach(q => {
     const qc = el('div', 'quick-card');
     qc.innerHTML = `<div class="qc-icon">${q.icon}</div><div class="qc-label">${q.label}</div><div class="qc-count">${q.count}</div>`;
@@ -356,8 +463,8 @@ async function renderHome() {
     const nc = el('div', 'note-card anim anim-d3');
     nc.innerHTML = `
       <div class="note-top">
-        <div><div class="note-date">${fmtDate(notes[0].date)}</div>${notes[0].title?`<div class="note-title">${notes[0].title}</div>`:''}</div>
-        <div class="note-mood">${notes[0].mood}</div>
+        <div><div class="note-date">${fmtDate(notes[0].date)}</div>${notes[0].title?`<div class="note-title">${esc(notes[0].title)}</div>`:''}</div>
+        <div class="note-mood">${moodIcon(notes[0].mood)}</div>
       </div>
       <div class="note-content" style="margin-top:.5rem;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden">${notes[0].content}</div>
     `;
@@ -368,7 +475,7 @@ async function renderHome() {
   // ── ÚLTIMO ESCRITO ──
   if (poems[0]) {
     const pc = el('div', 'poem-card anim anim-d4');
-    pc.innerHTML = `<div class="poem-type-tag">${typeLabel(poems[0].type)}</div><div class="poem-title">${poems[0].title}</div><div class="poem-preview">${poems[0].content}</div>`;
+    pc.innerHTML = `<div class="poem-type-tag">${typeLabel(poems[0].type)}</div><div class="poem-title">${esc(poems[0].title)}</div><div class="poem-preview">${esc(poems[0].content)}</div>`;
     pc.onclick = () => App.navigate('poems');
     c.appendChild(pc);
   }
@@ -412,31 +519,45 @@ async function renderLetters() {
 
   if (!S.letters.length) { c.appendChild(emptyState('Aún no hay cartas')); return; }
 
-  const grid = el('div', 'letter-grid');
-  S.letters.forEach(l => {
-    const lc = el('div', 'letter-card');
-    const iconSvg = l.type === 'story'
-      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`
-      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
-    lc.innerHTML = `
-      <div class="letter-type-icon">${iconSvg}</div>
-      <div class="letter-info">
-        <div class="letter-title">${l.title}</div>
-        ${l.subtitle ? `<div class="letter-sub">${l.subtitle}</div>` : ''}
-      </div>
-      <span class="letter-badge">${typeLabel(l.type)}</span>
-    `;
-    lc.onclick = () => App.openBook(l);
-    grid.appendChild(lc);
+  const BOOK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`;
+  const kind = l => l.content ? (l.type === 'story' ? 'story' : 'letter') : (isImageFile(l.filename) ? 'card' : 'pdf');
+  const GROUPS = [
+    { key:'letter', title:'Cartas',              icon:ICONS.letters, badge:'Carta'    },
+    { key:'story',  title:'Historias',           icon:BOOK_SVG,      badge:'Historia' },
+    { key:'card',   title:'Tarjetas y notitas',  icon:ICONS.image,   badge:'Tarjeta'  },
+    { key:'pdf',    title:'Cuentos y cartas en PDF', icon:ICONS.pdf.replace(/ width="44" height="44"/, ''), badge:'PDF' },
+  ];
+
+  GROUPS.forEach(g => {
+    const items = S.letters.filter(l => kind(l) === g.key);
+    if (!items.length) return;
+    const head = el('p', 'flip-section-title');
+    head.textContent = `${g.title} · ${items.length}`;
+    c.appendChild(head);
+
+    const grid = el('div', 'letter-grid');
+    items.forEach(l => {
+      const lc = el('div', 'letter-card');
+      lc.innerHTML = `
+        <div class="letter-type-icon">${g.icon}</div>
+        <div class="letter-info">
+          <div class="letter-title">${esc(l.title)}</div>
+          ${l.subtitle ? `<div class="letter-sub">${esc(l.subtitle)}</div>` : ''}
+        </div>
+        <span class="letter-badge">${g.badge}</span>
+      `;
+      lc.onclick = () => App.openBook(l);
+      grid.appendChild(lc);
+    });
+    c.appendChild(grid);
   });
-  c.appendChild(grid);
 }
 
 function renderBook() {
   const letter = S.bookLetter;
   const bc = $('book-container');
 
-  if (!letter.content && letter.filename && /\.(png|jpe?g|webp|gif)$/i.test(letter.filename)) {
+  if (!letter.content && isImageFile(letter.filename)) {
     bc.innerHTML = `
       <div class="book-header"><h2>${letter.title}</h2>${letter.subtitle?`<p>${letter.subtitle}</p>`:''}</div>
       <div class="book-pages book-pages-image">
@@ -500,48 +621,12 @@ window.saveLetter = async () => {
 
 // ── NOTES ──
 async function renderNotes() {
-  [S.notes, S.gallery] = await Promise.all([api('GET', '/notes'), api('GET', '/gallery')]);
+  S.notes = await api('GET', '/notes');
   const c = $('content');
   c.innerHTML = '';
 
   c.appendChild(backBtn());
   c.appendChild(sectionTitle('Día a día', 'Notas', 'Los pequeños momentos que merecen ser recordados, escritos con cuidado.'));
-
-  // ── FOTOS & PALABRAS (flip cards) ──
-  const fotos = (S.gallery || []).filter(g => g.seeded || g.seeded === 1);
-  if (fotos.length) {
-    const ft = el('p', 'flip-section-title');
-    ft.textContent = 'Fotos & Palabras';
-    c.appendChild(ft);
-
-    const grid = el('div', 'flip-grid');
-    fotos.forEach(img => {
-      const card = el('div', 'flip-card');
-      const inner = el('div', 'flip-card-inner');
-      const front = el('div', 'flip-front');
-      front.innerHTML = `
-        <img src="${imgSrc(img)}" alt="${img.title}" loading="lazy">
-        <div class="flip-front-overlay">
-          <div class="flip-front-title">${img.title}</div>
-          <div class="flip-front-hint">toca para leer</div>
-        </div>`;
-      const back = el('div', 'flip-back');
-      back.innerHTML = `
-        <div class="flip-back-title">${img.title}</div>
-        <div class="flip-back-text">${img.description || ''}</div>`;
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
-      card.onclick = () => card.classList.toggle('flipped');
-      grid.appendChild(card);
-    });
-    c.appendChild(grid);
-    c.appendChild(el('hr', 'divider'));
-  }
-
-  const notesHead = el('p', 'flip-section-title');
-  notesHead.textContent = 'Mis notas';
-  c.appendChild(notesHead);
 
   if (!S.notes.length) {
     c.appendChild(emptyState('Aún no hay notas'));
@@ -552,11 +637,11 @@ async function renderNotes() {
       nc.innerHTML = `
         <div class="note-card-top">
           <span class="note-card-date">${fmtDate(n.date)}</span>
-          <span class="note-card-mood">${n.mood || ''}</span>
+          <span class="note-card-mood">${moodIcon(n.mood)}</span>
         </div>
         <div class="note-card-body">
-          ${n.title ? `<div class="note-card-title">${n.title}</div>` : ''}
-          <div class="note-card-text">${n.content}</div>
+          ${n.title ? `<div class="note-card-title">${esc(n.title)}</div>` : ''}
+          <div class="note-card-text">${esc(n.content)}</div>
           <div class="note-card-actions">
             <button class="btn btn-ghost" style="padding:.28rem .5rem" onclick="editNote(${n.id})">${ICONS.edit}</button>
             <button class="btn btn-danger" style="padding:.28rem .5rem" onclick="deleteNote(${n.id})">${ICONS.trash}</button>
@@ -576,17 +661,17 @@ async function renderNotes() {
 }
 
 function openNoteForm(note) {
-  const today = new Date().toISOString().split('T')[0];
-  const moods = ['🥰','😊','🌟','💭','😴','🌸','😢','🔥','💫','🌙'];
-  const sel = (note && note.mood) || '🥰';
+  const t = new Date();
+  const today = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  const sel = moodKey(note && note.mood);
   App.openModal(`
-    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="n-date" value="${note ? note.date : today}"></div>
-    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="n-title" placeholder="Un título bonito…" value="${note ? note.title||'' : ''}"></div>
-    <div class="form-group"><label class="form-label">Estado de ánimo</label>
-      <div class="mood-row">${moods.map(m=>`<span class="mood-opt${m===sel?' selected':''}" onclick="selectMood(this,'${m}')">${m}</span>`).join('')}</div>
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="n-date" value="${note ? ymd(note.date) : today}"></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="n-title" placeholder="Un título bonito…" value="${note ? esc(note.title||'') : ''}"></div>
+    <div class="form-group"><label class="form-label">Estado de ánimo · <span id="n-mood-label">${MOODS[sel].label}</span></label>
+      <div class="mood-row">${Object.keys(MOODS).map(k=>`<span class="mood-opt${k===sel?' selected':''}" title="${MOODS[k].label}" onclick="selectMood(this,'${k}')">${MOODS[k].svg}</span>`).join('')}</div>
       <input type="hidden" id="n-mood" value="${sel}">
     </div>
-    <div class="form-group"><label class="form-label">Nota</label><textarea class="form-textarea" id="n-content" placeholder="¿Qué ocurrió hoy?">${note ? note.content : ''}</textarea></div>
+    <div class="form-group"><label class="form-label">Nota</label><textarea class="form-textarea" id="n-content" placeholder="¿Qué ocurrió hoy?">${note ? esc(note.content) : ''}</textarea></div>
     <button class="btn btn-primary" style="width:100%" onclick="saveNote(${note ? note.id : 'null'})">${note ? 'Actualizar' : 'Guardar nota'}</button>
   `, note ? 'Editar nota' : 'Nueva nota');
 }
@@ -595,6 +680,7 @@ window.selectMood = (el, mood) => {
   document.querySelectorAll('.mood-opt').forEach(e => e.classList.remove('selected'));
   el.classList.add('selected');
   $('n-mood').value = mood;
+  $('n-mood-label').textContent = MOODS[mood].label;
 };
 
 window.saveNote = async (id) => {
@@ -643,8 +729,8 @@ async function renderPoems() {
             <button class="btn btn-danger" style="padding:.28rem .5rem" onclick="event.stopPropagation();deletePoem(${p.id})">${ICONS.trash}</button>
           </div>
         </div>
-        <div class="poem-title">${p.title}</div>
-        <div class="poem-preview">${p.content}</div>
+        <div class="poem-title">${esc(p.title)}</div>
+        <div class="poem-preview">${esc(p.content)}</div>
       `;
       pc.onclick = () => openPoemRead(p);
       c.appendChild(pc);
@@ -659,15 +745,15 @@ async function renderPoems() {
 function openPoemRead(p) {
   App.openModal(`
     <div style="text-align:center;margin-bottom:1rem"><span class="tag ${p.type==='song'?'tag-song':p.type==='story'?'tag-story':''}">${typeLabel(p.type)}</span></div>
-    <h3 style="font-family:var(--font-title);font-size:1.45rem;color:var(--rose);text-align:center;margin-bottom:1.2rem;font-style:italic">${p.title}</h3>
-    <div class="poem-full">${p.content}</div>
+    <h3 style="font-family:var(--font-title);font-size:1.45rem;color:var(--rose);text-align:center;margin-bottom:1.2rem;font-style:italic">${esc(p.title)}</h3>
+    <div class="poem-full">${esc(p.content)}</div>
     <div class="card-date text-center mt-2">${fmtDate(p.created_at)}</div>
   `, '');
 }
 
 function openPoemForm(poem) {
   App.openModal(`
-    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="p-title" placeholder="Título…" value="${poem ? poem.title : ''}"></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="p-title" placeholder="Título…" value="${poem ? esc(poem.title) : ''}"></div>
     <div class="form-group"><label class="form-label">Tipo</label>
       <select class="form-select" id="p-type">
         <option value="poem"  ${(!poem||poem.type==='poem' )?'selected':''}>Poema</option>
@@ -675,7 +761,7 @@ function openPoemForm(poem) {
         <option value="story" ${poem&&poem.type==='story'  ?'selected':''}>Historia</option>
       </select>
     </div>
-    <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-textarea" id="p-content" rows="9" style="min-height:200px">${poem ? poem.content : ''}</textarea></div>
+    <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-textarea" id="p-content" rows="9" style="min-height:200px">${poem ? esc(poem.content) : ''}</textarea></div>
     <button class="btn btn-primary" style="width:100%" onclick="savePoem(${poem ? poem.id : 'null'})">${poem ? 'Actualizar' : 'Guardar'}</button>
   `, poem ? 'Editar escrito' : 'Nuevo escrito');
 }
@@ -715,12 +801,49 @@ async function renderGallery() {
 
   if (!S.gallery.length) { c.appendChild(emptyState('La galería está esperando tus fotos')); return; }
 
+  // ── FOTOS & PALABRAS: cada foto con su texto detrás (toca para girar) ──
+  const conTexto = S.gallery.filter(g => g.seeded && g.description);
+  if (conTexto.length) {
+    const ft = el('p', 'flip-section-title');
+    ft.textContent = 'Fotos & Palabras';
+    c.appendChild(ft);
+    const fg = el('div', 'flip-grid');
+    conTexto.forEach(img => {
+      const card = el('div', 'flip-card');
+      card.innerHTML = `
+        <div class="flip-card-inner">
+          <div class="flip-front">
+            <img src="${imgSrc(img)}" alt="${esc(img.title)}" loading="lazy">
+            <div class="flip-front-overlay">
+              <div class="flip-front-title">${esc(img.title)}</div>
+              <div class="flip-front-hint">toca para leer</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-title">${esc(img.title)}</div>
+            <div class="flip-back-text">${esc(img.description)}</div>
+          </div>
+        </div>`;
+      card.onclick = () => card.classList.toggle('flipped');
+      fg.appendChild(card);
+    });
+    c.appendChild(fg);
+  }
+
+  const resto = S.gallery.filter(g => !conTexto.includes(g));
+  if (!resto.length) return;
+  if (conTexto.length) {
+    const rt = el('p', 'flip-section-title');
+    rt.textContent = 'Nuevas fotos';
+    c.appendChild(rt);
+  }
+
   const grid = el('div', 'gallery-grid');
-  S.gallery.forEach(img => {
+  resto.forEach(img => {
     const item = el('div', 'gallery-item');
     item.innerHTML = `
-      <img src="${imgSrc(img)}" alt="${img.title||''}" loading="lazy">
-      <div class="gallery-cap"><div class="gallery-cap-title">${img.title || ''}</div></div>
+      <img src="${imgSrc(img)}" alt="${esc(img.title)}" loading="lazy">
+      <div class="gallery-cap"><div class="gallery-cap-title">${esc(img.title)}</div></div>
     `;
     item.onclick = () => openGalleryItem(img);
     grid.appendChild(item);
@@ -757,8 +880,8 @@ window.uploadGalleryImg = async () => {
 function openGalleryItem(img) {
   App.openModal(`
     <img src="${imgSrc(img)}" style="width:100%;border-radius:var(--radius-sm);margin-bottom:1rem;object-fit:cover;max-height:300px">
-    ${img.title ? `<h3 style="font-family:var(--font-title);font-size:1.3rem;color:var(--rose);margin-bottom:.6rem;font-style:italic">${img.title}</h3>` : ''}
-    ${img.description ? `<p style="font-family:var(--font-body);font-style:italic;line-height:1.75;color:var(--text)">${img.description}</p>` : ''}
+    ${img.title ? `<h3 style="font-family:var(--font-title);font-size:1.3rem;color:var(--rose);margin-bottom:.6rem;font-style:italic">${esc(img.title)}</h3>` : ''}
+    ${img.description ? `<p style="font-family:var(--font-body);font-style:italic;line-height:1.75;color:var(--text);white-space:pre-wrap">${esc(img.description)}</p>` : ''}
     <div class="card-date mt-2">${fmtDate(img.created_at)}</div>
     ${!img.seeded ? `<div class="card-actions mt-2"><button class="btn btn-danger" onclick="deleteGalleryImg(${img.id})">${ICONS.trash} Eliminar</button></div>` : ''}
   `, '');
@@ -868,6 +991,12 @@ async function renderDetails() {
   c.appendChild(backBtn());
   c.appendChild(sectionTitle('Para ti', 'Detalles', 'Cada experiencia fue creada con amor, una por una, solo para Yasmin.'));
 
+  const arr = p => p.then(r => Array.isArray(r) ? r : []).catch(() => []);
+  [S.capsules, S.dates] = await Promise.all([arr(api('GET', '/capsules')), arr(api('GET', '/dates'))]);
+
+  const head = t => { const h = el('p', 'flip-section-title'); h.textContent = t; c.appendChild(h); };
+  head('Experiencias');
+
   EXPERIENCES.forEach(exp => {
     const ec = el('div', 'exp-card');
     ec.innerHTML = `
@@ -882,23 +1011,134 @@ async function renderDetails() {
     c.appendChild(ec);
   });
 
-  // Roulette
-  const rl = el('div', 'exp-card');
-  rl.style.cssText = 'cursor:pointer;background:linear-gradient(135deg,#1a0520,#2d0a30)';
-  rl.innerHTML = `
-    <div class="exp-icon">${ICONS.wheel}</div>
-    <div class="exp-info"><div class="exp-title">Ruleta romántica</div><div class="exp-desc">Gira para elegir qué plan romántico hacer esta noche</div></div>
-    <button class="exp-launch" onclick="event.stopPropagation();openRoulette()">Girar</button>
-  `;
-  rl.onclick = openRoulette;
-  c.appendChild(rl);
+  // ── JUEGOS Y SORPRESAS ──
+  head('Juegos y sorpresas');
+  [
+    { icon:ICONS.wheel, title:'Ruleta romántica',      desc:'Gira para elegir qué plan romántico hacer esta noche',      btn:'Girar', fn:openRoulette },
+    { icon:ICONS.chat,  title:'Cuestionario de cita',  desc:'Elige momento, comida, plan, horarios y fruta: yo me encargo del resto', btn:'Empezar', fn:showCitaCuestionario },
+    { icon:ICONS.cake,  title:'Sorpresa de cumpleaños',desc:'Tu tarta, tu regalo y las fotos de todo lo que hemos vivido', btn:'Abrir', fn:showFelizCumple },
+    { icon:ICONS.heart, title:'Lluvia de corazones',   desc:'Por si hoy necesitas que te lluevan corazones (o toca tres veces el logo)', btn:'Llover', fn:triggerHeartRain },
+  ].forEach(g => {
+    const card = el('div', 'exp-card exp-card-alt');
+    card.innerHTML = `
+      <div class="exp-icon">${g.icon}</div>
+      <div class="exp-info"><div class="exp-title">${g.title}</div><div class="exp-desc">${g.desc}</div></div>
+      <button class="exp-launch">${g.btn}</button>
+    `;
+    card.onclick = g.fn;
+    c.appendChild(card);
+  });
+
+  // ── CÁPSULAS DEL TIEMPO ──
+  head('Cápsulas del tiempo');
+  renderEnvelopeCard(c);
+  S.capsules.forEach(cp => {
+    const card = el('div', `envelope-card${cp.opened ? ' envelope-open' : ''}`);
+    const fecha = localDate(cp.open_date).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+    const left  = Math.round((localDate(cp.open_date) - todayLocal()) / 86400000);
+    card.innerHTML = `
+      <div class="envelope-icon">${cp.opened ? ICONS.letters : ICONS.lock}</div>
+      <div class="envelope-body">
+        <div class="envelope-title">${esc(cp.title)}</div>
+        <div class="envelope-sub">${cp.opened ? `Abierta el ${fecha}` : `Se abre el <strong>${fecha}</strong> · ${leftLabel(left)}`}</div>
+      </div>
+      <span class="envelope-badge ${cp.opened ? 'badge-open' : 'badge-locked'}">${cp.opened ? 'Abierta' : 'Cerrada'}</span>
+    `;
+    card.onclick = () => cp.opened
+      ? App.openModal(`
+          <h3 style="font-family:var(--font-title);font-size:1.5rem;color:var(--rose);font-style:italic;text-align:center;margin-bottom:1rem">${esc(cp.title)}</h3>
+          <div style="font-family:var(--font-body);font-size:1.05rem;line-height:1.9;color:var(--text);white-space:pre-wrap;font-style:italic">${esc(cp.content)}</div>
+          <div class="card-actions mt-2"><button class="btn btn-danger" onclick="deleteCapsule(${cp.id})">${ICONS.trash} Eliminar</button></div>
+        `, '')
+      : toast(`Aún no… ${leftLabel(left).toLowerCase()}`);
+    c.appendChild(card);
+  });
+  const capRow = el('div', 'sec-action-row');
+  capRow.innerHTML = `<button class="btn btn-ghost" onclick="openCapsuleForm()">${ICONS.plus} Nueva cápsula</button>`;
+  c.appendChild(capRow);
+
+  // ── NUESTRAS FECHAS ──
+  head('Nuestras fechas');
+  const fechas = upcomingDates(S.dates);
+  const pasadas = S.dates.filter(d => !fechas.some(f => f.id === d.id));
+  if (!fechas.length && !pasadas.length) c.appendChild(emptyState('Aún no hay fechas guardadas'));
+  const list = el('div', 'dates-card');
+  [...fechas, ...pasadas].forEach(d => {
+    const row = el('div', `date-row${d.left === 0 ? ' date-today' : ''}`);
+    const original = localDate(d.date).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+    row.innerHTML = `
+      <span class="date-ico">${ICONS[d.icon] || ICONS.heart}</span>
+      <span class="date-info"><strong>${esc(d.title)}</strong><small>${original}${d.description ? ' · ' + esc(d.description) : ''}</small></span>
+      <span class="date-left">${d.next ? leftLabel(d.left) : 'Ya pasó'}</span>
+      <button class="btn btn-danger date-del" title="Eliminar" onclick="event.stopPropagation();deleteDate(${d.id})">${ICONS.trash}</button>
+    `;
+    list.appendChild(row);
+  });
+  if (S.dates.length) c.appendChild(list);
+  const dateRow = el('div', 'sec-action-row');
+  dateRow.innerHTML = `<button class="btn btn-ghost" onclick="openDateForm()">${ICONS.plus} Añadir fecha</button>`;
+  c.appendChild(dateRow);
 }
+
+window.openCapsuleForm = () => {
+  const t = new Date(Date.now() + 30 * 86400000);
+  const def = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  App.openModal(`
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="cp-title" placeholder="Para cuando cumplamos…"></div>
+    <div class="form-group"><label class="form-label">Se abre el</label><input class="form-input" type="date" id="cp-date" value="${def}"></div>
+    <div class="form-group"><label class="form-label">Mensaje</label><textarea class="form-textarea" id="cp-content" rows="7" placeholder="Lo que quieres que lea ese día…"></textarea></div>
+    <button class="btn btn-primary" style="width:100%" onclick="saveCapsule()">Guardar cápsula</button>
+  `, 'Nueva cápsula del tiempo');
+};
+window.saveCapsule = async () => {
+  const data = { title:$('cp-title').value.trim(), open_date:$('cp-date').value, content:$('cp-content').value.trim() };
+  if (!data.title || !data.open_date || !data.content) { toast('Rellena todo'); return; }
+  await api('POST', '/capsules', data);
+  App.closeModal();
+  toast('Cápsula guardada');
+  await renderDetails();
+};
+window.deleteCapsule = async (id) => {
+  if (!confirm('¿Eliminar esta cápsula?')) return;
+  await api('DELETE', `/capsules/${id}`);
+  App.closeModal();
+  await renderDetails();
+};
+
+window.openDateForm = () => {
+  const icons = ['heart', 'cake', 'flower', 'pin', 'letter', 'gift', 'calendar'];
+  App.openModal(`
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="dt-title" placeholder="Nuestro primer viaje…"></div>
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="dt-date"></div>
+    <div class="form-group"><label class="form-label">Descripción</label><input class="form-input" id="dt-desc" placeholder="Una frase para recordarla"></div>
+    <div class="form-group"><label class="form-label">Icono</label>
+      <div class="mood-row">${icons.map((k, i) => `<span class="mood-opt${i===0?' selected':''}" onclick="document.querySelectorAll('.mood-opt').forEach(e=>e.classList.remove('selected'));this.classList.add('selected');$('dt-icon').value='${k}'">${ICONS[k]}</span>`).join('')}</div>
+      <input type="hidden" id="dt-icon" value="heart">
+    </div>
+    <label style="display:flex;gap:.5rem;align-items:center;font-family:var(--font-ui);font-size:.88rem;color:var(--text-mid);margin-bottom:1rem">
+      <input type="checkbox" id="dt-rec" checked> Recordarla cada año
+    </label>
+    <button class="btn btn-primary" style="width:100%" onclick="saveDate()">Guardar fecha</button>
+  `, 'Nueva fecha');
+};
+window.saveDate = async () => {
+  const data = { title:$('dt-title').value.trim(), date:$('dt-date').value, description:$('dt-desc').value.trim(), icon:$('dt-icon').value, recurring:$('dt-rec').checked };
+  if (!data.title || !data.date) { toast('Pon título y fecha'); return; }
+  await api('POST', '/dates', data);
+  App.closeModal();
+  await renderDetails();
+};
+window.deleteDate = async (id) => {
+  if (!confirm('¿Eliminar esta fecha?')) return;
+  await api('DELETE', `/dates/${id}`);
+  await renderDetails();
+};
 
 // ── SOBRE DE LOS 100 DÍAS ──
 function renderEnvelopeCard(c) {
-  const start    = new Date(S.settings.start_date);
-  const day100   = new Date(start.getTime() + 100 * 86400000);
-  const daysLeft = Math.ceil((day100 - Date.now()) / 86400000);
+  const start    = localDate(S.settings.start_date);
+  const day100   = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 100);
+  const daysLeft = Math.round((day100 - todayLocal()) / 86400000);
   const isOpen   = daysLeft <= 0;
 
   const card = el('div', `envelope-card anim anim-d1${isOpen ? ' envelope-open' : ''}`);
@@ -910,7 +1150,7 @@ function renderEnvelopeCard(c) {
       <div class="envelope-title">El sobre de los 100 días</div>
       <div class="envelope-sub">${isOpen
         ? 'Ha llegado el momento. Ábrelo.'
-        : `Se abre el <strong>${dateStr}</strong> · Faltan <strong>${daysLeft}</strong> días`}
+        : `Se abre el <strong>${dateStr}</strong> · ${daysLeft === 1 ? 'Mañana' : `Faltan <strong>${daysLeft}</strong> días`}`}
       </div>
     </div>
     <span class="envelope-badge ${isOpen ? 'badge-open' : 'badge-locked'}">${isOpen ? 'Abierto' : 'Cerrado'}</span>
@@ -1025,9 +1265,9 @@ async function renderMemories() {
 
     const hdr = el('div', 'memory-header');
     hdr.innerHTML = `
-      <div class="memory-eyebrow">${g.sub || ''}</div>
-      <h3 class="memory-title">${g.title}</h3>
-      ${g.text ? `<p class="memory-text">${g.text}</p>` : ''}
+      <div class="memory-eyebrow">${esc(g.sub)}</div>
+      <h3 class="memory-title">${esc(g.title)}</h3>
+      ${g.text ? `<p class="memory-text">${esc(g.text)}</p>` : ''}
     `;
     section.appendChild(hdr);
 
@@ -1038,9 +1278,10 @@ async function renderMemories() {
         const imgSrc = m.src ? `${BACKEND}${m.src}` : `${BACKEND}/uploads/${m.filename}`;
         const fi = el('div', 'memory-feat-item');
         fi.innerHTML = `
-          <img src="${imgSrc}" alt="${m.photo_note || g.title}" loading="lazy" onclick="openMemoryPhoto('${imgSrc}','${(m.photo_note||'').replace(/'/g,'&apos;')}')">
+          <img src="${imgSrc}" alt="${esc(m.photo_note || g.title)}" loading="lazy">
           ${m.photo_note ? `<div class="memory-tap-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> pulsa para leer</div>` : ''}
         `;
+        fi.onclick = () => openMemoryPhoto(imgSrc, m.photo_note || '');
         feat.appendChild(fi);
       });
       section.appendChild(feat);
@@ -1053,9 +1294,10 @@ async function renderMemories() {
         const imgSrc = m.src ? `${BACKEND}${m.src}` : `${BACKEND}/uploads/${m.filename}`;
         const mi = el('div', 'memory-item');
         mi.innerHTML = `
-          <img src="${imgSrc}" alt="${m.photo_note || g.title}" loading="lazy" onclick="openMemoryPhoto('${imgSrc}','${(m.photo_note||'').replace(/'/g,'&apos;')}')">
+          <img src="${imgSrc}" alt="${esc(m.photo_note || g.title)}" loading="lazy">
           ${m.photo_note ? `<div class="memory-tap-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> pulsa para leer</div>` : ''}
         `;
+        mi.onclick = () => openMemoryPhoto(imgSrc, m.photo_note || '');
         grid.appendChild(mi);
       });
       section.appendChild(grid);
@@ -1149,13 +1391,22 @@ async function renderFlores() {
     outro.innerHTML = `${paras(data.outro)}<div class="flores-firma">Siempre tuyo</div>`;
     c.appendChild(outro);
   }
+
+  // ── QUÉ SIGNIFICA CADA FLOR → poemas ──
+  const link = el('div', 'roulette-card anim');
+  link.innerHTML = `
+    <div class="roulette-icon">${ICONS.poems}</div>
+    <div><div class="card-title" style="margin:0">Lo que significa cada flor</div><div class="card-sub">El trébol, el girasol, la rosa… y lo que dicen de ti</div></div>
+  `;
+  link.onclick = () => { S.poemFilter = 'poem'; App.navigate('poems'); };
+  c.appendChild(link);
 }
 
 function openMemoryPhoto(src, note) {
   App.openModal(`
     <div style="text-align:center">
-      <img src="${src}" alt="${note}" style="max-width:100%;max-height:70vh;border-radius:var(--radius);object-fit:contain;display:block;margin:0 auto">
-      ${note ? `<p style="margin-top:1rem;font-family:var(--font-body);font-style:italic;font-size:1.05rem;color:var(--text-mid);line-height:1.6">${note}</p>` : ''}
+      <img src="${src}" alt="${esc(note)}" style="max-width:100%;max-height:70vh;border-radius:var(--radius);object-fit:contain;display:block;margin:0 auto">
+      ${note ? `<p style="margin-top:1rem;font-family:var(--font-body);font-style:italic;font-size:1.05rem;color:var(--text-mid);line-height:1.6;white-space:pre-wrap">${esc(note)}</p>` : ''}
     </div>
   `, '');
 }
@@ -1235,6 +1486,88 @@ function dismissSplash() {
   if (!s || s.classList.contains('out')) return;
   s.classList.add('out');
   setTimeout(() => s?.remove(), 950);
+}
+
+// ── CUESTIONARIO DE CITA ──
+function showCitaCuestionario() {
+  const respuestas = {};
+  let paso = 0;
+
+  const overlay = el('div');
+  overlay.id = 'nota-overlay';
+  const card = el('div', 'nota-card');
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('nota-in'));
+
+  const cerrar = () => {
+    overlay.classList.add('nota-out');
+    setTimeout(() => overlay.remove(), 500);
+  };
+  overlay.onclick = e => { if (e.target === overlay) cerrar(); };
+  const closeBtn = `<button class="nota-close" data-close>${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'} cerrar</button>`;
+
+  function renderPaso() {
+    const step = CITA_STEPS[paso];
+    const total = CITA_STEPS.length;
+    const cuerpo = step.horas
+      ? `<div class="cita-horas">
+          <label class="cita-hora"><span>Recogida</span><input type="time" id="cita-recogida" value="${respuestas.recogida || '18:00'}"></label>
+          <label class="cita-hora"><span>Dejada en casa</span><input type="time" id="cita-dejada" value="${respuestas.dejada || '23:00'}"></label>
+        </div>
+        <button class="cita-next" id="cita-next">Continuar</button>`
+      : `<div class="cita-opciones">${step.opciones.map(o =>
+          `<button class="cita-opcion${respuestas[step.key] === o ? ' sel' : ''}" data-val="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+
+    card.innerHTML = `
+      <div class="nota-deco" aria-hidden="true">${ICONS.heart}</div>
+      <div class="nota-eyebrow">cuestionario de cita · ${paso + 1}/${total}</div>
+      <div class="cita-progress"><span style="width:${(paso / total) * 100}%"></span></div>
+      <div class="cita-titulo">${esc(step.titulo)}</div>
+      <div class="cita-sub">${esc(step.sub)}</div>
+      ${cuerpo}
+      ${paso > 0 ? '<button class="cita-back" id="cita-back">← atrás</button>' : ''}
+      ${closeBtn}
+    `;
+    card.querySelectorAll('.cita-opcion').forEach(btn => {
+      btn.onclick = () => { respuestas[step.key] = btn.dataset.val; avanzar(); };
+    });
+    const nextBtn = card.querySelector('#cita-next');
+    if (nextBtn) nextBtn.onclick = () => {
+      respuestas.recogida = card.querySelector('#cita-recogida').value;
+      respuestas.dejada   = card.querySelector('#cita-dejada').value;
+      avanzar();
+    };
+    const back = card.querySelector('#cita-back');
+    if (back) back.onclick = () => { paso--; renderPaso(); };
+    card.querySelector('[data-close]').onclick = cerrar;
+  }
+
+  function avanzar() {
+    if (paso < CITA_STEPS.length - 1) { paso++; renderPaso(); }
+    else renderFinal();
+  }
+
+  function renderFinal() {
+    const filas = [
+      ['Momento', respuestas.momento], ['Comida', respuestas.comida], ['Plan', respuestas.plan],
+      ['Recogida', respuestas.recogida], ['Dejada en casa', respuestas.dejada], ['Fruta', respuestas.fruta],
+    ];
+    card.innerHTML = `
+      <div class="nota-deco" aria-hidden="true">${ICONS.heart}</div>
+      <div class="nota-eyebrow">tu cita de hoy</div>
+      <div class="cita-titulo">Todo listo</div>
+      <div class="cita-sub">Haz una captura y mándamela</div>
+      <div class="cita-resumen">
+        ${filas.map(([k, v]) => `<div class="cita-fila"><span>${esc(k)}</span><strong>${esc(v || '—')}</strong></div>`).join('')}
+      </div>
+      <div class="nota-firma">Siempre tuyo</div>
+      ${closeBtn}
+    `;
+    card.querySelector('[data-close]').onclick = cerrar;
+  }
+
+  renderPaso();
 }
 
 // ── FELIZ CUMPLEAÑOS ──
@@ -1422,13 +1755,14 @@ function syncFooter() {
 async function init() {
   // Auto-dismiss splash after 2.4s
   setTimeout(dismissSplash, 2400);
-  // Sorpresa de cumpleaños al entrar
-  setTimeout(showFelizCumple, 3600);
 
   try {
     const settings = await api('GET', '/settings');
-    if (settings) S.settings = { ...S.settings, ...settings };
+    if (settings && !Array.isArray(settings) && !settings.error) S.settings = { ...S.settings, ...settings };
   } catch (_) {}
+
+  // Sorpresa de cumpleaños: solo el día de su cumple (el resto del año está en Detalles)
+  if (isBirthdayToday()) setTimeout(showFelizCumple, 3600);
 
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.onclick = () => { App.navigate(btn.dataset.section); App.closeMenu(); };
