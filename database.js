@@ -135,8 +135,32 @@ class PostgresDB {
   }
 }
 
-/* ── CHOOSE IMPLEMENTATION ── */
-const db = process.env.DATABASE_URL ? new PostgresDB() : new JSONDB();
+/* ── CHOOSE IMPLEMENTATION ──
+   Con DATABASE_URL se usa Postgres, pero si no conecta (proyecto de Supabase pausado o borrado)
+   se cae a la JSON DB: la web sigue mostrando todo el contenido de love/.
+   Ojo: en Render el disco es efímero, lo que se escriba en ese modo se pierde al redesplegar. */
+let impl = process.env.DATABASE_URL ? new PostgresDB() : new JSONDB();
+
+async function checkPostgres() {
+  if (!(impl instanceof PostgresDB)) return;
+  try {
+    await Promise.race([
+      impl._q('SELECT 1'),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000)),
+    ]);
+  } catch (err) {
+    console.error('  Postgres no disponible (' + err.message + ') → usando JSON DB local');
+    impl = new JSONDB();
+  }
+}
+
+// las rutas hacen require('./database').db una sola vez: delegamos para poder cambiar de implementación
+const db = new Proxy({}, {
+  get: (_t, prop) => {
+    const v = impl[prop];
+    return typeof v === 'function' ? v.bind(impl) : v;
+  },
+});
 
 /* ════════════════════════════════════════════
    SEED — same logic for both implementations
@@ -144,7 +168,8 @@ const db = process.env.DATABASE_URL ? new PostgresDB() : new JSONDB();
 async function seed() {
   const loveDir = path.join(__dirname, 'love');
 
-  if (db instanceof PostgresDB) await db.createTables();
+  await checkPostgres();
+  if (impl instanceof PostgresDB) await impl.createTables();
 
   /* SETTINGS */
   if (!(await db.getSetting('start_date'))) {
