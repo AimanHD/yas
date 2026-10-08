@@ -165,9 +165,9 @@ const S = {
 };
 
 // ── API ──
-// Mismo origen: en local lo sirve server.js y en Vercel los rewrites de vercel.json llevan /api, /love… a Render.
-// Solo GitHub Pages (sin backend ni rewrites) necesita apuntar a Render directamente.
-const BACKEND = location.hostname.endsWith('github.io') ? 'https://yas-1.onrender.com' : '';
+// Si la página la sirve server.js (local, IP de la red, Render) los datos están en el mismo origen.
+// Vercel y GitHub Pages solo sirven estáticos (los rewrites de vercel.json no están activos) → Render directo.
+const BACKEND = /(vercel\.app|github\.io)$/.test(location.hostname) ? 'https://yas-1.onrender.com' : '';
 
 async function api(method, path, body) {
   const opts = { method, headers: { 'Content-Type': 'application/json' } };
