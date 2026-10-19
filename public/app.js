@@ -1482,12 +1482,80 @@ window.deleteMemory = async function(groupKey) {
   } catch(_) { toast('Error al eliminar'); }
 };
 
-// ── SPLASH ──
-function dismissSplash() {
-  const s = $('splash');
-  if (!s || s.classList.contains('out')) return;
-  s.classList.add('out');
-  setTimeout(() => s?.remove(), 950);
+// ── ENTRADA: NOCHE CON LUNA, ESTRELLAS Y SU AUDIO ──
+const NOCHE_AUDIO = '/love/audionancy.mp4';   // el navegador reproduce la pista de audio del mp4
+let _nocheAudio = null;
+
+// setInterval y no requestAnimationFrame: rAF se congela en segundo plano y el volumen se quedaría en 0
+function fadeVolume(a, to, ms) {
+  const from = a.volume, t0 = Date.now();
+  const id = setInterval(() => {
+    const k = Math.min(1, (Date.now() - t0) / ms);
+    a.volume = from + (to - from) * k;
+    if (k >= 1) clearInterval(id);
+  }, 50);
+}
+
+function soundToggle(a) {
+  const ON  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>`;
+  const OFF = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+  let b = $('sound-btn');
+  if (!b) {
+    b = el('button', 'sound-btn');
+    b.id = 'sound-btn';
+    b.setAttribute('aria-label', 'Sonido');
+    document.body.appendChild(b);
+  }
+  const sync = () => { b.innerHTML = a.paused ? OFF : ON; };
+  b.onclick = e => { e.stopPropagation(); a.paused ? a.play().catch(() => {}) : a.pause(); sync(); };
+  a.addEventListener('play', sync);
+  a.addEventListener('pause', sync);
+  a.addEventListener('ended', () => b.classList.add('sound-btn-hide'));
+  sync();
+  requestAnimationFrame(() => b.classList.add('sound-btn-in'));
+}
+
+function showNocheIntro() {
+  const n = $('noche');
+  if (!n) return Promise.resolve();
+
+  // cielo: estrellas pequeñas con parpadeo a destiempo (menos en pantallas pequeñas)
+  const cielo = $('noche-cielo');
+  const total = innerWidth < 600 ? 70 : 120;
+  let html = '';
+  for (let i = 0; i < total; i++) {
+    const big = Math.random() < .12;
+    const s = big ? 2.4 + Math.random() * 1.2 : 1 + Math.random() * 1.3;
+    html += `<span class="estrella${big ? ' estrella-g' : ''}" style="left:${(Math.random()*100).toFixed(2)}%;top:${(Math.random()*100).toFixed(2)}%;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;--d:${(2.5+Math.random()*4).toFixed(2)}s;--w:${(Math.random()*5).toFixed(2)}s;--o:${(.35+Math.random()*.55).toFixed(2)}"></span>`;
+  }
+  cielo.innerHTML = html;
+  requestAnimationFrame(() => n.classList.add('noche-in'));
+
+  // audio: se intenta al cargar; si el navegador lo bloquea, suena con el primer toque
+  const a = _nocheAudio = new Audio(BACKEND + NOCHE_AUDIO);
+  a.preload = 'auto';
+  a.volume = 0;
+  const arrancar = () => a.play().then(() => { fadeVolume(a, .85, 2500); soundToggle(a); return true; }).catch(() => false);
+  const boton = $('noche-entrar');
+  arrancar().then(ok => { if (!ok) { n.classList.add('noche-espera'); boton.textContent = 'toca para escuchar'; } });
+
+  return new Promise(resolve => {
+    let cerrada = false;
+    const cerrar = async () => {
+      if (cerrada) return;
+      // primer toque con audio bloqueado: ese toque desbloquea el sonido y la noche sigue un momento más
+      if (a.paused && n.classList.contains('noche-espera')) {
+        n.classList.remove('noche-espera');
+        if (await arrancar()) { boton.textContent = 'toca para entrar'; return; }
+      }
+      cerrada = true;
+      n.classList.add('noche-out');
+      setTimeout(() => { n.remove(); resolve(); }, 1300);
+    };
+    n.addEventListener('click', cerrar);
+    // el botón aparece cuando ya se ha leído la frase
+    setTimeout(() => n.classList.add('noche-lista'), 4200);
+  });
 }
 
 // ── CUESTIONARIO DE CITA ──
@@ -1755,16 +1823,16 @@ function syncFooter() {
 
 // ── INIT ──
 async function init() {
-  // Auto-dismiss splash after 2.4s
-  setTimeout(dismissSplash, 2400);
+  // Entrada con la luna; la app carga por detrás mientras tanto
+  const intro = showNocheIntro();
 
   try {
     const settings = await api('GET', '/settings');
     if (settings && !Array.isArray(settings) && !settings.error) S.settings = { ...S.settings, ...settings };
   } catch (_) {}
 
-  // Sorpresa de cumpleaños: solo el día de su cumple (el resto del año está en Detalles)
-  if (isBirthdayToday()) setTimeout(showFelizCumple, 3600);
+  // Sorpresa de cumpleaños: solo el día de su cumple (el resto del año está en Detalles), al salir de la noche
+  if (isBirthdayToday()) intro.then(() => setTimeout(showFelizCumple, 300));
 
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.onclick = () => { App.navigate(btn.dataset.section); App.closeMenu(); };
