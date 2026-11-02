@@ -60,8 +60,18 @@
     font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(15px,2.4vw,18px);
     padding:.55em 1.6em; transition:background .25s ease, transform .25s ease;}
   .again:hover,.again:focus-visible{background:rgba(240,207,140,.14); transform:translateY(-1px); outline:none;}
+  /* entrar a la app completa */
+  .entrar{margin-top:5vh; display:inline-block; text-decoration:none; cursor:pointer;
+    font-family:'Dancing Script',cursive; font-weight:600; font-size:clamp(24px,5vw,32px); color:#2a1a3e;
+    background:linear-gradient(180deg,#fff4d8 0%,#f0cf8c 60%,#d9ad66 100%); border-radius:999px;
+    padding:.3em 1.6em .4em; box-shadow:0 6px 28px rgba(240,207,140,.35);
+    opacity:0; transform:translateY(10px); transition:opacity 1.4s ease 2.2s, transform 1.4s ease 2.2s, box-shadow .25s ease;}
+  .finale.show .entrar{opacity:1; transform:none;}
+  .entrar:hover,.entrar:focus-visible{box-shadow:0 8px 34px rgba(240,207,140,.6); outline:none;}
+  .again{margin-top:2.4vh;}
 
   @media (prefers-reduced-motion: reduce){
+    .entrar{transition:none; opacity:1; transform:none;}
     html{scroll-behavior:auto;}
     .line{transition:none; opacity:1; transform:none;}
     .cue span,.num.beat{animation:none;}
@@ -87,6 +97,7 @@
       <div class="name">Yasmín</div>
       <div class="mil">cuatro meses… ojalá sean cuatro milenios junto a ti</div>
       <div class="touch">toca la pantalla</div>
+      <a class="entrar" href="/app.html">entrar</a>
       <button class="again" id="again" type="button">volver a empezar</button>
     </section>
   </main>
